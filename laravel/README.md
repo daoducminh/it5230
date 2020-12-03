@@ -1,4 +1,4 @@
-# IT4421
+# IT4421 - Web App
 
 ## Prerequisite
 - Ubuntu 18.04 or above
