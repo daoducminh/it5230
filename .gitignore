@@ -1,4 +1,4 @@
 # IDE's cache
 .vscode
-idea/
+.idea/
 *.iml

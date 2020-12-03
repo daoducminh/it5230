@@ -30,6 +30,7 @@ sudo ./install.sh
     - Create database for user: `createdb hello`
     - Create database for Laravel: `createdb laravel`
 3. Configure Laravel project:
+    - Install packages: `composer install`. (`composer update` will install the latest version of packages)
     - Create `.env` file with configuration. For example:
         ```
         APP_NAME=Laravel
