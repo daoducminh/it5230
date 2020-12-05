@@ -8,4 +8,4 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 sudo apt-get update
 
 # Install packages
-sudo apt install php openssl php-pgsql php-common php-curl php-json php-mbstring php-xml php-zip postgresql -y
+sudo apt install php openssl php-pgsql php-common php-curl php-json php-mbstring php-xml php-zip php-xdebug postgresql -y
