@@ -21,5 +21,5 @@
         |Shall the new role be a superuser?|y|
     - Create database for user (skip if you already have it): `createdb hello`
     - Create database for Django: `createdb django`
-7. Migrate databases: `python manage.py migrate`
+7. Migrate databases: `python manage.py makemigrations && python manage.py migrate`
 8. Run server: `python manage.py runserver`
