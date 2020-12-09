@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres import fields
 
 
 # Create your models here.
-class BasicUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class User(models.Model):
+    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     height = models.IntegerField()
     weight = models.IntegerField()
     fullname = models.CharField(max_length=50)
@@ -30,6 +30,8 @@ class Dish(models.Model):
     ingredients = fields.ArrayField(
         models.CharField(max_length=50)
     )
+    class Meta:
+        constraints=[]
 
 
 class Rating(models.Model):
