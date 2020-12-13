@@ -30,8 +30,6 @@ class Dish(models.Model):
     ingredients = fields.ArrayField(
         models.CharField(max_length=50)
     )
-    class Meta:
-        constraints=[]
 
 
 class Rating(models.Model):
