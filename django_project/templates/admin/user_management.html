@@ -1,0 +1,53 @@
+{% extends "admin/base.html" %}
+
+{% load static %}
+
+{% block sb_admin_title %}Quản lý tài khoản{% endblock sb_admin_title %}
+
+{% block sb_admin_breadcrumb_active %}
+<li class="breadcrumb-item active">Tài khoản</li>
+{% endblock sb_admin_breadcrumb_active %}
+
+{% block sb_admin_content %}
+<!-- DataTables Example -->
+<div class="card mb-3">
+  <div class="card-header">
+    <i class="fas fa-table"></i>
+    Tài khoản
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Tên đăng nhập</th>
+            <th>Email</th>
+            <th>Họ và tên</th>
+            <th>Chiều cao</th>
+            <th>Cân nặng</th>
+            <th>Giới tính</th>
+            <th>Số điện thoại</th>
+            <th>Sở thích</th>
+            <th>Hệ số thực đơn</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock sb_admin_content %}
