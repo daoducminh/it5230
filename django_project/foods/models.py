@@ -32,7 +32,7 @@ class User(models.Model):
 
 
 class Dish(models.Model):
-    owner_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     dish_name = models.CharField(max_length=50)
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
@@ -50,7 +50,7 @@ class Dish(models.Model):
 class Rating(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     dish_id = models.ForeignKey(Dish, on_delete=models.CASCADE)
-    score = models.FloatField()
+    score = models.IntegerField()
     comment = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 

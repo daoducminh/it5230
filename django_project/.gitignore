@@ -1,3 +1,7 @@
+# Data files
+*.json
+*.yml
+
 # Environment files
 .env
 

@@ -1,15 +1,17 @@
-from django.urls import path, include
-from . import views, user_views, admin
 import django_sb_admin.views
+from django.urls import path, include
+
+from . import views, user_views, admin_views
 
 urlpatterns = [
     path('', views.index),
-    path('login/<str:name>', user_views.LoginView.as_view()),
+    path('accounts/profile/', user_views.ProfileView.as_view(), name='account_profile'),
+    path('test/', user_views.TestView.as_view()),
 
-    path('admin/', include([
-        path('', admin.Index.as_view(), name='admin_index'),
+    path('admins/', include([
+        path('', admin_views.HomeView.as_view(), name='admin_home'),
         path('login/', django_sb_admin.views.login, name='sb_admin_login'),
-        path('user/', admin.UserManagement.as_view(), name='user_management'),
-        path('dish/', admin.DishManagement.as_view(), name='dish_management'),
+        path('user/', admin_views.UserManagementView.as_view(), name='user_management'),
+        path('dish/', admin_views.DishManagementView.as_view(), name='dish_management'),
     ]))
 ]

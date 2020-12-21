@@ -1,23 +1,14 @@
 from django.shortcuts import render
-from django.views.generic import View
 
-from django.http import HttpRequest
-
-
-class LoginView(View):
-    def get(self, request, name):
-        return render(request, 'users/login.html', {
-            'method': 'GET',
-            'name': name
-        })
-
-    def post(self, request, name):
-        return render(request, 'users/profile.html', {
-            'method': 'POST',
-            'name': name
-        })
+from .views import UserRequiredView
 
 
-# def login(request: HttpRequest):
-#     if request.method == HttpRequest.GET:
-#         return render(request, 'users/login.html')
+class ProfileView(UserRequiredView):
+    def get(self, request):
+        print(request.user)
+        return render(request, 'registration/profile.html')
+
+
+class TestView(UserRequiredView):
+    def get(self, request):
+        return render(request, 'index.html')
