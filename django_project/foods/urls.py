@@ -2,8 +2,6 @@ from django.urls import path, include
 from . import views, user_views, admin_views
 import django_sb_admin.views
 
-from . import views, user_views, admin_views
-
 urlpatterns = [
     path('', views.index),
     path('accounts/profile/', user_views.ProfileView.as_view(), name='account_profile'),
