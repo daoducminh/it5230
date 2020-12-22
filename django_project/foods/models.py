@@ -11,7 +11,6 @@ class User(models.Model):
     birthday = models.DateField(default=datetime.date(2000, 1, 1))
     height = models.IntegerField()
     weight = models.IntegerField()
-    fullname = models.CharField(max_length=50)
     gender = models.BooleanField()
     diet_factor = models.FloatField()
     phone = models.CharField(max_length=50)
