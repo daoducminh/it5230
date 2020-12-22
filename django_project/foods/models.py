@@ -21,6 +21,8 @@ class User(models.Model):
     show_height = models.BooleanField()
     show_weight = models.BooleanField()
     show_diet = models.BooleanField()
+    def __str__(self):
+        return self.fullname
 
     class Meta:
         constraints = [

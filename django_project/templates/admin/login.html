@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Django SB Admin - Login</title>
+  <title>Đăng nhập</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static "vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
@@ -24,35 +24,37 @@
 
   <div class="container">
     <div class="card card-login mx-auto mt-5">
-      <div class="card-header">Login</div>
+      <div class="card-header">Đăng nhập</div>
       <div class="card-body">
-        <form>
+        <form action="" , method="POST">
+          {% csrf_token %}
           <div class="form-group">
             <div class="form-label-group">
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required" autofocus="autofocus">
-              <label for="inputEmail">Email address</label>
+              <input type="text" id="inputEmail" class="form-control" placeholder="Tên đăng nhập" required="required"
+                autofocus="autofocus" name="username">
+              <label for="inputEmail">Tên đăng nhập</label>
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
-              <label for="inputPassword">Password</label>
+              <input type="password" id="inputPassword" class="form-control" placeholder="Mật khẩu" required="required"
+                name="password">
+              <label for="inputPassword">Mật khẩu</label>
             </div>
+          </div>
+          <div>
+            {% if messages %}
+              {% for message in messages %}
+              <script>
+                alert('{{message}}')
+              </script>
+              {% endfor %}
+            {% endif %}
           </div>
           <div class="form-group">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" value="remember-me">
-                Remember Password
-              </label>
-            </div>
           </div>
-          <a class="btn btn-primary btn-block" href="index.html">Login</a>
+          <input type="submit" class="btn btn-primary btn-block text-white" value="Đăng nhập" />
         </form>
-        <div class="text-center">
-          <a class="d-block small mt-3" href="{% url "sb_admin_register" %}">Register an Account</a>
-          <a class="d-block small" href="{% url "sb_admin_forgot_password" %}">Forgot Password?</a>
-        </div>
       </div>
     </div>
   </div>
