@@ -11,7 +11,7 @@ class AllDishView(UserRequiredView):
         return render(request, '')
 
 
-class DishView(View):
+class DishView(UserRequiredView):
     def get(self, request, dish_id):
         dish = Dish.objects.get(pk=dish_id)
         if dish.is_public or (request.user.is_authenticated and request.user.pk == dish.user_id):
