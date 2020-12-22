@@ -22,29 +22,19 @@
           <tr>
             <th>Tên đăng nhập</th>
             <th>Email</th>
-            <th>Họ và tên</th>
-            <th>Chiều cao</th>
-            <th>Cân nặng</th>
-            <th>Giới tính</th>
-            <th>Số điện thoại</th>
-            <th>Sở thích</th>
-            <th>Hệ số thực đơn</th>
-            <th>Trạng thái</th>
+            <th>Loại tài khoản</th>
+            <th>Trạng thái tài khoản</th>
           </tr>
         </thead>
         <tbody>
+        {% for user in users %}
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><a href='#'>{{user.username}}</a></td>
+            <td>{{user.email}}</td>
+            <td>{{user.is_superuser|yesno:'Admin, Người dùng'}}</td>
+            <td>{{user.is_active|yesno:'Mở, Khóa'}}</td>
           </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>

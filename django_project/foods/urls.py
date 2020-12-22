@@ -7,8 +7,9 @@ urlpatterns = [
     path('login/<str:name>', user_views.LoginView.as_view()),
 
     path('admin/', include([
+        path('login/', admin.Login.as_view(), name='admin_login'),
+        path('logout/', admin.Logout.as_view(), name='admin_logout'),
         path('', admin.Index.as_view(), name='admin_index'),
-        path('login/', django_sb_admin.views.login, name='sb_admin_login'),
         path('user/', admin.UserManagement.as_view(), name='user_management'),
         path('dish/', admin.DishManagement.as_view(), name='dish_management'),
     ]))

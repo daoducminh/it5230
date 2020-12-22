@@ -21,19 +21,23 @@
           <tr>
             <th>Tên món ăn</th>
             <th>Mô tả</th>
-            <th>Calories</th>
+            <th>Calories (kcal)</th>
             <th>Trạng thái</th>
             <th>Thành phần</th>
+            <th>Sở hữu</th>
           </tr>
         </thead>
         <tbody>
+        {%  for dish in dishes %}
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><a href='#'> {{dish.dish_name}}</a></td>
+            <td>{{dish.description}}</td>
+            <td>{{dish.calories}}</td>
+            <td>{{dish.is_public|yesno:'Công khai,Riêng tư'}}</td>
+            <td>{{dish.ingredients|join:', '}}</td>
+            <td><a href='#'>{{dish.owner_id}}</a></td>
           </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>
