@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render
 
 from .views import UserRequiredView
@@ -6,8 +5,7 @@ from .views import UserRequiredView
 
 class ProfileView(UserRequiredView):
     def get(self, request):
-        user = User.objects.get(username=request.user.username)
-        user_info = user.user
+        user_info = request.user.user
         context = {
             'height': user_info.height,
             'weight': user_info.weight,
