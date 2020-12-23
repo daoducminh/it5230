@@ -12,5 +12,6 @@ urlpatterns = [
         path('', admin_views.Index.as_view(), name='admin_index'),
         path('user/', admin_views.UserManagement.as_view(), name='user_management'),
         path('dish/', admin_views.DishManagement.as_view(), name='dish_management'),
-    ]))
+    ])),
+    path('base/', admin_views.TestBase.as_view(), name='base'),
 ]
