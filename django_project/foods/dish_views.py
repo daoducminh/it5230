@@ -29,7 +29,7 @@ class DishView(LoginRequiredView):
             pass
 
 
-class DishUpdateView(SelfUpdateView):
+class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
     success_url = '/thanks/'
