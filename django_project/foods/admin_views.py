@@ -37,6 +37,11 @@ class Logout(View):
         return redirect('/admin/login')
 
 
+class TestBase(View):
+    def get(self, request):
+        return render(request, 'base/base.html')
+
+
 class Index(LoginRequiredMixin, View):
     login_url = '/admin/login'
 
