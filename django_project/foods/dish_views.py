@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from .forms import DishForm
 from .models import Dish
-from .views import LoginRequiredView, SelfUpdateView
+from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView
 
 
 class AllDishView(LoginRequiredView):
@@ -29,7 +29,12 @@ class DishView(LoginRequiredView):
             pass
 
 
-class UpdateDishView(SelfUpdateView):
+class UserUpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
+    success_url = '/thanks/'
+
+
+class UserDeleteDishView(SelfDeleteView):
+    model = Dish
     success_url = '/thanks/'
