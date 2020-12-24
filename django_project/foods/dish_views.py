@@ -1,5 +1,3 @@
-from django.shortcuts import render, HttpResponse
-from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
@@ -17,23 +15,14 @@ class AdminAllDishView(LoginRequiredView, ListView):
         context = super().get_context_data(**kwargs)
         return context
 
-    def post(self, request):
-        dishes = Dish.objects.all()
-        context = {'dishes': dishes}
-        return render(request, 'admins/admin_dishes.html', context)
-
 
 class AdminDishView(LoginRequiredView, DetailView):
     model = Dish
     template_name = 'admins/admin_dish.html'
+
     def get_context_data(self, **kwarg):
         context = super().get_context_data(**kwarg)
         return context
-
-    def post(self, request, dish_id):
-        dish = Dish.objects.get(pk=dish_id)
-        context = {'dish': dish}
-        return render(request, 'admins/admin_dish.html', context)
 
 
 # class DishView(LoginRequiredView):

@@ -19,7 +19,7 @@ urlpatterns = [
         path('dish/<int:pk>/', dish_views.AdminDishView.as_view(), name='admin_dish_view'),
     ])),
     path('profile/<int:pk>/', user_views.ProfileUpdate.as_view(), name='profile_update'),
-    path('dish/<int:pk>/update/', dish_views.DishUpdateView.as_view()),
+    path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks),
 
     # test view
