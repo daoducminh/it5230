@@ -1,39 +1,55 @@
-from django.shortcuts import render, HttpResponse
-from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 from .forms import DishForm
 from .models import Dish
-from .views import LoginRequiredView, SelfUpdateView
+from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView
 
 
 class AdminAllDishView(LoginRequiredView, ListView):
     model = Dish
-    template_name = "admins/admin_dishes.html"
+    template_name = "admins/dishes.html"
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
-    def post(self, request):
-        dishes = Dish.objects.all()
-        context = {'dishes': dishes}
-        return render(request, 'admins/admin_dishes.html', context)
-
 
 class AdminDishView(LoginRequiredView, DetailView):
     model = Dish
-    template_name = 'admins/admin_dish.html'
+    template_name = 'admins/dish.html'
+
     def get_context_data(self, **kwarg):
         context = super().get_context_data(**kwarg)
         return context
 
-    def post(self, request, dish_id):
-        dish = Dish.objects.get(pk=dish_id)
-        context = {'dish': dish}
-        return render(request, 'admins/admin_dish.html', context)
+
+class UserDishView(LoginRequiredView, DetailView):
+    model = Dish
+    template_name = 'users/dish.html'
+    queryset = Dish.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def get_context_data(self, **kwarg):
+        context = super().get_context_data(**kwarg)
+        return context
+
+
+class UserAllDishView(LoginRequiredView, ListView):
+    model = Dish
+    template_name = 'users/dishes.html'
+    queryset = Dish.objects.all()
+    paginate_by = 10
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def get_context_data(self, **kwarg):
+        context = super().get_context_data(**kwarg)
+        return context
 
 
 # class DishView(LoginRequiredView):
@@ -57,4 +73,9 @@ class AdminDishView(LoginRequiredView, DetailView):
 class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
+    success_url = '/thanks/'
+
+
+class DeleteDishView(SelfDeleteView):
+    model = Dish
     success_url = '/thanks/'
