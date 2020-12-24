@@ -1,10 +1,14 @@
 from django.shortcuts import render
 
-from .views import UserRequiredView
+from .forms import UserForm
+from .models import User
+from .views import LoginRequiredView, UserUpdateView
 
+# Testing purpose
 
-class ProfileView(UserRequiredView):
+class ProfileView(LoginRequiredView):
     def get(self, request):
+        print(request.user.is_staff)
         user_info = request.user.user
         context = {
             'height': user_info.height,
@@ -30,3 +34,11 @@ class ProfileView(UserRequiredView):
             'message': 'Updated successfully'
         }
         return render(request, 'registration/profile.html', context)
+
+
+class ProfileUpdate(UserUpdateView):
+    # model = User
+    # fields = ['height', 'weight', 'gender']
+    form_class = UserForm
+    queryset = User.objects.all()
+    success_url = '/thanks/'

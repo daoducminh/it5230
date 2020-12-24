@@ -4,7 +4,21 @@ from . import views, user_views, admin_views, dish_views
 urlpatterns = [
     path('', views.index),
     path('accounts/profile/', user_views.ProfileView.as_view(), name='account_profile'),
+    # path('accounts/', include([
+    #
+    # ])),
+    path('admins/', include([
+        path('login/', admin_views.Login.as_view(), name='admin_login'),
+        path('logout/', admin_views.Logout.as_view(), name='admin_logout'),
+        path('', admin_views.Index.as_view(), name='admin_index'),
+        path('user/', admin_views.UserManagement.as_view(), name='user_management'),
+        path('dish/', dish_views.AdminAllDishView.as_view(), name='admin_all_dish_view'),
+        path('dish/<int:pk>/', dish_views.AdminDishView.as_view(), name='admin_dish_view'),
+    ])),
+    path('profile/<int:pk>/', user_views.ProfileUpdate.as_view(), name='profile_update'),
+    path('dish/<int:pk>/update/', dish_views.DishUpdateView.as_view()),
+    path('thanks/', views.thanks),
+
+    # test view
     path('base/', admin_views.TestBase.as_view(), name='base'),
-    path('dishes/', dish_views.AllDishView.as_view(), name='all_dish_view'),
-    path('dishes/<int:dish_id>/', dish_views.DishView.as_view(), name='dish_view'),
 ]

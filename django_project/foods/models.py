@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres import fields
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -22,6 +23,12 @@ class User(models.Model):
     show_weight = models.BooleanField()
     show_diet = models.BooleanField()
 
+    def __str__(self):
+        pass
+
+    def get_absolute_url(self):
+        return reverse('user-detail', kwargs={'pk': self.pk})
+
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(weight__gt=0), name='weight_gt_0'),
@@ -31,7 +38,7 @@ class User(models.Model):
 
 
 class Dish(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     dish_name = models.CharField(max_length=50)
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
@@ -47,8 +54,8 @@ class Dish(models.Model):
 
 
 class Rating(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    dish_id = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     score = models.IntegerField()
     comment = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -61,7 +68,7 @@ class Rating(models.Model):
 
 
 class Menu(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     description = models.CharField(max_length=250)
     mealtime = models.DateTimeField()
     limit = models.IntegerField()
