@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 
 from .forms import DishForm
 from .models import Dish
-from .views import LoginRequiredView, SelfUpdateView
+from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView
 
 
 class AdminAllDishView(LoginRequiredView, ListView):
@@ -43,7 +43,12 @@ class AdminDishView(LoginRequiredView, DetailView):
 #             return HttpResponse("Not authorized or not public")
 
 
-class UpdateDishView(SelfUpdateView):
+class UserUpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
+    success_url = '/thanks/'
+
+
+class UserDeleteDishView(SelfDeleteView):
+    model = Dish
     success_url = '/thanks/'
