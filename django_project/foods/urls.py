@@ -22,7 +22,7 @@ urlpatterns = [
         path('', admin_views.Index.as_view(), name='admin_index'),
         path('user/', admin_views.UserManagement.as_view(), name='user_management'),
         path('dish/', include([
-            path('',admin_views.AdminAllDishView.as_view(), name='dish_management'),
+            path('', dish_views.AdminAllDishView.as_view(), name='dish_management'),
             path('<int:pk>/', include([
                 path('', dish_views.AdminDishView.as_view(), name='user_dish_detail'),
                 path('update/', dish_views.UserUpdateDishView.as_view(), name='admin_update_dish'),
