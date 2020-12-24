@@ -54,7 +54,7 @@ class AdminDishView(LoginRequiredView, DetailView):
 #             return HttpResponse("Not authorized or not public")
 
 
-class DishUpdateView(SelfUpdateView):
+class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
     success_url = '/thanks/'

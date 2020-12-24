@@ -2,8 +2,11 @@ from django.urls import path, include
 from . import views, user_views, admin_views, dish_views
 
 urlpatterns = [
-    path('', views.index),
-    path('accounts/profile/', user_views.ProfileView.as_view(), name='account_profile'),
+    path('', views.index, name='index'),
+    path('accounts/', include([
+        path('profile/', user_views.ProfileView.as_view(), name='account_profile'),
+        path('register/', user_views.RegisterView.as_view(), name='account_register')
+    ])),
     # path('accounts/', include([
     #
     # ])),
