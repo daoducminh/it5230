@@ -1,17 +1,17 @@
 from django.forms.models import model_to_dict
 from django.shortcuts import render
-from django.views.generic import View
 
+from .forms import DishForm
 from .models import Dish
-from .views import UserRequiredView
+from .views import LoginRequiredView, SelfUpdateView
 
 
-class AllDishView(UserRequiredView):
+class AllDishView(LoginRequiredView):
     def get(self, request):
         return render(request, '')
 
 
-class DishView(UserRequiredView):
+class DishView(LoginRequiredView):
     def get(self, request, dish_id):
         dish = Dish.objects.get(pk=dish_id)
         if dish.is_public or (request.user.is_authenticated and request.user.pk == dish.user_id):
@@ -27,3 +27,9 @@ class DishView(UserRequiredView):
         else:
             # Not authorized or not public
             pass
+
+
+class DishUpdateView(SelfUpdateView):
+    form_class = DishForm
+    queryset = Dish.objects.all()
+    success_url = '/thanks/'

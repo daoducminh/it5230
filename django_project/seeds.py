@@ -7,6 +7,7 @@ from faker import Faker
 MODEL = 'model'
 PK = 'pk'
 FIELDS = 'fields'
+USER_ID = 2
 
 fake = Faker()
 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -25,7 +26,7 @@ def seed_food_dish():
         for j in range(5):
             ingredients.append(f'ingredient {random.randint(0, 1000)}')
         d = {
-            'user_id': 1,
+            'user': USER_ID,
             'dish_name': f'dish {i}',
             'description': fake.text(50),
             'calories': random.randint(10, 3000),
@@ -48,7 +49,7 @@ def seed_food_menu():
         for j in range(8):
             dishes.append(random.randint(1, 50))
         m = {
-            'user_id': 1,
+            'user': USER_ID,
             'description': fake.text(50),
             'mealtime': timestamp,
             'limit': random.randint(3000, 10000),
@@ -67,8 +68,8 @@ def seed_food_rating():
     rs = []
     for i in range(1, 51):
         r = {
-            'user_id': 1,
-            'dish_id': i,
+            'user': USER_ID,
+            'dish': i,
             'score': random.randint(1, 5),
             'comment': fake.text(50),
             'timestamp': timestamp
