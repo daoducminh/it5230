@@ -16,7 +16,7 @@ class User(models.Model):
     diet_factor = models.FloatField()
 
     def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name}'
+        return self.user.username
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.pk})
