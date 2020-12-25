@@ -40,4 +40,3 @@ class DishForm(ModelForm):
     class Meta:
         model = Dish
         exclude = ['user']
-
