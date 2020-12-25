@@ -6,8 +6,6 @@ from .forms import UserForm, BaseUserForm
 from .views import LoginRequiredView
 
 
-# Testing purpose
-
 class UpdateProfileView(LoginRequiredView):
     def get(self, request):
         user = request.user.user
@@ -16,15 +14,17 @@ class UpdateProfileView(LoginRequiredView):
         })
 
     def post(self, request):
-        user_form = UserForm(request.POST)
+        user_info = request.user.user
+        user_form = UserForm(request.POST, instance=user_info)
         if user_form.is_valid():
-            user = user_form.save()
+            user = user_form.save(False)
+            user.save()
             return render(request, 'registration/profile.html', {
                 'form': user
             })
         else:
             return render(request, 'registration/profile.html', {
-                'form': request.user.user,
+                'form': user_info,
                 'errors': user_form.errors
             })
 

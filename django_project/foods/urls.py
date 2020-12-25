@@ -12,6 +12,7 @@ urlpatterns = [
         path('profile/', user_views.UpdateProfileView.as_view(), name='account_profile'),
         path('dish/', include([
             path('', dish_views.UserAllDishView.as_view(), name='user_all_dishes'),
+            path('t/', dish_views.TestPage.as_view()),
             path('add/', dish_views.CreateDishView.as_view(), name='user_add_dish'),
             path('<int:pk>/', include([
                 path('', dish_views.UserDishView.as_view(), name='user_dish_detail'),
