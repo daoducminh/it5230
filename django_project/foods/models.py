@@ -9,7 +9,7 @@ from django.urls import reverse
 # Create your models here.
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    birthday = models.DateField(default=datetime.date(2000, 1, 1))
+    birthday = models.DateField()
     height = models.IntegerField()
     weight = models.IntegerField()
     gender = models.BooleanField()
@@ -17,9 +17,6 @@ class User(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    def get_absolute_url(self):
-        return reverse('user-detail', kwargs={'pk': self.pk})
 
     class Meta:
         constraints = [
