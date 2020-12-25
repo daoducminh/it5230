@@ -59,13 +59,26 @@
         <div class="col-sm-10">
             <div class="form-check">
                 {% if form.gender.value %}
-                <input type="checkbox" class="form-check-input" id="id_gender" name="gender" checked>
-                {% else %}
-                <input type="checkbox" class="form-check-input" id="id_gender" name="gender">
-                {% endif %}
-                <label class="form-check-label" for="id_gender">
-                    Chọn nếu là Nam. Không chọn nếu là Nữ.
+                <input type="radio" class="form-check-input" id="male" name="gender" value="true" checked>
+                <label class="form-check-label" for="male">
+                    Nam
                 </label>
+                <br />
+                <input type="radio" class="form-check-input" id="female" name="gender" value="false">
+                <label class="form-check-label" for="female">
+                    Nữ
+                </label>
+                {% else %}
+                <input type="radio" class="form-check-input" id="male" name="gender" value="true">
+                <label class="form-check-label" for="male">
+                    Nam
+                </label>
+                <br />
+                <input type="radio" class="form-check-input" id="female" name="gender" value="false" checked>
+                <label class="form-check-label" for="female">
+                    Nữ
+                </label>
+                {% endif %}
             </div>
         </div>
     </div>
