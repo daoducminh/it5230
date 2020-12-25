@@ -40,10 +40,12 @@ class UserDishView(UserDetailView):
 
 class TestPage(LoginRequiredView):
     def get(self, request):
-        dishes = Dish.objects.get(user=request.user)
+        dishes = Dish.objects.filter(user=request.user)
         p = Paginator(dishes, 10)
-        page = request.GET.get('page', 1)
-        return render(request, 'thanks.html')
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'dishes.html', {
+            'page_obj': page
+        })
 
 
 class UserAllDishView(UserListView):
