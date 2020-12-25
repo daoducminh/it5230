@@ -18,9 +18,6 @@ class User(models.Model):
     def __str__(self):
         return self.user.username
 
-    def get_absolute_url(self):
-        return reverse('user-detail', kwargs={'pk': self.pk})
-
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(weight__gt=0), name='weight_gt_0'),

@@ -1,9 +1,9 @@
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
-
+from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from .forms import DishForm
 from .models import Dish
-from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView
+from .views import SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView, \
+    LoginRequiredView
 
 
 class AdminAllDishView(AdminListView):
@@ -38,6 +38,16 @@ class UserDishView(UserDetailView):
         return context
 
 
+class TestPage(LoginRequiredView):
+    def get(self, request):
+        dishes = Dish.objects.filter(user=request.user)
+        p = Paginator(dishes, 10)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'dishes.html', {
+            'page_obj': page
+        })
+
+
 class UserAllDishView(UserListView):
     model = Dish
     template_name = 'users/dishes.html'
@@ -52,24 +62,6 @@ class UserAllDishView(UserListView):
         return context
 
 
-# class DishView(LoginRequiredView):
-#     def get(self, request, dish_id):
-#         dish = Dish.objects.get(pk=dish_id)
-#         context = {'dish': dish}
-#         if dish.is_public or (request.user.is_authenticated and request.user.pk == dish.user_id):
-#             return render(request, 'foods/dish.html', context)
-#         else:
-#             return HttpResponse("Not authorized or not public")
-
-#     def post(self, request, dish_id):
-#         dish = Dish.objects.get(pk=dish_id)
-#         context = {'dish': dish}
-#         if dish.is_public or (request.user.is_authenticated and request.user.pk == dish.user_id):
-#             return render(request, 'foods/dish.html', context)
-#         else:
-#             return HttpResponse("Not authorized or not public")
-
-
 class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
@@ -79,3 +71,20 @@ class UpdateDishView(SelfUpdateView):
 class DeleteDishView(SelfDeleteView):
     model = Dish
     success_url = '/thanks/'
+
+
+class CreateDishView(LoginRequiredView):
+    def get(self, request):
+        return render(request, 'foods/dish_add.html')
+
+    def post(self, request):
+        dish_form = DishForm(request.POST)
+        if dish_form.is_valid():
+            dish = dish_form.save(False)
+            dish.user = request.user
+            dish.save()
+            return redirect('thanks')
+        else:
+            return render(request, 'foods/dish_add.html', {
+                'errors': dish_form.errors
+            })
