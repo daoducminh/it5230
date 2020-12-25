@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import views, user_views, dish_views
+from . import views, user_views, dish_views, menu_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -36,4 +36,5 @@ urlpatterns = [
     path('profile/<int:pk>/', user_views.ProfileUpdate.as_view(), name='profile_update'),
     path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
+    path('menu/', menu_views.index.as_view(), name="menu_index")
 ]
