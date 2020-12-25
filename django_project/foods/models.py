@@ -3,7 +3,6 @@ import datetime
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres import fields
 from django.db import models
-from django.urls import reverse
 
 
 # Create your models here.
@@ -52,11 +51,16 @@ class Rating(models.Model):
     comment = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.user.pk}-{self.dish.pk}'
+
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(score__gt=0), name='score_gt_0'),
             models.CheckConstraint(check=models.Q(score__lte=5), name='score_lte_5'),
         ]
+        unique_together = ('user', 'dish')
+        ordering = ['-timestamp']
 
 
 class Menu(models.Model):
