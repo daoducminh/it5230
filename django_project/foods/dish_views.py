@@ -3,10 +3,10 @@ from django.views.generic.list import ListView
 
 from .forms import DishForm
 from .models import Dish
-from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView
+from .views import LoginRequiredView, SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView
 
 
-class AdminAllDishView(LoginRequiredView, ListView):
+class AdminAllDishView(AdminListView):
     model = Dish
     template_name = "admins/dishes.html"
     paginate_by = 10
@@ -16,7 +16,7 @@ class AdminAllDishView(LoginRequiredView, ListView):
         return context
 
 
-class AdminDishView(LoginRequiredView, DetailView):
+class AdminDishView(AdminDetailView):
     model = Dish
     template_name = 'admins/dish.html'
 
@@ -25,7 +25,7 @@ class AdminDishView(LoginRequiredView, DetailView):
         return context
 
 
-class UserDishView(LoginRequiredView, DetailView):
+class UserDishView(UserDetailView):
     model = Dish
     template_name = 'users/dish.html'
     queryset = Dish.objects.all()
@@ -38,7 +38,7 @@ class UserDishView(LoginRequiredView, DetailView):
         return context
 
 
-class UserAllDishView(LoginRequiredView, ListView):
+class UserAllDishView(UserListView):
     model = Dish
     template_name = 'users/dishes.html'
     queryset = Dish.objects.all()

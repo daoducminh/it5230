@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import views, user_views, admin_views, dish_views
+from . import views, user_views, dish_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -20,10 +20,10 @@ urlpatterns = [
         ]))
     ])),
     path('admins/', include([
-        path('login/', admin_views.Login.as_view(), name='admin_login'),
-        path('logout/', admin_views.Logout.as_view(), name='admin_logout'),
-        path('', admin_views.Index.as_view(), name='admin_index'),
-        path('user/', admin_views.UserManagement.as_view(), name='user_management'),
+        # path('login/', admin_views.Login.as_view(), name='admin_login'),
+        # path('logout/', admin_views.Logout.as_view(), name='admin_logout'),
+        # path('', admin_views.Index.as_view(), name='admin_index'),
+        # path('user/', admin_views.UserManagement.as_view(), name='user_management'),
         path('dish/', include([
             path('', dish_views.AdminAllDishView.as_view(), name='admin_all_dishes'),
             path('<int:pk>/', include([
@@ -36,6 +36,4 @@ urlpatterns = [
     path('profile/<int:pk>/', user_views.ProfileUpdate.as_view(), name='profile_update'),
     path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
-    # test view
-    path('base/', admin_views.TestBase.as_view(), name='base'),
 ]

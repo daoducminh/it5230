@@ -1,7 +1,6 @@
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
-
 from .forms import UserForm, BaseUserForm
 from .models import User
 from .views import LoginRequiredView, UserUpdateView
@@ -67,12 +66,6 @@ class RegisterView(View):
                     base_user = base_user_form.save()
                     user = user_form.save(commit=False)
                     user.user = base_user
-                    user.show_weight = True
-                    user.show_height = True
-                    user.show_email = True
-                    user.show_gender = True
-                    user.show_diet = True
-                    user.show_phone = True
                     user.save()
                 return redirect('login')
             else:
