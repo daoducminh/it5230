@@ -6,8 +6,6 @@ from .forms import UserForm, BaseUserForm
 from .views import LoginRequiredView
 
 
-# Testing purpose
-
 class UpdateProfileView(LoginRequiredView):
     def get(self, request):
         user = request.user.user

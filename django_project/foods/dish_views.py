@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.core.paginator import Paginator
 from .forms import DishForm
 from .models import Dish
 from .views import SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView, \
@@ -36,6 +36,14 @@ class UserDishView(UserDetailView):
     def get_context_data(self, **kwarg):
         context = super().get_context_data(**kwarg)
         return context
+
+
+class TestPage(LoginRequiredView):
+    def get(self, request):
+        dishes = Dish.objects.get(user=request.user)
+        p = Paginator(dishes, 10)
+        page = request.GET.get('page', 1)
+        return render(request, 'thanks.html')
 
 
 class UserAllDishView(UserListView):
