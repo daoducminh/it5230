@@ -12,6 +12,7 @@ urlpatterns = [
         path('profile/', user_views.ProfileView.as_view(), name='account_profile'),
         path('dish/', include([
             path('', dish_views.UserAllDishView.as_view(), name='user_all_dishes'),
+            path('add/', dish_views.CreateDishView.as_view(), name='user_add_dish'),
             path('<int:pk>/', include([
                 path('', dish_views.UserDishView.as_view(), name='user_dish_detail'),
                 path('update/', dish_views.UpdateDishView.as_view(), name='user_update_dish'),
@@ -26,6 +27,7 @@ urlpatterns = [
         # path('user/', admin_views.UserManagement.as_view(), name='user_management'),
         path('dish/', include([
             path('', dish_views.AdminAllDishView.as_view(), name='admin_all_dishes'),
+            path('add/', dish_views.CreateDishView.as_view(), name='admin_add_dish'),
             path('<int:pk>/', include([
                 path('', dish_views.AdminDishView.as_view(), name='admin_dish_detail'),
                 path('update/', dish_views.UpdateDishView.as_view(), name='admin_update_dish'),
