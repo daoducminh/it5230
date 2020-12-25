@@ -3,51 +3,48 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <p>{{ message }}</p>
-        <p>Welcome, {{ user.username }}. Thanks for logging in.</p>
-        <form action="" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="height">Height:</label>
-                <input type="number" class="form-control" min="100" max="250" id="height" name="height"
-                       value="{{ height }}">
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="weight">Weight:</label>
-                <input type="number" class="form-control" min="10" max="200" id="weight" name="weight"
-                       value="{{ weight }}">
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            {% if gender %}
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="gender" value="male" checked>Male
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="gender" value="female">Female
-                    </label>
-                </div>
-            {% else %}
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="gender" value="male">Male
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="gender" value="female" checked>Female
-                    </label>
-                </div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    {% else %}
-        <p>Welcome, new user. Please log in.</p>
+    {% if errors %}
+        <div>{{ errors }}</div>
     {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="height">Height:</label>
+            <input type="number" class="form-control" min="100" max="250" id="height" name="height"
+                   value="{{ form.height }}">
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group">
+            <label for="weight">Weight:</label>
+            <input type="number" class="form-control" min="10" max="200" id="weight" name="weight"
+                   value="{{ form.weight }}">
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        {% if form.gender %}
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" value="male" checked>Male
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" value="female">Female
+                </label>
+            </div>
+        {% else %}
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" value="male">Male
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" value="female" checked>Female
+                </label>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 {% endblock %}
