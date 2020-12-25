@@ -39,7 +39,7 @@ class Logout(View):
 
 class TestBase(View):
     def get(self, request):
-        return render(request, 'base/base.html')
+        return render(request, 'base/../templates/base.html')
 
 
 class Index(LoginRequiredMixin, View):
