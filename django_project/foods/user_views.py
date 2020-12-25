@@ -66,12 +66,6 @@ class RegisterView(View):
                     base_user = base_user_form.save()
                     user = user_form.save(commit=False)
                     user.user = base_user
-                    user.show_weight = True
-                    user.show_height = True
-                    user.show_email = True
-                    user.show_gender = True
-                    user.show_diet = True
-                    user.show_phone = True
                     user.save()
                 return redirect('login')
             else:

@@ -14,17 +14,9 @@ class User(models.Model):
     weight = models.IntegerField()
     gender = models.BooleanField()
     diet_factor = models.FloatField()
-    phone = models.CharField(max_length=50)
-    favorites = models.CharField(max_length=100)
-    show_gender = models.BooleanField()
-    show_phone = models.BooleanField()
-    show_email = models.BooleanField()
-    show_height = models.BooleanField()
-    show_weight = models.BooleanField()
-    show_diet = models.BooleanField()
 
     def __str__(self):
-        pass
+        return f'{self.user.first_name} {self.user.last_name}'
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.pk})
@@ -46,6 +38,9 @@ class Dish(models.Model):
     ingredients = fields.ArrayField(
         models.CharField(max_length=50)
     )
+
+    def __str__(self):
+        return self.dish_name
 
     class Meta:
         constraints = [

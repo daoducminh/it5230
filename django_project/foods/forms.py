@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm, CharField, NumberInput, CheckboxInput, EmailField, EmailInput
+from django.forms import ModelForm, CharField, EmailField, EmailInput
 
-from .constants.form_styles import *
 from .models import Dish, User
 
 
@@ -34,13 +33,7 @@ class BaseUserForm(UserCreationForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['height', 'weight', 'gender', 'diet_factor']
-        widgets = {
-            'height': NumberInput(attrs={'class': FORM_CONTROL}),
-            'weight': NumberInput(attrs={'class': FORM_CONTROL}),
-            'gender': CheckboxInput(attrs={'class': FORM_CONTROL}),
-            'diet_factor': NumberInput(attrs={'class': FORM_CONTROL}),
-        }
+        fields = ['birthday', 'height', 'weight', 'gender', 'diet_factor']
 
 
 class DishForm(ModelForm):
