@@ -34,7 +34,7 @@ urlpatterns = [
         ])),
     ])),
     path('thanks/', views.thanks, name='thanks'),
-
+    path('dish/<int:pk>/', dish_views.UpdateDishView.as_view()),
     # test view
     path('base/', admin_views.TestBase.as_view(), name='base'),
 ]
