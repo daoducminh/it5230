@@ -36,5 +36,11 @@ urlpatterns = [
     path('profile/<int:pk>/', user_views.ProfileUpdate.as_view(), name='profile_update'),
     path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
-    path('menu/', menu_views.index.as_view(), name="menu_index")
+    path('menu/', include([
+        path('', menu_views.index.as_view(), name="menu_index"),
+        path('create', menu_views.create.as_view(), name="menu_create"),
+        path('history', menu_views.history.as_view(), name="menu_history"),
+        path('update', menu_views.update.as_view(), name="menu_update"),
+        path('delete', menu_views.delete.as_view(), name="menu_delete")
+    ]))
 ]

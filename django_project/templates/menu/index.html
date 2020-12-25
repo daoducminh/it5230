@@ -3,10 +3,43 @@
     Menu
 {% endblock title %}
 {% block app_name %}
-    Menu
+    Home
 {% endblock app_name %}
 {% block content %}
-    Menu Content
+    {% comment %} script {% endcomment %}
+    {% load static %}
+        <script src="{% static 'js/menu_index.js' %}" defer></script>
+        
+    <div class="container-fluid" style="height:750px">
+        <div class="row" style="background-color: transparent; height: 100%; width: 100%">
+            <div class='col-6 d-flex align-content-center justify-content-center align-items-center' 
+                style="background-color: transparent"
+            >
+                <a class='d-flex flex-column btn btn-info justify-content-center shadow-lg' 
+                    href='{% url 'menu_create' %}' 
+                    style="width: 250px; height:250px"
+                >
+                    <i class="fas fa-plus fa-7x"></i>
+                    <h2 class="font-weight-bold mt-2">
+                    Tạo Mới
+                    </h2>
+                </a>
+            </div>
+            <div class='col-6 d-flex align-content-center justify-content-center align-items-center' 
+                style="background-color: transparent"
+            >
+                <a class='d-flex flex-column btn btn-info justify-content-center shadow-lg' 
+                    href='{% url 'menu_history' %}' 
+                    style="width: 250px; height:250px"
+                >
+                    <i class="fas fa-list fa-7x"></i>
+                    <h2 class="font-weight-bold mt-2">
+                    Lịch Sử
+                    </h2>
+                </a>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
     

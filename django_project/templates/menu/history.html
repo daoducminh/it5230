@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    History
+{% endblock title %}
+{% block app_name %}
+    Home
+{% endblock app_name %}
+{% block content %}
+    {% comment %} script {% endcomment %}
+    {% load static %}
+        <script src="{% static 'js/menu_index.js' %}" defer></script>
+        
+    <div class="container-fluid" style="height:750px">
+        <div class="badge badge-secondary mb-3"><text class="font-weight-bold display-4">Lịch sử thực đơn</text></div>
+        <div class="row mb-3" style="background-color: transparent">
+            <span class="page-links"
+            >
+                {% if page_obj.has_previous %}
+                    <a 
+                        class="font-weight-bold" 
+                        href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
+                    >
+                        Trang Trước
+                    </a>
+                {% endif %}
+                <span class="page-current"
+                    class="font-weight-bold"
+                >
+                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a 
+                        class="font-weight-bold"
+                        href="{{ request.path }}?page={{ page_obj.next_page_number }}"
+                    >
+                        Trang Sau
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+        <div class="row" style="background-color: transparent; width: 100%">
+            <table class="table table-hover table-sm table-responsive-sm" style="text-overflow: ellipsis" id="table_cb">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width: 10%">#</th>
+                        <th style="width: 40%">Mô tả</th>
+                        <th style="width: 35%">Thời gian</th>
+                        <th style="width: 15%">Giới hạn Calories</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for menu in menus %}
+                    <tr id="m_{{menu.id}}">
+                        <td>
+                            {{menu.id}}
+                        </td>
+                        <td>
+                            {{menu.description}}
+                        </td>
+                        <td>
+                            {{menu.mealtime}}
+                        </td>
+                        <td>
+                            {{menu.limit}}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock content %}
+
+    
