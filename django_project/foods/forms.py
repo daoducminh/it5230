@@ -1,24 +1,34 @@
-from django.forms import ModelForm, PasswordInput, CharField, NumberInput, CheckboxInput
+from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm, CharField, NumberInput, CheckboxInput, EmailField, EmailInput
 
 from .constants.form_styles import *
-from .models import Dish, User, BaseUser
+from .models import Dish, User
 
 
-class BaseUserForm(ModelForm):
-    password1 = CharField(
-        label='Input your password',
-        max_length=50,
-        widget=PasswordInput()
+class BaseUserForm(UserCreationForm):
+    email = EmailField(
+        label='Email',
+        widget=EmailInput(),
+        max_length=50
     )
-    password2 = CharField(
-        label='Input your password again',
-        max_length=50,
-        widget=PasswordInput()
+    first_name = CharField(
+        label='First name',
+        max_length=50
+    )
+    last_name = CharField(
+        label='Last name',
+        max_length=50
     )
 
-    class Meta:
-        model = BaseUser
-        fields = ['username', 'email', 'first_name', 'last_name']
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        user.email = self.cleaned_data.get('email')
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        if commit:
+            user.save()
+        return user
 
 
 class UserForm(ModelForm):

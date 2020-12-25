@@ -1,7 +1,6 @@
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
-
 from .forms import UserForm, BaseUserForm
 from .models import User
 from .views import LoginRequiredView, UserUpdateView
