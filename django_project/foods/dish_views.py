@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic import View
 
 from .forms import DishForm, RatingForm
@@ -60,12 +61,22 @@ class UserAllDishView(UserListView):
 class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
-    success_url = '/thanks/'
+
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            return reverse('admin_dish_detail', kwargs={'pk': self.object.pk})
+        else:
+            return reverse('user_dish_detail', kwargs={'pk': self.object.pk})
 
 
 class DeleteDishView(SelfDeleteView):
     model = Dish
-    success_url = '/thanks/'
+
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            return reverse('admin_all_dishes', kwargs={'pk': self.object.pk})
+        else:
+            return reverse('user_all_dishes', kwargs={'pk': self.object.pk})
 
 
 class CreateDishView(LoginRequiredView):
