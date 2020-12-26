@@ -109,69 +109,6 @@ class CreateDishView(LoginRequiredView):
             })
 
 
-class AllRatingsView(View):
-    def get(self, request, pk):
-        dish = get_object_or_404(Dish, pk=pk)
-        ratings = Rating.objects.filter(dish=dish)
-        p = Paginator(ratings, 4)
-        page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'ratings.html', {
-            'page_obj': page
-        })
-
-
-class CreateRatingView(LoginRequiredView):
-    def get(self, request, pk):
-        get_object_or_404(Dish, pk=pk)
-        return render(request, 'rating_form.html')
-
-    def post(self, request, pk):
-        dish = get_object_or_404(Dish, pk=pk)
-        rating_form = RatingForm(request.POST)
-        if rating_form.is_valid():
-            try:
-                rating = rating_form.save(False)
-                rating.user = request.user
-                rating.dish = dish
-                rating.save()
-                return render(request, 'rating_form.html', {
-                    'message': RATE_CREATED,
-                    'rating': rating
-                })
-            except Exception as e:
-                print(e)
-                messages.add_message(request, messages.ERROR, RATE_DUPLICATED)
-                return render(request, 'rating_form.html')
-        else:
-            messages.add_message(request, messages.ERROR, rating_form.errors)
-            return render(request, 'rating_form.html')
-
-
-class UpdateRatingView(LoginRequiredView):
-    def get(self, request, pk):
-        dish = get_object_or_404(Dish, pk=pk)
-        rating = get_object_or_404(Rating, user=request.user, dish=dish)
-        return render(request, 'rating_form.html', {
-            'rating': rating
-        })
-
-    def post(self, request, pk):
-        dish = get_object_or_404(Dish, pk=pk)
-        instance = get_object_or_404(Rating, user=request.user, dish=dish)
-        rating_form = RatingForm(request.POST, instance=instance)
-        if rating_form.is_valid():
-            rating = rating_form.save()
-            messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
-            return render(request, 'rating_form.html', {
-                'rating': rating
-            })
-        else:
-            messages.add_message(request, messages.ERROR, rating_form.errors)
-            return render(request, 'rating_form.html', {
-                'rating': instance
-            })
-
-
 class UserRatingView(UserOnlyView):
     def post(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk)

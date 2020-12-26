@@ -37,7 +37,7 @@ urlpatterns = [
         path('', dish_views.SearchDishView.as_view(), name='search_dish'),
         path('<int:pk>/', include([
             path('', dish_views.DishDetailView.as_view(), name='dish_detail'),
-            path('rate/', dish_views.AllRatingsView.as_view(), name='user_rating'),
+            path('rate/', dish_views.UserRatingView.as_view(), name='user_rating'),
         ])),
 
     ])),
