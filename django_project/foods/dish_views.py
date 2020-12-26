@@ -1,23 +1,25 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import View, DetailView
+from django.views.generic import View
 
 from .forms import DishForm, RatingForm
 from .i18n.vi import *
 from .models import Dish, Rating
-from .views import SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView, \
-    LoginRequiredView
+from .views import SelfUpdateView, SelfDeleteView, UserListView, AdminDetailView, \
+    LoginRequiredView, UserOnlyView, AdminOnlyView
 
 
-class AdminAllDishView(AdminListView):
-    model = Dish
-    template_name = "admins/dishes.html"
-    paginate_by = 10
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+class AdminAllDishView(AdminOnlyView):
+    def get(self, request, pk):
+        dish = get_object_or_404(Dish, pk=pk, user=request.user)
+        ratings = Rating.objects.filter(dish=dish)
+        p = Paginator(ratings, 5)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'users/dish.html', {
+            'object': dish,
+            'page_obj': page
+        })
 
 
 class AdminDishView(AdminDetailView):
@@ -29,17 +31,16 @@ class AdminDishView(AdminDetailView):
         return context
 
 
-class UserDishView(UserDetailView):
-    model = Dish
-    template_name = 'users/dish.html'
-    queryset = Dish.objects.all()
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    def get_context_data(self, **kwarg):
-        context = super().get_context_data(**kwarg)
-        return context
+class UserDishView(UserOnlyView):
+    def get(self, request, pk):
+        dish = get_object_or_404(Dish, pk=pk, user=request.user)
+        ratings = Rating.objects.filter(dish=dish)
+        p = Paginator(ratings, 5)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'users/dish.html', {
+            'object': dish,
+            'page_obj': page
+        })
 
 
 class UserAllDishView(UserListView):
@@ -156,17 +157,16 @@ class UpdateRatingView(LoginRequiredView):
             })
 
 
-class DishDetailView(DetailView):
-    model = Dish
-    template_name = 'dish.html'
-    queryset = Dish.objects.all()
-
-    def get_queryset(self):
-        return self.queryset.filter(is_public=True)
-
-    def get_context_data(self, **kwarg):
-        context = super().get_context_data(**kwarg)
-        return context
+class DishDetailView(View):
+    def get(self, request, pk):
+        dish = get_object_or_404(Dish, pk=pk)
+        ratings = Rating.objects.filter(dish=dish)
+        p = Paginator(ratings, 5)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'users/dish.html', {
+            'object': dish,
+            'page_obj': page
+        })
 
 
 class SearchDishView(View):
