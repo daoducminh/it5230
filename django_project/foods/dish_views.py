@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import View
+from django.views.generic import View, DetailView
 
 from .forms import DishForm, RatingForm
 from .models import Dish, Rating
@@ -148,6 +148,19 @@ class UpdateRatingView(LoginRequiredView):
             })
 
 
+class DishDetailView(DetailView):
+    model = Dish
+    template_name = 'dish.html'
+    queryset = Dish.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(is_public=True)
+
+    def get_context_data(self, **kwarg):
+        context = super().get_context_data(**kwarg)
+        return context
+
+
 class SearchDishView(View):
     def get(self, request):
         query = self.request.GET.get('search')
@@ -163,5 +176,5 @@ class SearchDishView(View):
             })
         else:
             return render(request, 'dishes.html', {
-                'error': 'No dish found'
+                'errors': 'No dish found'
             })

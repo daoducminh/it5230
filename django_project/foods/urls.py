@@ -39,6 +39,7 @@ urlpatterns = [
         ])),
     ])),
     path('dish/', dish_views.SearchDishView.as_view(), name='search_dish'),
+    path('dish/<int:pk>/', dish_views.DishDetailView.as_view(), name='dish_detail'),
     path('dish/<int:pk>/rate/', dish_views.AllRatingsView.as_view()),
     path('dish/<int:pk>/rate/add/', dish_views.CreateRatingView.as_view()),
     path('dish/<int:pk>/rate/update/', dish_views.UpdateRatingView.as_view()),
