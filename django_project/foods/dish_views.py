@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
 
@@ -150,7 +151,10 @@ class UpdateRatingView(LoginRequiredView):
 class SearchDishView(View):
     def get(self, request):
         query = self.request.GET.get('search')
-        dishes = Dish.objects.filter(dish_name__contains=query, is_public=True)
+        dishes = Dish.objects.filter(
+            Q(dish_name__contains=query) | Q(description__contains=query),
+            is_public=True
+        )
         if dishes:
             p = Paginator(dishes, 10)
             page = p.get_page(request.GET.get('page', 1))
