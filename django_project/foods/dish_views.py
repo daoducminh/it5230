@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View, DetailView
 
 from .forms import DishForm, RatingForm
+from .i18n.vi import *
 from .models import Dish, Rating
 from .views import SelfUpdateView, SelfDeleteView, UserListView, UserDetailView, AdminListView, AdminDetailView, \
     LoginRequiredView
@@ -65,6 +66,9 @@ class DeleteDishView(SelfDeleteView):
     model = Dish
     success_url = '/thanks/'
 
+    def get_success_url(self):
+        return super().get_success_url()
+
 
 class CreateDishView(LoginRequiredView):
     def get(self, request):
@@ -76,7 +80,14 @@ class CreateDishView(LoginRequiredView):
             dish = dish_form.save(False)
             dish.user = request.user
             dish.save()
-            return redirect('thanks')
+            if request.user.is_staff:
+                return redirect('admin_all_dishes', {
+                    'message': DISH_CREATED
+                })
+            else:
+                return redirect('user_all_dishes', {
+                    'message': DISH_CREATED
+                })
         else:
             return render(request, 'foods/dish_add.html', {
                 'errors': dish_form.errors
@@ -109,13 +120,13 @@ class CreateRatingView(LoginRequiredView):
                 rating.dish = dish
                 rating.save()
                 return render(request, 'rating_form.html', {
-                    'message': 'Create successfully',
+                    'message': RATE_CREATED,
                     'rating': rating
                 })
             except Exception as e:
                 print(e)
                 return render(request, 'rating_form.html', {
-                    'errors': 'You have already rated this dish'
+                    'errors': RATE_DUPLICATED
                 })
         else:
             return render(request, 'rating_form.html', {
@@ -139,7 +150,7 @@ class UpdateRatingView(LoginRequiredView):
             rating = rating_form.save()
             return render(request, 'rating_form.html', {
                 'rating': rating,
-                'message': 'Update successfully'
+                'message': RATE_UPDATED
             })
         else:
             return render(request, 'rating_form.html', {
@@ -165,7 +176,7 @@ class SearchDishView(View):
     def get(self, request):
         query = self.request.GET.get('search')
         dishes = Dish.objects.filter(
-            Q(dish_name__contains=query) | Q(description__contains=query),
+            Q(dish_name__icontains=query) | Q(description__icontains=query),
             is_public=True
         )
         if dishes:
@@ -176,5 +187,5 @@ class SearchDishView(View):
             })
         else:
             return render(request, 'dishes.html', {
-                'error': 'No dish found'
+                'error': NO_DISH_FOUND
             })

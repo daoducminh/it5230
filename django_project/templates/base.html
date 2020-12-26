@@ -204,7 +204,14 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                {% block content %}{% endblock %}
+                {% if errors %}
+                    <div>{{ errors }}</div>
+                {% endif %}
+                {% if message %}
+                    <div>{{ message }}</div>
+                {% endif %}
+                {% block content %}
+                {% endblock %}
             </div>
             <!-- End of Main Content -->
 
