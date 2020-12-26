@@ -6,9 +6,6 @@
     <div class="mt-5"><h2 class="text-center">Thêm món ăn</h2></div>
     <form class="m-5" action="" method="post">
         {% csrf_token %}
-        {% if errors %}
-            <div>{{ errors }}</div>
-        {% endif %}
         <div class="form-group row">
             <label for="id_dish_name" class="col-sm-2 col-form-label">Tên món ăn:</label>
             <div class="col-sm-10">

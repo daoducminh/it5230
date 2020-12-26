@@ -3,9 +3,6 @@
 {% block title %}Dishes{% endblock %}
 
 {% block content %}
-    {% if errors %}
-        <div>{{ errors }}</div>
-    {% endif %}
     {% for dish in page_obj.object_list %}
         <div class="card shadow mb-4 ml-4 mr-4">
             <!-- Card Header - Accordion -->

@@ -195,11 +195,18 @@
                 </nav>
                 <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    {% block content %}{% endblock %}
-                </div>
-                <!-- End of Main Content -->
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                {% if errors %}
+                    <div>{{ errors }}</div>
+                {% endif %}
+                {% if message %}
+                    <div>{{ message }}</div>
+                {% endif %}
+                {% block content %}
+                {% endblock %}
+            </div>
+            <!-- End of Main Content -->
 
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
