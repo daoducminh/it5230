@@ -5,7 +5,7 @@ from . import views, user_views, dish_views, menu_views
 urlpatterns = [
     path('', views.index, name='index'),
     path('accounts/', include([
-        path('register/', user_views.RegisterView.as_view(), name='account_register'),
+        path('register/', user_views.RegisterView.as_view(), name='register'),
 
     ])),
     path('users/', include([

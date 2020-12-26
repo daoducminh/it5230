@@ -8,7 +8,7 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    birthday = models.DateField(default=datetime.date(2000, 1, 1))
+    birthday = models.DateField()
     height = models.IntegerField()
     weight = models.IntegerField()
     gender = models.BooleanField()

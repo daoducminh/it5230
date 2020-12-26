@@ -66,9 +66,6 @@ class DeleteDishView(SelfDeleteView):
     model = Dish
     success_url = '/thanks/'
 
-    def get_success_url(self):
-        return super().get_success_url()
-
 
 class CreateDishView(LoginRequiredView):
     def get(self, request):
@@ -187,5 +184,5 @@ class SearchDishView(View):
             })
         else:
             return render(request, 'dishes.html', {
-                'error': NO_DISH_FOUND
+                'errors': NO_DISH_FOUND
             })
