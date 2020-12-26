@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
 
 from .forms import UserForm, BaseUserForm
+from .i18n.vi import *
 from .views import LoginRequiredView
 
 
@@ -19,13 +21,14 @@ class UpdateProfileView(LoginRequiredView):
         if user_form.is_valid():
             user = user_form.save(False)
             user.save()
+            messages.add_message(request, messages.SUCCESS, PROFILE_UPDATED)
             return render(request, 'registration/profile.html', {
                 'form': user
             })
         else:
+            messages.add_message(request, messages.ERROR, user_form.errors)
             return render(request, 'registration/profile.html', {
-                'form': user_info,
-                'errors': user_form.errors
+                'form': user_info
             })
 
 
@@ -51,6 +54,7 @@ class RegisterView(View):
                     user = user_form.save(commit=False)
                     user.user = base_user
                     user.save()
+                    messages.add_message(request, messages.SUCCESS, REGISTER_SUCCESS)
                 return redirect('login')
             else:
                 return render(request, 'registration/register.html', {
