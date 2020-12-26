@@ -4,6 +4,8 @@
 
 - OS: Linux/MacOS
 - Python3
+- docker and docker-compose (`Docker version 20.10.1, build 831ebea`
+  and `docker-compose version 1.27.4, build 40524192`)
 
 ## Installation
 
@@ -27,3 +29,26 @@
 
 1. Generate fake data: `.venv/bin/python seeds.py`
 2. Load data: `.venv/bin/python manage.py loaddata foods.json`
+
+## Deploying
+
+1. Checkout branch `deploy`: `git checkout deploy`
+2. Create `.evn-ci` file with these settings:
+   ```
+   SECRET_KEY=n6jzfo%$k91@jf1-w4ci9!5yhhso2(hqq5x+@1r6d&-=sv6!+0
+   
+   DB_ENGINE=django.db.backends.postgresql_psycopg2
+   DB_HOST=db
+   DB_PORT=5432
+   DB_DATABASE=django
+   DB_USERNAME=hello
+   DB_PASSWORD=world123
+   ```
+3. Run container: `docker-compose up`.
+4. Open browser with url: `http://localhost` or `http://127.0.0.1`
+5. Sample accounts:
+
+   |Type|Username|Password|
+   |---|---|---|
+   |admin|minhdao|1a2s3d4f|
+   |user|test|y5GSL3LmAbHr8rF|
