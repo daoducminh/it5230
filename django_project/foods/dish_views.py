@@ -176,5 +176,5 @@ class SearchDishView(View):
             })
         else:
             return render(request, 'dishes.html', {
-                'error': 'No dish found'
+                'errors': 'No dish found'
             })
