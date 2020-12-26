@@ -40,16 +40,6 @@ class UserDishView(UserDetailView):
         return context
 
 
-class TestPage(LoginRequiredView):
-    def get(self, request):
-        dishes = Dish.objects.filter(user=request.user)
-        p = Paginator(dishes, 10)
-        page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'dishes.html', {
-            'page_obj': page
-        })
-
-
 class UserAllDishView(UserListView):
     model = Dish
     template_name = 'users/dishes.html'
@@ -92,7 +82,7 @@ class CreateDishView(LoginRequiredView):
             })
 
 
-class TestRating(View):
+class AllRatingsView(View):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk)
         ratings = Rating.objects.filter(dish=dish)
@@ -103,7 +93,7 @@ class TestRating(View):
         })
 
 
-class CreateRating(LoginRequiredView):
+class CreateRatingView(LoginRequiredView):
     def get(self, request, pk):
         get_object_or_404(Dish, pk=pk)
         return render(request, 'rating_form.html')
@@ -132,7 +122,7 @@ class CreateRating(LoginRequiredView):
             })
 
 
-class UpdateRating(LoginRequiredView):
+class UpdateRatingView(LoginRequiredView):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk)
         rating = get_object_or_404(Rating, user=request.user, dish=dish)
@@ -154,4 +144,20 @@ class UpdateRating(LoginRequiredView):
             return render(request, 'rating_form.html', {
                 'rating': instance,
                 'errors': rating_form.errors
+            })
+
+
+class SearchDishView(View):
+    def get(self, request):
+        query = self.request.GET.get('search')
+        dishes = Dish.objects.filter(dish_name__contains=query, is_public=True)
+        if dishes:
+            p = Paginator(dishes, 10)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'dishes.html', {
+                'page_obj': page
+            })
+        else:
+            return render(request, 'dishes.html', {
+                'error': 'No dish found'
             })

@@ -12,7 +12,6 @@ urlpatterns = [
         path('profile/', user_views.UpdateProfileView.as_view(), name='account_profile'),
         path('dish/', include([
             path('', dish_views.UserAllDishView.as_view(), name='user_all_dishes'),
-            path('t/', dish_views.TestPage.as_view()),
             path('add/', dish_views.CreateDishView.as_view(), name='user_add_dish'),
             path('<int:pk>/', include([
                 path('', dish_views.UserDishView.as_view(), name='user_dish_detail'),
@@ -39,9 +38,10 @@ urlpatterns = [
             ]))
         ])),
     ])),
-    path('dish/<int:pk>/rate/', dish_views.TestRating.as_view()),
-    path('dish/<int:pk>/rate/add/', dish_views.CreateRating.as_view()),
-    path('dish/<int:pk>/rate/update/', dish_views.UpdateRating.as_view()),
+    path('dish/', dish_views.SearchDishView.as_view(), name='search_dish'),
+    path('dish/<int:pk>/rate/', dish_views.AllRatingsView.as_view()),
+    path('dish/<int:pk>/rate/add/', dish_views.CreateRatingView.as_view()),
+    path('dish/<int:pk>/rate/update/', dish_views.UpdateRatingView.as_view()),
     path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
     path('menu/', menu_views.index.as_view(), name="menu_index")

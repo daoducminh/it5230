@@ -22,54 +22,64 @@ class SelfLoginView(UserPassesTestMixin, LoginRequiredView):
         pass
 
 
-class UserDetailView(DetailView, SelfLoginView):
-    def test_func(self):
-        return (not self.request.user.is_staff) and (self.request.user.pk == self.get_object().user.pk)
-
-
-class UserListView(ListView, SelfLoginView):
+class UserOnlyView(SelfLoginView):
     def test_func(self):
         return not self.request.user.is_staff
 
 
-class UserCreateView(CreateView, SelfLoginView):
-    def test_func(self):
-        return (not self.request.user.is_staff) and (self.request.user.pk == self.get_object().user.pk)
-
-
-class UserUpdateView(UpdateView, SelfLoginView):
-    def test_func(self):
-        return (not self.request.user.is_staff) and (self.request.user.pk == self.get_object().user.pk)
-
-
-class UserDeleteView(DeleteView, SelfLoginView):
-    def test_func(self):
-        return (not self.request.user.is_staff) and (self.request.user.pk == self.get_object().user.pk)
-
-
-class AdminDetailView(DetailView, SelfLoginView):
-    def test_func(self):
-        return self.request.user.is_staff and (self.request.user.pk == self.get_object().user.pk)
-
-
-class AdminListView(ListView, SelfLoginView):
+class AdminOnlyView(SelfLoginView):
     def test_func(self):
         return self.request.user.is_staff
 
 
-class AdminCreateView(CreateView, SelfLoginView):
+class UserDetailView(DetailView, UserOnlyView):
     def test_func(self):
-        return self.request.user.is_staff and (self.request.user.pk == self.get_object().user.pk)
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
 
 
-class AdminUpdateView(UpdateView, SelfLoginView):
+class UserListView(ListView, UserOnlyView):
     def test_func(self):
-        return self.request.user.is_staff and (self.request.user.pk == self.get_object().user.pk)
+        return super().test_func()
 
 
-class AdminDeleteView(DeleteView, SelfLoginView):
+class UserCreateView(CreateView, UserOnlyView):
     def test_func(self):
-        return self.request.user.is_staff and (self.request.user.pk == self.get_object().user.pk)
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class UserUpdateView(UpdateView, UserOnlyView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class UserDeleteView(DeleteView, UserOnlyView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class AdminDetailView(DetailView, SelfLoginView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class AdminListView(ListView, AdminOnlyView):
+    def test_func(self):
+        return super().test_func()
+
+
+class AdminCreateView(CreateView, AdminOnlyView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class AdminUpdateView(UpdateView, AdminOnlyView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
+
+
+class AdminDeleteView(DeleteView, AdminOnlyView):
+    def test_func(self):
+        return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
 
 
 class SelfCreateView(CreateView, SelfLoginView):
