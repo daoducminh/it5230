@@ -1,11 +1,11 @@
-import datetime
-
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres import fields
 from django.db import models
 
-
 # Create your models here.
+from django.urls import reverse
+
+
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     birthday = models.DateField()
