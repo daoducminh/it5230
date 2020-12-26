@@ -17,7 +17,12 @@ urlpatterns = [
             path('<int:pk>/', include([
                 path('', dish_views.UserDishView.as_view(), name='user_dish_detail'),
                 path('update/', dish_views.UpdateDishView.as_view(), name='user_update_dish'),
-                path('delete/', dish_views.DeleteDishView.as_view(), name='user_delete_dish')
+                path('delete/', dish_views.DeleteDishView.as_view(), name='user_delete_dish'),
+                # path('rate/', include([
+                #     path('', dish_views.TestRating.as_view(), name='view_ratings')
+                # path('add/', name='add_rating'),
+                # path('update/', name='update_rating')
+                # ]))
             ]))
         ]))
     ])),
@@ -34,6 +39,9 @@ urlpatterns = [
             ]))
         ])),
     ])),
+    path('dish/<int:pk>/rate/', dish_views.TestRating.as_view()),
+    path('dish/<int:pk>/rate/add/', dish_views.CreateRating.as_view()),
+    path('dish/<int:pk>/rate/update/', dish_views.UpdateRating.as_view()),
     path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
     path('menu/', menu_views.index.as_view(), name="menu_index")
