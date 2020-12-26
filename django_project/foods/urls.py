@@ -43,7 +43,7 @@ urlpatterns = [
     path('dish/<int:pk>/rate/', dish_views.AllRatingsView.as_view()),
     path('dish/<int:pk>/rate/add/', dish_views.CreateRatingView.as_view()),
     path('dish/<int:pk>/rate/update/', dish_views.UpdateRatingView.as_view()),
-    path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
+    # path('dish/<int:pk>/update/', dish_views.UpdateDishView.as_view()),
     path('thanks/', views.thanks, name='thanks'),
     path('menu/', menu_views.index.as_view(), name="menu_index")
 ]

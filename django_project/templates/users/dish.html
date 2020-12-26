@@ -36,6 +36,7 @@
     </div>
 
     <div class="row m-3 d-flex justify-content-center">
+    {% if true %}
         <a type="button" class="btn btn-secondary m-2" data-toggle="modal" data-target="#form">Đánh giá</a>
         <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
@@ -63,8 +64,9 @@
                 </div>
             </div>
         </div>
-        <a type="button" class="btn btn-primary m-2">Chỉnh sửa</a>
-        <a type="button" class="btn btn-danger m-2">Xóa</a>
+    {% endif %}
+        <a type="button" class="btn btn-primary m-2" href="{% url 'user_update_dish' object.id %}">Chỉnh sửa</a>
+        <a type="button" class="btn btn-danger m-2" href="{% url 'user_delete_dish' object.id %}">Xóa</a>
     </div>
 
     <div class="row d-flex justify-content-center mb-5">
