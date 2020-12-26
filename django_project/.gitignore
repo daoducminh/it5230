@@ -2,12 +2,8 @@
 *.json
 *.yml
 
-# Environment files
-.env
-
 # IDE
 .vscode/
-.venv
 .idea/
 *.iml
 

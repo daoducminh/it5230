@@ -3,7 +3,7 @@
 {% block title %}Dishes{% endblock %}
 
 {% block content %}
-    {% for dish in object_list %}
+    {% for dish in page_obj.object_list %}
         <div class="card shadow mb-4 ml-4 mr-4">
             <!-- Card Header - Accordion -->
             <a href="#collapseCardExample{{ dish.pk }}" class="d-block card-header py-3" data-toggle="collapse"
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     {{ dish.description }}
                     <br/>
-                    <a href="{% url 'admin_dish_detail' dish.pk %}">Xem chi tiết</a>
+                    <a href="{% url 'user_dish_detail' dish.pk %}">Xem chi tiết</a>
                 </div>
             </div>
         </div>

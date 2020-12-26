@@ -1,48 +1,32 @@
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
+
 from .forms import UserForm, BaseUserForm
-from .models import User
-from .views import LoginRequiredView, UserUpdateView
+from .views import LoginRequiredView
 
 
-# Testing purpose
-
-class ProfileView(LoginRequiredView):
+class UpdateProfileView(LoginRequiredView):
     def get(self, request):
-        user_info = request.user.user
-        context = {
-            'height': user_info.height,
-            'weight': user_info.weight,
-            'gender': user_info.gender
-        }
-        return render(request, 'registration/profile.html', context)
+        user = request.user.user
+        return render(request, 'registration/profile.html', {
+            'form': user
+        })
 
     def post(self, request):
-        height = request.POST['height']
-        weight = request.POST['weight']
-        gender = request.POST['gender']
-        gender = True if gender == 'male' else False
         user_info = request.user.user
-        user_info.height = height
-        user_info.weight = weight
-        user_info.gender = gender
-        user_info.save()
-        context = {
-            'height': height,
-            'weight': weight,
-            'gender': gender,
-            'message': 'Updated successfully'
-        }
-        return render(request, 'registration/profile.html', context)
-
-
-class ProfileUpdate(UserUpdateView):
-    # model = User
-    # fields = ['height', 'weight', 'gender']
-    form_class = UserForm
-    queryset = User.objects.all()
-    success_url = '/thanks/'
+        user_form = UserForm(request.POST, instance=user_info)
+        if user_form.is_valid():
+            user = user_form.save(False)
+            user.save()
+            return render(request, 'registration/profile.html', {
+                'form': user
+            })
+        else:
+            return render(request, 'registration/profile.html', {
+                'form': user_info,
+                'errors': user_form.errors
+            })
 
 
 class RegisterView(View):
