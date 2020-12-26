@@ -163,7 +163,7 @@ class DishDetailView(View):
         ratings = Rating.objects.filter(dish=dish)
         p = Paginator(ratings, 5)
         page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'users/dish.html', {
+        return render(request, 'dish.html', {
             'object': dish,
             'page_obj': page
         })
