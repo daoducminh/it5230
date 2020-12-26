@@ -5,6 +5,7 @@ from django.views.generic.list import ListView
 
 from .views import LoginRequiredView
 from .models import Menu
+from utils.calories import bmr
 import json
 
 
@@ -24,7 +25,14 @@ class create(LoginRequiredView):
         return self.execute(request)
     def execute(self, request):
         user = request.user.user
-        return render(request, 'menu/create.html')
+        data = {}
+        weight = user.weight
+        height = user.height
+        gender = user.gender
+        diet_factor = user.diet_factor
+        calories = bmr(weight, height, gender, 20, diet_factor)
+        data['calories'] = calories
+        return render(request, 'menu/create.html', data)
 
 
 class history(ListView):
@@ -35,6 +43,10 @@ class history(ListView):
     def get_queryset(self):
         menus = Menu.objects.filter(user=self.request.user).order_by('-mealtime') 
         print(len(menus), "##")
+        for menu in menus:
+            dishes = menu.dishes.all()
+            calories = sum((dish.calories for dish in dishes))
+            menu.calories = calories
         return menus
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -6,7 +6,6 @@
     Home
 {% endblock app_name %}
 {% block content %}
-    {% comment %} script {% endcomment %}
     {% load static %}
         <script src="{% static 'js/menu_index.js' %}" defer></script>
         
@@ -45,7 +44,7 @@
                         <th style="width: 10%">#</th>
                         <th style="width: 40%">Mô tả</th>
                         <th style="width: 35%">Thời gian</th>
-                        <th style="width: 15%">Giới hạn Calories</th>
+                        <th style="width: 15%">Calories</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +60,7 @@
                             {{menu.mealtime}}
                         </td>
                         <td>
-                            {{menu.limit}}
+                            {{menu.calories}}/{{menu.limit}}
                         </td>
                     </tr>
                 {% endfor %}
