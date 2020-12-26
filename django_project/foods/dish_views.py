@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -134,13 +135,11 @@ class CreateRatingView(LoginRequiredView):
                 })
             except Exception as e:
                 print(e)
-                return render(request, 'rating_form.html', {
-                    'errors': RATE_DUPLICATED
-                })
+                messages.add_message(request, messages.ERROR, RATE_DUPLICATED)
+                return render(request, 'rating_form.html')
         else:
-            return render(request, 'rating_form.html', {
-                'errors': rating_form.errors
-            })
+            messages.add_message(request, messages.ERROR, rating_form.errors)
+            return render(request, 'rating_form.html')
 
 
 class UpdateRatingView(LoginRequiredView):
@@ -157,15 +156,34 @@ class UpdateRatingView(LoginRequiredView):
         rating_form = RatingForm(request.POST, instance=instance)
         if rating_form.is_valid():
             rating = rating_form.save()
+            messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
             return render(request, 'rating_form.html', {
-                'rating': rating,
-                'message': RATE_UPDATED
+                'rating': rating
             })
         else:
+            messages.add_message(request, messages.ERROR, rating_form.errors)
             return render(request, 'rating_form.html', {
-                'rating': instance,
-                'errors': rating_form.errors
+                'rating': instance
             })
+
+
+class UserRatingView(UserOnlyView):
+    def post(self, request, pk):
+        dish = get_object_or_404(Dish, pk=pk)
+        user = request.user
+        if dish.user != user:
+            ratings = Rating.objects.filter(dish=dish, user=user)
+            if ratings:
+                rating_instance = ratings.get()
+                rating_form = RatingForm(request.POST, instance=rating_instance)
+            else:
+                rating_form = RatingForm(request.POST)
+            if rating_form.is_valid():
+                rating_form.save()
+                messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+            else:
+                messages.add_message(request, messages.ERROR, rating_form.errors)
+        return redirect('dish_detail', kwargs={'pk': pk})
 
 
 class DishDetailView(View):
@@ -174,10 +192,16 @@ class DishDetailView(View):
         ratings = Rating.objects.filter(dish=dish)
         p = Paginator(ratings, 5)
         page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'dish.html', {
+        context = {
             'object': dish,
             'page_obj': page
-        })
+        }
+        user = request.user
+        if user.is_authenticated and not user.is_staff:
+            user_rating = Rating.objects.filter(dish=dish, user=user)
+            if user_rating:
+                context['user_rating'] = user_rating.get()
+        return render(request, 'dish.html', context)
 
 
 class SearchDishView(View):
@@ -194,6 +218,5 @@ class SearchDishView(View):
                 'page_obj': page
             })
         else:
-            return render(request, 'dishes.html', {
-                'errors': NO_DISH_FOUND
-            })
+            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            return render(request, 'dishes.html')

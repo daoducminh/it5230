@@ -45,21 +45,23 @@
                     <div class="modal-content">
                         <div class="card-body text-center">
                             <div class="text-center">
-                                <h4>Thêm đánh giá cho món ăn</h4>
-                                <div class="mb-2">
-                                    <input type="number" min="1" max="5" step="1" value="5" id="rating">
-                                    <label for="rating">
-                                        <i class="fas fa-star"></i>
-                                    </label>
-                                </div>
-                                <div class="comment-area">
-                                    <label>
-                                        <textarea class="form-control" placeholder="Thêm bình luận" rows="4"></textarea>
-                                    </label>
-                                </div>
-                                <div class="text-center mt-4">
-                                    <button class="btn btn-success">Gửi</button>
-                                </div>
+                                <form action="" method="post">
+                                    <h4>Thêm đánh giá cho món ăn</h4>
+                                    <div class="mb-2">
+                                        <input type="number" min="1" max="5" step="1" value="{{ user_rating.score|default:5 }}" id="rating" name="score">
+                                        <label for="rating">
+                                            <i class="fas fa-star"></i>
+                                        </label>
+                                    </div>
+                                    <div class="comment-area">
+                                        <label>
+                                            <textarea class="form-control" placeholder="Thêm bình luận" rows="4" name="comment" maxlength="100">{{ user_rating.comment }}</textarea>
+                                        </label>
+                                    </div>
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-success" type="submit">Gửi</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
