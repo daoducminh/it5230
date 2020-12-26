@@ -8,25 +8,30 @@ from django.views.generic import View
 from .forms import DishForm, RatingForm
 from .i18n.vi import *
 from .models import Dish, Rating
-from .views import SelfUpdateView, SelfDeleteView, UserListView, AdminDetailView, \
-    LoginRequiredView, UserOnlyView, AdminOnlyView
+from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
+    AdminListView
 
 
-class AdminAllDishView(AdminOnlyView):
+class AdminDishView(AdminOnlyView):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk, user=request.user)
         ratings = Rating.objects.filter(dish=dish)
         p = Paginator(ratings, 5)
         page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'users/dish.html', {
+        return render(request, 'admins/dish.html', {
             'object': dish,
             'page_obj': page
         })
 
 
-class AdminDishView(AdminDetailView):
+class AdminAllDishView(AdminListView):
     model = Dish
-    template_name = 'admins/dish.html'
+    template_name = 'admins/dishes.html'
+    queryset = Dish.objects.all()
+    paginate_by = 10
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
     def get_context_data(self, **kwarg):
         context = super().get_context_data(**kwarg)
