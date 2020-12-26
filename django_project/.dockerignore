@@ -1,0 +1,21 @@
+# Virtualenv
+.venv
+virtualenv
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# Docs
+README.md
+CHANGELOG.md
+
+# Docker files
+docker-compose.yml
+Dockerfile
+
+# git
+.git
+.gitattributes
+.gitignore
