@@ -162,3 +162,17 @@ class SearchDishView(View):
         else:
             messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
             return render(request, 'dishes.html')
+
+
+class AllPublicDishView(View):
+    def get(self, request):
+        dishes = Dish.objects.filter(is_public=True)
+        if dishes:
+            p = Paginator(dishes, 10)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'dishes.html', {
+                'page_obj': page
+            })
+        else:
+            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            return render(request, 'dishes.html')
