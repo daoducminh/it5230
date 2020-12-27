@@ -68,4 +68,16 @@ class Menu(models.Model):
     description = models.CharField(max_length=250)
     mealtime = models.DateTimeField()
     limit = models.IntegerField()
-    dishes = models.ManyToManyField(Dish)
+    dishes = models.ManyToManyField(Dish, null=True, through="Menu_Dish")
+
+    # calories it not necessary but db keep it in local, i am not able to fix it
+    calories = models.IntegerField(default=0)
+
+class Menu_Dish(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    count = models.IntegerField(default=1)
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=models.Q(count__gt=0), name="count_gt_0")
+        ]

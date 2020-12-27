@@ -48,8 +48,10 @@ urlpatterns = [
     path('menu/', include([
         path('', menu_views.index.as_view(), name="menu_index"),
         path('create', menu_views.create.as_view(), name="menu_create"),
+        path('create_query', menu_views.create_query.as_view(), name="menu_create_query"),
         path('history', menu_views.history.as_view(), name="menu_history"),
         path('update', menu_views.update.as_view(), name="menu_update"),
-        path('delete', menu_views.delete.as_view(), name="menu_delete")
+        path('delete', menu_views.delete.as_view(), name="menu_delete"),
+        path('query_filter_dish', menu_views.query_filter_dish, name="menu_query_filter_dish")
     ]))
 ]
