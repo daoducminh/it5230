@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.conf.urls import handler404, handler500
 
 from . import user_views, dish_views, menu_views
 
@@ -45,9 +46,17 @@ urlpatterns = [
         path('', menu_views.index.as_view(), name="menu_index"),
         path('create', menu_views.create.as_view(), name="menu_create"),
         path('create_query', menu_views.create_query.as_view(), name="menu_create_query"),
+        path('update_query', menu_views.update_query.as_view(), name="menu_update_query"),
+        path('clone_query', menu_views.clone_query.as_view(), name="menu_clone_query"),
+        path('delete_query', menu_views.delete_query.as_view(), name="menu_delete_query"),
         path('history', menu_views.history.as_view(), name="menu_history"),
+        path('detail/<int:menu_id>', menu_views.detail.as_view(), name="menu_detail"),
         path('update', menu_views.update.as_view(), name="menu_update"),
         path('delete', menu_views.delete.as_view(), name="menu_delete"),
         path('query_filter_dish', menu_views.query_filter_dish, name="menu_query_filter_dish")
     ]))
 ]
+
+
+handler404 = 'foods.views.error_404'
+handler500 = 'foods.views.error_500'

@@ -99,3 +99,11 @@ class SelfDeleteView(DeleteView, SelfLoginView):
 
 def thanks(request):
     return render(request, 'thanks.html')
+
+
+def error_404(request, exception):
+    return render(request, 'error.html')
+
+    
+def error_500(request):
+    return render(request, 'error.html')

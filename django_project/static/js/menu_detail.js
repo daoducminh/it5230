@@ -1,6 +1,5 @@
 let calo_select = 0
 let temp_dishs = []
-let dishs = []
 
 let dish_contianer
 let btn_show_model
@@ -34,8 +33,8 @@ const setup_ajax = ()=>{
 
 const get_total_calories = ()=>{
     let total_calories = 0 
-    for (let d in dishs){
-        let dish = dishs[d]
+    for (let d in dishes){
+        let dish = dishes[d]
         total_calories += dish.count * dish._dish.fields.calories
     }
     return total_calories
@@ -43,7 +42,7 @@ const get_total_calories = ()=>{
 
 
 const get_send_dishes = ()=>{
-    let send_dishs = dishs.map(item=>{
+    let send_dishs = dishes.map(item=>{
         return {
             count: item.count,
             dish_id: item._dish.pk
@@ -62,6 +61,14 @@ const get_limit = ()=>{
 }
 
 
+const attach_dishes = ()=>{
+    for (let d in dishes){
+        let dish = dishes[d]
+        append_dish_tag(dish._dish, dish.count)
+    }
+}
+
+
 const update_current_metric = ()=>{
     let total_calories = get_total_calories()
     $("#curent_calories").html(total_calories + " calories")
@@ -76,14 +83,14 @@ const update_dish_tag = (_dish)=>{
 }
 
 
-const append_dish_tag = (_dish)=>{
+const append_dish_tag = (_dish, count)=>{
     let dish_html = single_dish_html
     dish_html = dish_html.replace("#dish_id", _dish.pk)
     dish_html = dish_html.replace("dish_name_value", _dish.fields.dish_name)
     dish_html = dish_html.replace("dish_description_value", _dish.fields.description)
     dish_html = dish_html.replace("dish_ingradients_value", JSON.parse(_dish.fields.ingredients).join(", "))
     dish_html = dish_html.replace("dish_calories_value", _dish.fields.calories)
-    dish_html = dish_html.replace("dish_count_value", "x1")
+    dish_html = dish_html.replace("dish_count_value", "x" + (isNaN(count) ? "1" : count))
     dish_html = dish_html.replace("#edit_dish", "edit_dish" + _dish.pk)
     dish_html = dish_html.replace("#remove_dish", "remove_dish" + _dish.pk)
     dish_html = dish_html.replace("#dish_count", "dish_count" + _dish.pk)
@@ -104,7 +111,7 @@ const remove_dish_tag = (_dish)=>{
 
 
 const remove_all_dish = ()=>{
-    dishs.length = 0
+    dishes.length = 0
     dish_contianer.empty()
     update_current_metric()
 }
@@ -112,8 +119,8 @@ const remove_all_dish = ()=>{
 
 const push_dish = (_dish)=>{
     let new_dish = true
-    for (let d in dishs){
-        let dish = dishs[d]
+    for (let d in dishes){
+        let dish = dishes[d]
         if (dish._dish.pk == _dish.pk) {
             dish.count ++
             update_dish_tag(dish)
@@ -122,7 +129,7 @@ const push_dish = (_dish)=>{
         }
     }
     if (new_dish){
-        dishs.push({
+        dishes.push({
             _dish: _dish,
             count: 1
         })
@@ -133,8 +140,8 @@ const push_dish = (_dish)=>{
 
 const remove_dish = (_dish_id)=>{
     let dish
-    for (let d in dishs){
-        dish = dishs[d]
+    for (let d in dishes){
+        dish = dishes[d]
         if (dish._dish.pk == _dish_id) {
             dish.count --
             update_dish_tag(dish)
@@ -142,7 +149,7 @@ const remove_dish = (_dish_id)=>{
         }
     }
     if (dish.count == 0){
-        dishs = dishs.filter((item)=>item._dish.pk != _dish_id)
+        dishes = dishes.filter((item)=>item._dish.pk != _dish_id)
         remove_dish_tag(dish)
     }
     update_current_metric()
@@ -207,8 +214,8 @@ const click_on_filter = ()=>{
 }
 
 
-const click_on_confirm= ()=>{
-    if (dishs.length == 0){
+const update_menu = ()=>{
+    if (dishes.length == 0){
         alert("Bạn chưa chọn món !")
         return
     }
@@ -217,7 +224,34 @@ const click_on_confirm= ()=>{
     let description = get_description()
     let limit = get_limit()
 
-    $.post("/menu/create_query", 
+    $.post("/menu/update_query", 
+        {
+            'menu_id': menu_id,
+            'dishes': JSON.stringify(send_dishes),
+            'description': description,
+            'limit': limit
+        },
+        function(data, status){
+            if (status == 'success'){
+                toastr.options.onHidden = function() { window.location = data }
+                toastr.success("Cập nhật thực đơn thành công, đang chuyển trang...", "Hệ thống")
+            }
+        }
+    )
+}
+
+
+const clone_menu = ()=>{
+    if (dishes.length == 0){
+        alert("Bạn chưa chọn món !")
+        return
+    }
+
+    let send_dishes = get_send_dishes()
+    let description = get_description()
+    let limit = get_limit()
+
+    $.post("/menu/clone_query", 
         {
             'dishes': JSON.stringify(send_dishes),
             'description': description,
@@ -226,7 +260,22 @@ const click_on_confirm= ()=>{
         function(data, status){
             if (status == 'success'){
                 toastr.options.onHidden = function() { window.location = data }
-                toastr.success("Tạo thực đơn thành công, đang chuyển trang...", "Hệ thống")
+                toastr.success("Sao chép thực đơn thành công, đang chuyển trang...", "Hệ thống")
+            }
+        }
+    )
+}
+
+
+const delete_menu = ()=>{
+    $.post("/menu/delete_query", 
+        {
+            'menu_id': menu_id,
+        },
+        function(data, status){
+            if (status == 'success'){
+                toastr.options.onHidden = function() { window.location = data }
+                toastr.success("Xóa thực đơn thành công, đang chuyển trang...", "Hệ thống")
             }
         }
     )
@@ -255,13 +304,29 @@ $(document).ready(()=>{
     let model_btn_filter = $("#model_btn_filter")
     model_btn_filter.click(click_on_filter)
 
-    // confirm
-    let btn_confirm = $("#btn_confirm")
-    btn_confirm.click(click_on_confirm)
+    // manage
+    let btn_update = $("#btn_update")
+    btn_update.click(update_menu)
+    let btn_clone = $("#btn_clone")
+    btn_clone.click(clone_menu)
+    let btn_delete = $("#btn_delete")
+    btn_delete.click(delete_menu)
 
     // init-2
+    attach_dishes()
     update_current_metric()
 })
+
+
+
+// set dishes
+dishes = dishes.map((dish, index)=>{
+    return {
+        count: menus_dishes[index].count,
+        _dish: dish
+    }
+})
+
 
 
 // for single dish selection

@@ -3,12 +3,12 @@
     Chi tiết thực đơn
 {% endblock title %}
 {% block app_name %}
-    Thực đơn {{context["menu_id"]}}
+    Thực đơn {{menu.pk}}
     <style>
-        li {
+        {% comment %} li {
         overflow: auto;
         white-space: nowrap;
-        }
+        } {% endcomment %}
         i.fas {
             cursor: pointer;
         }
@@ -20,11 +20,14 @@
 {% block content %}
     {% load static %}
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
-        <script src="{% static 'js/menu_create.js' %}" defer></script>
         <script src="{% static 'js/toastr.min.js' %}" defer></script>
+        <script src="{% static 'js/menu_detail.js' %}" defer></script>
         <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <script>
-        target_calories = "{{calories}}"
+        let menu_id = {{menu.pk}}
+        let dishes = {{dishes|safe}}
+        let menus_dishes = {{menus_dishes|safe}}
+        let target_calories = {{menu.limit}}
     </script>
         
     <div class="container-fluid d-flex flex-column" style="height:800px; background-color: transparent">
@@ -90,7 +93,7 @@
                     <label
                         class="text-white ml-1"
                     >
-                        Tiêu thụ: <strong><u>{{calories}}</u></strong> calories
+                        Tiêu thụ: <strong><u>{{menu.limit}}</u></strong> calories
                     </label>
                     <br>
                 </div>
@@ -117,15 +120,14 @@
                     <label
                         class="badge-success badge"
                     >
-                        <text style="font-size:20px">{{calories}}</text>
+                        <text style="font-size:20px">{{menu.limit}}</text>
                     </label>
                 </div>
             </div>
         </div>
         <div
-            class="flex-grow-1 rounded d-flex flex-column-reverse"
+            class="flex-grow-1 rounded d-flex flex-column"
         >
-            <input type="button" class="btn btn-primary btn-block" value="Xác nhận" id="btn_confirm"></input>
             <div class="mb-1 d-flex flex-column flex-grow-1 mt-2">
                 <div class="d-flex justify-content-center mt-1">
                     <h4 class="font-weight-bold">
@@ -135,7 +137,7 @@
                 <div class="list-group overflow-auto flex-grow-1 bg-secondary p-1" style="max-height:350px" id="dish_container">
                 </div>
                 <label for="comment" class="mt-2">Thêm mô tả</label>
-                <textarea class="form-control mb-2" rows="3" id="description" class="mb-2"></textarea>
+                <textarea class="form-control mb-2" rows="3" id="description" class="mb-2">{{menu.description}}</textarea>
                 <div class="container-fluid">
                     <div class="row ml-0 pl-0">
                         <button class="btn btn-success m-1" style="width:100px" data-toggle="modal" data-target="#model_list" id="btn_show_model">Thêm </button>
@@ -143,7 +145,14 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex">
+            <input type="button" class="btn btn-primary m-1 flex-grow-1" value="Cập nhật" id="btn_update"></input>
+            <input type="button" class="btn btn-warning m-1 flex-grow-1" value="Sao chép mới" id="btn_clone"></input>
+            <input type="button" class="btn btn-danger m-1 flex-grow-1" value="Xóa bỏ" id="btn_delete"></input>
+            </div>
+            
         </div>
+        
         <div class="modal fade" id="model_list">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">

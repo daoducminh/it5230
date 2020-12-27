@@ -20,12 +20,11 @@
 {% block content %}
     {% load static %}
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
-        <script src="{% static 'js/menu_create.js' %}" defer></script>
         <script src="{% static 'js/toastr.min.js' %}" defer></script>
+        <script src="{% static 'js/menu_create.js' %}" defer></script>
         <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <script>
-        target_calories = "{{calories}}"
-        MENU_INDEX = "{% url 'menu_history' %}"
+        let target_calories = "{{calories}}"
     </script>
         
     <div class="container-fluid d-flex flex-column" style="height:800px; background-color: transparent">
@@ -126,11 +125,11 @@
         <div
             class="flex-grow-1 rounded d-flex flex-column-reverse"
         >
-            <input type="button" class="btn btn-primary btn-block" value="Xác nhận" id="btn_confirm"></input>
+            <input type="button" class="btn btn-primary btn-block" value="Tạo mới" id="btn_confirm"></input>
             <div class="mb-1 d-flex flex-column flex-grow-1 mt-2">
                 <div class="d-flex justify-content-center mt-1">
                     <h4 class="font-weight-bold">
-                        Chọn Món
+                        Thực đơn
                     </h4>
                 </div>
                 <div class="list-group overflow-auto flex-grow-1 bg-secondary p-1" style="max-height:350px" id="dish_container">
@@ -139,8 +138,8 @@
                 <textarea class="form-control mb-2" rows="3" id="description" class="mb-2"></textarea>
                 <div class="container-fluid">
                     <div class="row ml-0 pl-0">
-                        <button class="btn btn-success m-1" style="width:100px" data-toggle="modal" data-target="#model_list" id="btn_show_model">Thêm </button>
-                        <button class="btn btn-danger m-1" style="width:100px" id="btn_delete_all">Xóa hết </button>
+                        <button class="btn btn-success m-1" style="width:130px" data-toggle="modal" data-target="#model_list" id="btn_show_model">Chọn món </button>
+                        <button class="btn btn-danger m-1" style="width:130px" id="btn_delete_all">Xóa hết </button>
                     </div>
                 </div>
             </div>

@@ -23,6 +23,7 @@ calories_conf = [
 ]
 
 LIMIT_DISH_FILTER = 10
+CRUD_SUCCESS_NAVIGATE = "/menu/history"
 
 class index(LoginRequiredView):
     def get(self, request):
@@ -80,10 +81,71 @@ class create_query(LoginRequiredView):
                 count=d['count']
             )
             m_d.save()
-        return HttpResponseRedirect("/menu/")
+        return HttpResponse(CRUD_SUCCESS_NAVIGATE)
+
+class update_query(LoginRequiredView):
+    def get(self, request):
+        return self.execute(request)
+    def post(self, request):
+        # dishes = request.POST.getlist('dishes[]')
+        content = {}
+        content['menu_id'] = request.POST['menu_id']
+        content['dishes'] = json.loads(request.POST['dishes'])
+        content['description'] = request.POST['description']
+        content['limit'] = request.POST['limit']
+        return self.execute(request, content)
+    def execute(self, request, content):
+        print(content)
+        user = request.user.user
+
+        menu_id = content['menu_id']
+        description = content['description']
+        limit = content['limit']
+        dishes = content['dishes']
+
+        menu = Menu.objects.get(pk=menu_id)
+        menu.description = description
+        menu.limit = limit
+        menu.save()
+
+        Menu_Dish.objects.filter(menu=menu).delete()
+
+        for d in dishes:
+            dish = Dish.objects.get(pk=d['dish_id'])
+            m_d = Menu_Dish.objects.create(
+                dish=dish,
+                menu = menu,
+                count=d['count']
+            )
+            m_d.save()
+        return HttpResponse(CRUD_SUCCESS_NAVIGATE)
 
 
-class history(ListView):
+class clone_query(create_query):
+    pass
+
+
+class delete_query(LoginRequiredView):
+    def get(self, request):
+        content = {}
+        content['menu_id'] = request.GET['menu_id']
+        return self.execute(request, content)
+    def post(self, request):
+        content = {}
+        content['menu_id'] = request.POST['menu_id']
+        return self.execute(request, content)
+    def execute(self, request, content):
+        menu_id = content['menu_id']
+        menu = Menu.objects.get(pk = menu_id)
+        Menu_Dish.objects.filter(menu=menu).delete()
+        menu.delete()
+        return HttpResponse(CRUD_SUCCESS_NAVIGATE)
+
+
+
+
+
+class history(ListView, LoginRequiredView):
     model = Menu
     paginate_by = 5
     context_object_name = "menus"
@@ -114,6 +176,32 @@ class history(ListView):
     #     #     for d in dishs:
     #     #         print(d.id, d.dish_name, d.description, d.calories)
     #     return HttpResponse("Menu History")
+
+
+class detail(LoginRequiredView):
+    def get(self, request, menu_id):
+        content = {}
+        content["menu_id"] = menu_id
+        return self.execute(request, content)
+    def post(self, request, menu_id):
+        content = {}
+        content["menu_id"] = menu_id
+        return self.execute(request, content)
+    def execute(self, request, content):
+        menu_id = content["menu_id"]
+        menu = Menu.objects.get(pk=menu_id)
+        dishes = list(menu.dishes.all())
+        menus_dishes = []
+        for dish in dishes:
+            md = {}
+            md['count'] = Menu_Dish.objects.get(menu=menu, dish=dish).count
+            menus_dishes.append(md)
+        return render(request, "menu/detail.html", {
+            'menu': menu,
+            'dishes': serializers.serialize('json', dishes),
+            'menus_dishes': menus_dishes,
+            'calories_conf': calories_conf
+        })
 
 
 class update(LoginRequiredView):

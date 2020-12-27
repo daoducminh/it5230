@@ -7,7 +7,8 @@
 {% endblock app_name %}
 {% block content %}
     {% load static %}
-        <script src="{% static 'js/menu_index.js' %}" defer></script>
+        <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
+        <script src="{% static 'js/menu_history.js' %}" defer></script>
         <style rel="stylesheet">
             tr td {
                cursor: pointer;
@@ -56,7 +57,7 @@
                 </thead>
                 <tbody>
                 {% for menu in menus %}
-                    <tr id="m_{{menu.id}}">
+                    <tr menu_id="{{menu.id}}" class="menu_item" href="{% url 'menu_detail' menu.id %}">
                         <td>
                             {{menu.id}}
                         </td>
