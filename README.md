@@ -9,3 +9,15 @@
 |2|Nguyễn Duy Đoàn|20209546|doan.nd209546@sis.hust.edu.vn|
 |3|Phạm Quang Trung|20164256|trung.pq164256@sis.hust.edu.vn|
 |4|Nguyễn Văn Hoan|20167973|hoan.nv167973@sis.hust.edu.vn|
+
+## Hướng dẫn cài đặt và chạy chương trình
+1. Yêu cầu đã cài đặt `docker` và `docker-compose`
+2. Chuyển vào thư mục `django_project`: `cd django_project`
+3. Chạy container: `docker-compose up`
+4. Mở trình duyệt với đường dẫn: `http://localhost` hoặc `http://127.0.0.1`
+5. Danh sách tài khoản kiểm thử
+
+    |Loại tài khoản|Tên đăng nhập|Mật khẩu|
+    |---|---|---|
+    |admin|minhdao|1a2s3d4f|
+    |user|test|y5GSL3LmAbHr8rF|
