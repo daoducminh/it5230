@@ -57,7 +57,7 @@ class UserDeleteView(DeleteView, UserOnlyView):
         return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
 
 
-class AdminDetailView(DetailView, SelfLoginView):
+class AdminDetailView(DetailView, AdminOnlyView):
     def test_func(self):
         return super().test_func() and (self.request.user.pk == self.get_object().user.pk)
 

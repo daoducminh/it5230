@@ -6,7 +6,7 @@ let dish_contianer
 let btn_show_model
 let btn_delete_all
 
-const MENU_INDEX = "/menu"
+// total calories over limit
 const ALLOW_OVER = true
 
 const get_csrf = ()=>{

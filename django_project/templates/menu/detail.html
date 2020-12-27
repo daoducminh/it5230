@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}
-    Tạo thực đơn
+    Chi tiết thực đơn
 {% endblock title %}
 {% block app_name %}
-    Tạo thực đơn
+    Thực đơn {{context["menu_id"]}}
     <style>
-        {% comment %} li {
+        li {
         overflow: auto;
         white-space: nowrap;
-        } {% endcomment %}
+        }
         i.fas {
             cursor: pointer;
         }
@@ -25,7 +25,6 @@
         <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <script>
         target_calories = "{{calories}}"
-        MENU_INDEX = "{% url 'menu_history' %}"
     </script>
         
     <div class="container-fluid d-flex flex-column" style="height:800px; background-color: transparent">

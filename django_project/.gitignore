@@ -1,6 +1,8 @@
+# Env
+.env-ci
+
 # Data files
 *.json
-*.yml
 
 # IDE
 .vscode/
