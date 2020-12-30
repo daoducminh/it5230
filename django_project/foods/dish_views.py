@@ -28,7 +28,7 @@ class AdminAllDishView(AdminListView):
     model = Dish
     template_name = 'admins/dishes.html'
     queryset = Dish.objects.all()
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -54,7 +54,7 @@ class UserAllDishView(UserListView):
     model = Dish
     template_name = 'users/dishes.html'
     queryset = Dish.objects.all()
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -154,7 +154,7 @@ class SearchDishView(View):
             is_public=True
         )
         if dishes:
-            p = Paginator(dishes, 10)
+            p = Paginator(dishes, 12)
             page = p.get_page(request.GET.get('page', 1))
             return render(request, 'dishes.html', {
                 'page_obj': page
@@ -168,7 +168,7 @@ class AllPublicDishView(View):
     def get(self, request):
         dishes = Dish.objects.filter(is_public=True)
         if dishes:
-            p = Paginator(dishes, 10)
+            p = Paginator(dishes, 12)
             page = p.get_page(request.GET.get('page', 1))
             return render(request, 'dishes.html', {
                 'page_obj': page
