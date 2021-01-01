@@ -4,9 +4,6 @@ from django.db import models
 from foods.validators import dish_image_path
 
 
-# Create your models here.
-
-
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     birthday = models.DateField()
