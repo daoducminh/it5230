@@ -2,7 +2,7 @@ from django.contrib.auth.models import User as BaseUser
 from django.db import models
 
 # Create your models here.
-from foods.validators import validate_image_extension, user_directory_path
+from foods.validators import dish_image_path
 
 
 class User(models.Model):
@@ -30,7 +30,9 @@ class Dish(models.Model):
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
     is_public = models.BooleanField()
-    image = models.FileField(upload_to=user_directory_path, validators=[validate_image_extension])
+    image = models.ImageField(
+        upload_to=dish_image_path
+    )
     ingredients = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
