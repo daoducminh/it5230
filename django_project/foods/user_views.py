@@ -6,6 +6,7 @@ from django.views.generic.base import View
 
 from .forms import UserForm, BaseUserForm
 from .i18n.vi import *
+from .models import Dish
 from .views import LoginRequiredView, AdminOnlyView
 
 
@@ -81,6 +82,8 @@ class UpdateActivationView(AdminOnlyView):
 class ProfileView(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
+        dishes = Dish.objects.filter(user=user, is_public=True)
         return render(request, 'profile.html', {
-            'user': user
+            'user': user,
+            'dishes': dishes
         })
