@@ -1,11 +1,12 @@
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import View
 
 from .forms import UserForm, BaseUserForm
 from .i18n.vi import *
-from .views import LoginRequiredView
+from .views import LoginRequiredView, AdminOnlyView
 
 
 class UpdateProfileView(LoginRequiredView):
@@ -63,3 +64,23 @@ class RegisterView(View):
                 })
         else:
             return redirect('account_profile')
+
+
+class UpdateActivationView(AdminOnlyView):
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        if user.is_active:
+            messages.add_message(request, messages.SUCCESS, DEACTIVATE_SUCCESS)
+        else:
+            messages.add_message(request, messages.SUCCESS, ACTIVATE_SUCCESS)
+        user.is_active = not user.is_active
+        user.save()
+        return redirect('profile_detail', pk=pk)
+
+
+class ProfileView(View):
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        return render(request, 'profile.html', {
+            'user': user
+        })

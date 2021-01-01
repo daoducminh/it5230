@@ -115,14 +115,21 @@ class UserRatingView(UserOnlyView):
             if ratings:
                 rating_instance = ratings.get()
                 rating_form = RatingForm(request.POST, instance=rating_instance)
+                if rating_form.is_valid():
+                    rating_form.save()
+                    messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+                else:
+                    messages.add_message(request, messages.ERROR, rating_form.errors)
             else:
                 rating_form = RatingForm(request.POST)
-            if rating_form.is_valid():
-                rating_form.save()
-                messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
-            else:
-                messages.add_message(request, messages.ERROR, rating_form.errors)
-        return redirect('dish_detail', kwargs={'pk': pk})
+                if rating_form.is_valid():
+                    rating = rating_form.save(False)
+                    rating.dish = dish
+                    rating.user = user
+                    messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+                else:
+                    messages.add_message(request, messages.ERROR, rating_form.errors)
+        return redirect('dish_detail', pk=pk)
 
 
 class DishDetailView(View):

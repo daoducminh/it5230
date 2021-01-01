@@ -41,6 +41,10 @@ urlpatterns = [
             path('rate/', dish_views.UserRatingView.as_view(), name='user_rating'),
         ])),
     ])),
+    path('profile/<int:pk>/', include([
+        path('', user_views.ProfileView.as_view(), name='profile_detail'),
+        path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
+    ])),
     path('menu/', include([
         path('', menu_views.index.as_view(), name="menu_index"),
         path('create', menu_views.create.as_view(), name="menu_create"),
@@ -56,5 +60,5 @@ urlpatterns = [
     ]))
 ]
 
-handler404 = 'foods.views.error_404'
-handler500 = 'foods.views.error_500'
+# handler404 = 'foods.views.error_404'
+# handler500 = 'foods.views.error_500'

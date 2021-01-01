@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User as BaseUser
 from django.db import models
 
-# Create your models here.
 from foods.validators import dish_image_path
+
+
+# Create your models here.
 
 
 class User(models.Model):

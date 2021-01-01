@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, CharField, EmailField, EmailInput
 
-from .models import Dish, User, Rating
+from .models import Dish, User, Rating, BaseUser
 
 
 class BaseUserForm(UserCreationForm):

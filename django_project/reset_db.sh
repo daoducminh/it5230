@@ -3,6 +3,9 @@
 # Remove all tables
 python manage.py reset_db
 
+# Remove images
+rm -rf static/image/user_*
+
 # Remove migration files
 mv foods/migrations/__init__.py foods/migrations/__init__
 rm foods/migrations/*.py
