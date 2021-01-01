@@ -33,17 +33,7 @@
 ## Deploying
 
 1. Checkout branch `deploy`: `git checkout deploy`
-2. Create `.evn-ci` file with these settings:
-   ```
-   SECRET_KEY=n6jzfo%$k91@jf1-w4ci9!5yhhso2(hqq5x+@1r6d&-=sv6!+0
-   
-   DB_ENGINE=django.db.backends.postgresql_psycopg2
-   DB_HOST=db
-   DB_PORT=5432
-   DB_DATABASE=django
-   DB_USERNAME=hello
-   DB_PASSWORD=world123
-   ```
+2. Rename file from '.env-example', and rename it to '.env'.: `cp .env-example .env-ci`
 3. Run container: `docker-compose up`.
 4. Open browser with url: `http://localhost` or `http://127.0.0.1`
 5. Sample accounts:
