@@ -31,8 +31,9 @@
             {% endif %}
 
             <span class="current">
-                <button class="btn btn-secondary" disabled>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages
-                    }}</button>
+                <button class="btn btn-secondary" disabled>
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages}}
+                </button>
             </span>
 
             {% if page_obj.has_next %}
