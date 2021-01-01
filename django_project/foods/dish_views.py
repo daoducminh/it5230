@@ -126,7 +126,8 @@ class UserRatingView(UserOnlyView):
                     rating = rating_form.save(False)
                     rating.dish = dish
                     rating.user = user
-                    messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+                    rating.save()
+                    messages.add_message(request, messages.SUCCESS, RATE_CREATED)
                 else:
                     messages.add_message(request, messages.ERROR, rating_form.errors)
         return redirect('dish_detail', pk=pk)
