@@ -160,15 +160,14 @@ class SearchDishView(View):
             Q(ingredients__icontains=query),
             is_public=True
         )
-        if dishes:
-            p = Paginator(dishes, DISHES_PER_PAGE)
-            page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'dishes.html', {
-                'page_obj': page
-            })
-        else:
+        if not dishes:
+            dishes = Dish.objects.filter(is_public=True)
             messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
-            return render(request, 'dishes.html')
+        p = Paginator(dishes, DISHES_PER_PAGE)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'dishes.html', {
+            'page_obj': page
+        })
 
 
 class AllPublicDishView(View):

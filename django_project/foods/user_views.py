@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import View
 
+from .constants.pagination import PROFILES_PER_PAGE
 from .forms import UserForm, BaseUserForm
 from .i18n.vi import *
 from .models import Dish
@@ -86,4 +89,43 @@ class ProfileView(View):
         return render(request, 'profile.html', {
             'user': user,
             'dishes': dishes
+        })
+
+
+class SearchProfile(View):
+    def get(self, request):
+        query = self.request.GET.get('search')
+        users = User.objects.filter(
+            Q(username__icontains=query) |
+            Q(first_name=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query),
+            is_active=True
+        )
+        if not users:
+            users = User.objects.filter(is_active=True).order_by('username')
+            messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+        p = Paginator(users, PROFILES_PER_PAGE)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'profiles.html', {
+            'page_obj': page
+        })
+
+
+class AdminSearchProfile(AdminOnlyView):
+    def get(self, request):
+        query = self.request.GET.get('search')
+        users = User.objects.filter(
+            Q(username__icontains=query) |
+            Q(first_name=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query)
+        )
+        if not users:
+            users = User.objects.all().order_by('username')
+            messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+        p = Paginator(users, PROFILES_PER_PAGE)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'profiles.html', {
+            'page_obj': page
         })

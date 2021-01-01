@@ -24,6 +24,7 @@ urlpatterns = [
         path('', dish_views.AdminAllPublicDishView.as_view(), name='admin_index'),
         # path('', admin_views.Index.as_view(), name='admin_index'),
         # path('user/', admin_views.UserManagement.as_view(), name='user_management'),
+        path('admin/', user_views.AdminSearchProfile.as_view(), name='admin_search_profile'),
         path('dish/', include([
             path('', dish_views.AdminAllDishView.as_view(), name='admin_all_dishes'),
             path('add/', dish_views.CreateDishView.as_view(), name='admin_add_dish'),
@@ -41,10 +42,14 @@ urlpatterns = [
             path('rate/', dish_views.UserRatingView.as_view(), name='user_rating'),
         ])),
     ])),
-    path('profile/<int:pk>/', include([
-        path('', user_views.ProfileView.as_view(), name='profile_detail'),
-        path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
+    path('profile/', include([
+        path('', user_views.SearchProfile.as_view(), name='search_profile'),
+        path('<int:pk>/', include([
+            path('', user_views.ProfileView.as_view(), name='profile_detail'),
+            path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
+        ])),
     ])),
+
     path('menu/', include([
         path('', menu_views.index.as_view(), name="menu_index"),
         path('create', menu_views.create.as_view(), name="menu_create"),
