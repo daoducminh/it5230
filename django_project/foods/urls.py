@@ -8,7 +8,7 @@ urlpatterns = [
         path('register/', user_views.RegisterView.as_view(), name='register'),
     ])),
     path('users/', include([
-        path('', dish_views.AllPublicDishView.as_view(), name='user_index'),
+        path('', dish_views.UserAllPublicDishView.as_view(), name='user_index'),
         path('profile/', user_views.UpdateProfileView.as_view(), name='account_profile'),
         path('dish/', include([
             path('', dish_views.UserAllDishView.as_view(), name='user_all_dishes'),
@@ -21,7 +21,7 @@ urlpatterns = [
         ]))
     ])),
     path('admins/', include([
-        path('', dish_views.AllPublicDishView.as_view(), name='admin_index'),
+        path('', dish_views.AdminAllPublicDishView.as_view(), name='admin_index'),
         # path('', admin_views.Index.as_view(), name='admin_index'),
         # path('user/', admin_views.UserManagement.as_view(), name='user_management'),
         path('dish/', include([

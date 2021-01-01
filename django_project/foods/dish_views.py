@@ -183,3 +183,31 @@ class AllPublicDishView(View):
         else:
             messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
             return render(request, 'dishes.html')
+
+
+class UserAllPublicDishView(UserOnlyView):
+    def get(self, request):
+        dishes = Dish.objects.filter(is_public=True)
+        if dishes:
+            p = Paginator(dishes, DISHES_PER_PAGE)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'dishes.html', {
+                'page_obj': page
+            })
+        else:
+            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            return render(request, 'dishes.html')
+
+
+class AdminAllPublicDishView(AdminOnlyView):
+    def get(self, request):
+        dishes = Dish.objects.filter(is_public=True)
+        if dishes:
+            p = Paginator(dishes, DISHES_PER_PAGE)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'dishes.html', {
+                'page_obj': page
+            })
+        else:
+            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            return render(request, 'dishes.html')
