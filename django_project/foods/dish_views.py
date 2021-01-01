@@ -91,11 +91,12 @@ class CreateDishView(LoginRequiredView):
         return render(request, 'foods/dish_add.html')
 
     def post(self, request):
-        dish_form = DishForm(request.POST, request.FILE)
+        dish_form = DishForm(request.POST, request.FILES)
         if dish_form.is_valid():
             dish = dish_form.save(False)
             dish.user = request.user
             dish.save()
+            messages.add_message(request, messages.SUCCESS, DISH_CREATED)
             if request.user.is_staff:
                 return redirect('admin_all_dishes')
             else:

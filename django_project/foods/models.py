@@ -2,7 +2,7 @@ from django.contrib.auth.models import User as BaseUser
 from django.db import models
 
 # Create your models here.
-from foods.validators import validate_image_extension
+from foods.validators import validate_image_extension, user_directory_path
 
 
 class User(models.Model):
@@ -30,8 +30,10 @@ class Dish(models.Model):
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
     is_public = models.BooleanField()
-    image = models.FileField(upload_to='static/image/', validators=[validate_image_extension])
+    image = models.FileField(upload_to=user_directory_path, validators=[validate_image_extension])
     ingredients = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.dish_name
@@ -40,6 +42,7 @@ class Dish(models.Model):
         constraints = [
             models.CheckConstraint(check=models.Q(calories__gt=0), name='calories_gt_0'),
         ]
+        ordering = ['-updated_at']
 
 
 class Rating(models.Model):
@@ -47,7 +50,8 @@ class Rating(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     score = models.IntegerField()
     comment = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.user.pk}-{self.dish.pk}'
@@ -58,7 +62,7 @@ class Rating(models.Model):
             models.CheckConstraint(check=models.Q(score__lte=5), name='score_lte_5'),
         ]
         unique_together = ('user', 'dish')
-        ordering = ['-timestamp']
+        ordering = ['-updated_at']
 
 
 class Menu(models.Model):
