@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm, CharField, EmailField, EmailInput
+from django.forms import ModelForm, CharField, EmailField, EmailInput, FileInput
 
 from .models import Dish, User, Rating
 

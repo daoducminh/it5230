@@ -1,5 +1,4 @@
 from django.urls import path, include
-from django.conf.urls import handler404, handler500
 
 from . import user_views, dish_views, menu_views
 
@@ -42,7 +41,7 @@ urlpatterns = [
             path('rate/', dish_views.UserRatingView.as_view(), name='user_rating'),
         ])),
     ])),
-        path('menu/', include([
+    path('menu/', include([
         path('', menu_views.index.as_view(), name="menu_index"),
         path('create', menu_views.create.as_view(), name="menu_create"),
         path('create_query', menu_views.create_query.as_view(), name="menu_create_query"),
@@ -56,7 +55,6 @@ urlpatterns = [
         path('query_filter_dish', menu_views.query_filter_dish, name="menu_query_filter_dish")
     ]))
 ]
-
 
 handler404 = 'foods.views.error_404'
 handler500 = 'foods.views.error_500'

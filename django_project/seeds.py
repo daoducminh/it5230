@@ -31,7 +31,7 @@ def seed_food_dish():
             'description': fake.text(50),
             'calories': random.randint(10, 3000),
             'is_public': fake.pybool(),
-            'ingredients': ingredients
+            'ingredients': ','.join(ingredients)
         }
         rs.append({
             MODEL: model,

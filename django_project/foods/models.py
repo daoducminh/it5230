@@ -1,9 +1,8 @@
 from django.contrib.auth.models import User as BaseUser
-from django.contrib.postgres import fields
 from django.db import models
 
 # Create your models here.
-from django.urls import reverse
+from foods.validators import validate_image_extension
 
 
 class User(models.Model):
@@ -31,9 +30,8 @@ class Dish(models.Model):
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
     is_public = models.BooleanField()
-    ingredients = fields.ArrayField(
-        models.CharField(max_length=50)
-    )
+    image = models.FileField(upload_to='static/image/', validators=[validate_image_extension])
+    ingredients = models.CharField(max_length=100)
 
     def __str__(self):
         return self.dish_name
@@ -73,10 +71,12 @@ class Menu(models.Model):
     # calories it not necessary but db keep it in local, i am not able to fix it
     calories = models.IntegerField(default=0)
 
+
 class Menu_Dish(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     count = models.IntegerField(default=1)
+
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(count__gt=0), name="count_gt_0")
