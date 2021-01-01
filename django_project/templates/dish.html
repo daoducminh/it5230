@@ -91,7 +91,7 @@
                 {% for dish in page_obj.object_list %}
                 <li class="list-group-item">
                     <div>
-                        <a href="#">{{ dish.user }}</a>
+                        <a href="{% url 'profile_detail' dish.user.pk %}">{{ dish.user }}</a>
                         <div>
                             <span>{{ dish.score }}</span>
                             <i class="fas fa-star"></i>
