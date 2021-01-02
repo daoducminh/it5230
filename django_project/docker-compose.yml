@@ -9,14 +9,7 @@ services:
       - POSTGRES_PASSWORD=world123
   web:
     build: .
-    command:
-      - /bin/bash
-      - -c
-      - |
-        python manage.py migrate
-        python manage.py loaddata data.json
-        python manage.py update_score
-        python manage.py runserver 0.0.0.0:8000
+    command: ./startup.sh
     volumes:
       - .:/code
     ports:
