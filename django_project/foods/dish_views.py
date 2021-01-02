@@ -81,9 +81,9 @@ class DeleteDishView(SelfDeleteView):
 
     def get_success_url(self):
         if self.request.user.is_staff:
-            return reverse('admin_all_dishes', kwargs={'pk': self.object.pk})
+            return reverse('admin_all_dishes')
         else:
-            return reverse('user_all_dishes', kwargs={'pk': self.object.pk})
+            return reverse('user_all_dishes')
 
 
 class CreateDishView(LoginRequiredView):

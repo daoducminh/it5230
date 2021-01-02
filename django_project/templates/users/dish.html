@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row m-5">
     <div class="col-lg-6">
-        <img class="card-img-top" src="http://placehold.it/700x400" alt="">
+        <img class="card-img-top" src="/media/{{ object.image }}" alt="Không có hình ảnh">
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-center">
@@ -14,7 +14,7 @@
         <table class="table table-hover">
             <tr>
                 <th>Người sở hữu:</th>
-                <td>{{ object.user }}</td>
+                <td><a href="{% url 'profile_detail' object.user.pk %}">{{ object.user }}</a></td>
             </tr>
             <tr>
                 <th>Mô tả:</th>
@@ -22,7 +22,7 @@
             </tr>
             <tr>
                 <th>Lượng calories:</th>
-                <td>{{ object.calories }} calo</td>
+                <td>{{ object.calories }} kcal</td>
             </tr>
             <tr>
                 <th>Trạng thái:</th>
@@ -33,8 +33,8 @@
                 <td>{{ object.ingredients }}</td>
             </tr>
             <tr>
-                <th>Đánh giá</th>
-                <td><span class="mr-2">5</span><i class="fas fa-star"></i></td>
+                <th>Đánh giá trung bình:</th>
+                <td><span class="mr-2">{{ object.score }}/5</span><i class="fas fa-star"></i></td>
             </tr>
         </table>
         <div class="row m-3 d-flex justify-content-center">

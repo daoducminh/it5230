@@ -7,12 +7,11 @@
         {% for user in page_obj.object_list %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                     <div class="card-body">
                         <h4 class="card-title">
-                            <a href="{% url 'dish_detail' user.pk %}">{{ user.username }}</a>
+                            <a href="{% url 'profile_detail' user.pk %}">{{ user.username }}</a>
                         </h4>
-                        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                        <h5>{{ user.last_name }} {{ user.first_name }}</h5>
                         <p class="card-text">{{ user.email }}</p>
                     </div>
                 </div>
