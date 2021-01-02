@@ -97,10 +97,6 @@ class SelfDeleteView(DeleteView, SelfLoginView):
         return self.request.user.pk == self.get_object().user.pk
 
 
-def thanks(request):
-    return render(request, 'thanks.html')
-
-
 def error_404(request, exception):
     return render(request, 'error.html')
 
