@@ -29,4 +29,13 @@ $(document).ready(()=>{
     $(".menu_item").click(function(){
         window.location = $(this).attr("href")
     })
+
+    $("#date_filter").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        onSelect: function(dateText, inst) {
+            $("#form_date_filter").submit()
+        }
+    })
 })

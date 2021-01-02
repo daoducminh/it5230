@@ -8,42 +8,46 @@
 {% block content %}
     {% load static %}
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
-        <script src="{% static 'js/menu_history.js' %}" defer></script>
-        <style rel="stylesheet">
-            tr td {
-               cursor: pointer;
-            }
-            tr:hover {
-                filter: alpha(opacity=100);
-            }
-        </style>
+        <script src="{% static 'js/menu/menu_history.js' %}" defer></script>
+        <link rel="stylesheet" href="{% static 'css/menu/menu_history.css' %}"></link>
     <div class="container-fluid" style="height:750px">
         <div class=""><h3 class="font-weight-bold">Lịch sử thực đơn</h3></div>
-        <div class="row mb-3" style="background-color: transparent">
-            <span class="page-links"
+        <div class="d-flex mb-3 justify-content-between" style="background-color: transparent">
+            <span class=""
             >
-                {% if page_obj.has_previous %}
-                    <a 
-                        class="font-weight-bold" 
-                        href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
-                    >
-                        Trang Trước
-                    </a>
-                {% endif %}
-                <span class="page-current"
-                    class="font-weight-bold"
+                <a 
+                    class="font-weight-bold btn btn-success {% if has_previous %}{% else %}disabled{% endif %}" 
+                    {% if has_previous %}
+                        href="{{ request.path }}?page_number={{ cur_page|add:"-1" }}"
+                    {% endif %}
+                        href="#"
+                >   
+                    Trang Trước
+                </a>
+                <span class="container font-weight-bold"
                 >
-                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    {{ cur_page }} / {{ page_count }}
                 </span>
-                {% if page_obj.has_next %}
-                    <a 
-                        class="font-weight-bold"
-                        href="{{ request.path }}?page={{ page_obj.next_page_number }}"
-                    >
-                        Trang Sau
-                    </a>
-                {% endif %}
+                <a 
+                    class="font-weight-bold btn btn-success {% if has_next %}{% else %}disabled{% endif %}"
+                    {% if has_next %}
+                        href="{{ request.path }}?page_number={{ cur_page|add:1 }}"
+                    {% endif %}
+                        href="#"
+                >
+                    Trang Sau
+                </a>
             </span>
+            <div class="mr-2 inline-form">
+                <form action="{% url 'menu_history' %}" class="d-flex" id="form_date_filter" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex mx-1 bg-secondary rounded pl-2">
+                        <text class="text-white font-weight-bold mx-1 mt-2">Xem theo ngày</text>
+                        <input type="text" id="date_filter" class="px-2" name="date_filter" val="{{date_filter}}"></text>
+                    </div>
+                    <a class="btn btn-success font-weight-bold" href="{% url 'menu_create' %}">Tạo Mới</a>
+                </form>
+            </div>
         </div>
         <div class="row" style="background-color: transparent; width: 100%">
             <table class="table table-hover table-sm table-responsive-sm" style="text-overflow: ellipsis" id="table_cb">

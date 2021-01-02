@@ -4,24 +4,14 @@
 {% endblock title %}
 {% block app_name %}
     Thực đơn {{menu.pk}}
-    <style>
-        {% comment %} li {
-        overflow: auto;
-        white-space: nowrap;
-        } {% endcomment %}
-        i.fas {
-            cursor: pointer;
-        }
-        i.fas:hover {
-            filter: alpha(opacity=100);
-        }
-    </style>
+    {% load static %}
+        <link rel="stylesheet" href="{% static 'css/menu/menu_detail.css' %}"></link>
 {% endblock app_name %}
 {% block content %}
     {% load static %}
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
         <script src="{% static 'js/toastr.min.js' %}" defer></script>
-        <script src="{% static 'js/menu_detail.js' %}" defer></script>
+        <script src="{% static 'js/menu/menu_detail.js' %}" defer></script>
         <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <script>
         let menu_id = {{menu.pk}}
