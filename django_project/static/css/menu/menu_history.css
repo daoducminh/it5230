@@ -8,3 +8,7 @@ a.ui-state-default{
     background-color: #eeeeee !important;
     /* color: #ffffff */
 } 
+#clear_filter:hover {
+    filter: alpha(opacity=100);
+    cursor: pointer;
+}

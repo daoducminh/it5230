@@ -38,4 +38,11 @@ $(document).ready(()=>{
             $("#form_date_filter").submit()
         }
     })
+
+    let clear_filter = $("#clear_filter")
+    if (clear_filter){
+        clear_filter.click(function(){
+            window.location = window.location
+        })
+    }
 })

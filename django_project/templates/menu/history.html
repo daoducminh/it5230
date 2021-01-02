@@ -42,8 +42,15 @@
                 <form action="{% url 'menu_history' %}" class="d-flex" id="form_date_filter" method="post">
                     {% csrf_token %}
                     <div class="d-flex mx-1 bg-secondary rounded pl-2">
-                        <text class="text-white font-weight-bold mx-1 mt-2">Xem theo ngày</text>
-                        <input type="text" id="date_filter" class="px-2" name="date_filter" val="{{date_filter}}"></text>
+                        <text class="text-white font-weight-bold mx-1 mt-2">
+                            Xem theo ngày
+                            {% if date_filter != "" %}
+                                <text class="font-weight-bold text-warning" id="clear_filter">
+                                    [X]
+                                </text>
+                            {% endif %}
+                        </text>
+                        <input type="text" id="date_filter" class="px-2" name="date_filter" value="{{date_filter}}"></text>
                     </div>
                     <a class="btn btn-success font-weight-bold" href="{% url 'menu_create' %}">Tạo Mới</a>
                 </form>
