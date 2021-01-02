@@ -33,6 +33,7 @@ class Dish(models.Model):
         upload_to=dish_image_path
     )
     ingredients = models.CharField(max_length=100)
+    score = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,6 +43,8 @@ class Dish(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(calories__gt=0), name='calories_gt_0'),
+            models.CheckConstraint(check=models.Q(score__gte=0), name='dish_score_gte_0'),
+            models.CheckConstraint(check=models.Q(score__lte=5), name='dish_score_lte_5')
         ]
         ordering = ['-updated_at']
 
@@ -59,8 +62,8 @@ class Rating(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(score__gt=0), name='score_gt_0'),
-            models.CheckConstraint(check=models.Q(score__lte=5), name='score_lte_5'),
+            models.CheckConstraint(check=models.Q(score__gt=0), name='rating_score_gt_0'),
+            models.CheckConstraint(check=models.Q(score__lte=5), name='rating_score_lte_5'),
         ]
         unique_together = ('user', 'dish')
         ordering = ['-updated_at']

@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, CharField, EmailField, EmailInput
 
-from .models import Dish, User, Rating, BaseUser
+from .models import Dish, User, Rating
 
 
 class BaseUserForm(UserCreationForm):
@@ -39,7 +39,7 @@ class UserForm(ModelForm):
 class DishForm(ModelForm):
     class Meta:
         model = Dish
-        exclude = ['user', 'created_at', 'updated_at']
+        fields = ['dish_name', 'description', 'calories', 'is_public', 'ingredients', 'image']
 
 
 class RatingForm(ModelForm):
