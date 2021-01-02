@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row m-5">
     <div class="col-lg-6">
-        <img class="card-img-top" src="/media/{{ object.image }}" alt="Không có hình ảnh">
+        <img class="card-img-top" src="/media/{{ object.image|default:"default.jpg" }}" alt="Không có hình ảnh">
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-center">
