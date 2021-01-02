@@ -16,5 +16,5 @@
 
    |Type|Username|Password|
    |---|---|---|
-   |admin|minhdao|1a2s3d4f|
-   |user|test|y5GSL3LmAbHr8rF|
+   |admin|admin_01|1a2s3d4f|
+   |user|user_01|1a2s3d4f|

@@ -1,4 +1,3 @@
-from django.conf.urls import handler404, handler500
 from django.urls import path, include
 
 from . import user_views, dish_views, menu_views
@@ -39,6 +38,7 @@ urlpatterns = [
         path('<int:pk>/', include([
             path('', dish_views.DishDetailView.as_view(), name='dish_detail'),
             path('rate/', dish_views.UserRatingView.as_view(), name='user_rating'),
+            path('delete/', dish_views.SuperuserDeleteDishView.as_view(), name='self_delete_dish')
         ])),
     ])),
     path('profile/', include([
