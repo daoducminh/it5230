@@ -6,6 +6,12 @@
 <div class="mt-5">
     <h2 class="text-center">Đăng nhập</h2>
 </div>
+{% if form.errors %}
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <div>Sai tên đăng nhập hoặc mật khẩu!</div>
+    </div>
+{% endif %}
 <form class="m-5" action="" method="post">
     {% csrf_token %}
     <div class="form-group row">

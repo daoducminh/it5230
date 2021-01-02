@@ -3,9 +3,9 @@
 {% block title %}Dish{% endblock %}
 
 {% block content %}
-    <form method="post">
+    <form class="m-5" method="post">
         {% csrf_token %}
-        <p>Are you sure you want to delete "{{ object }}"?</p>
-        <input type="submit" class="btn btn-primary" value="Confirm">
+        <p>Bạn có chắc muốn xóa "{{ object }}"?</p>
+        <input type="submit" class="btn btn-primary" value="Xác nhận">
     </form>
 {% endblock %}

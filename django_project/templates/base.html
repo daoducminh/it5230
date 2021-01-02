@@ -59,8 +59,7 @@
                     <div id="collapseAccounts" class="collapse" aria-labelledby="headingAccounts" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Quản lý tài khoản:</h6>
-                            <a class="collapse-item" href="#">Danh sách tài khoản</a>
-                            <a class="collapse-item" href="#">Thêm tài khoản</a>
+                            <a class="collapse-item" href="{% url 'admin_search_profile' %}">Danh sách tài khoản</a>
                         </div>
                     </div>
                 </li>
@@ -103,6 +102,7 @@
                         <div id="collapseAccounts" class="collapse" aria-labelledby="headingAccounts" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Quản lý tài khoản:</h6>
+                                <a class="collapse-item" href="{% url 'profile_detail' user.pk %}">Xem thông tin</a>
                                 <a class="collapse-item" href="{% url 'account_profile' %}">Cập nhật thông tin</a>
                                 <a class="collapse-item" href="{% url 'password_change' %}">Thay đổi mật khẩu</a>
                             </div>
@@ -234,16 +234,6 @@
                             <div class="alert alert-info alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <div>{{ message }}</div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-                {% if form %}
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <div>{{ field.errors }}</div>
                             </div>
                         {% endif %}
                     {% endfor %}

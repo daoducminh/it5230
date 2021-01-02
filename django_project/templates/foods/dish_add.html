@@ -4,6 +4,16 @@
 
 {% block content %}
     <div class="mt-5"><h2 class="text-center">Thêm món ăn</h2></div>
+    {% if form %}
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div>{{field.label_tag}} {{ field.errors }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <form class="m-5" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group row">
@@ -20,7 +30,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="id_calories" class="col-sm-2 col-form-label">Lượng calories (calo):</label>
+            <label for="id_calories" class="col-sm-2 col-form-label">Lượng calories (kcal):</label>
             <div class="col-sm-10">
                 <input type="number" class="form-control" id="id_calories" name="calories" value="" required>
             </div>
