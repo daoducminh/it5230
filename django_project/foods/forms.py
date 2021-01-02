@@ -39,7 +39,7 @@ class UserForm(ModelForm):
 class DishForm(ModelForm):
     class Meta:
         model = Dish
-        exclude = ['user']
+        fields = ['dish_name', 'description', 'calories', 'is_public', 'ingredients', 'image']
 
 
 class RatingForm(ModelForm):

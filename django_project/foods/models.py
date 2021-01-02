@@ -1,9 +1,7 @@
 from django.contrib.auth.models import User as BaseUser
-from django.contrib.postgres import fields
 from django.db import models
 
-# Create your models here.
-from django.urls import reverse
+from foods.validators import dish_image_path
 
 
 class User(models.Model):
@@ -31,9 +29,13 @@ class Dish(models.Model):
     description = models.CharField(max_length=250)
     calories = models.IntegerField()
     is_public = models.BooleanField()
-    ingredients = fields.ArrayField(
-        models.CharField(max_length=50)
+    image = models.ImageField(
+        upload_to=dish_image_path
     )
+    ingredients = models.CharField(max_length=100)
+    score = models.FloatField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.dish_name
@@ -41,7 +43,10 @@ class Dish(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(calories__gt=0), name='calories_gt_0'),
+            models.CheckConstraint(check=models.Q(score__gte=0), name='dish_score_gte_0'),
+            models.CheckConstraint(check=models.Q(score__lte=5), name='dish_score_lte_5')
         ]
+        ordering = ['-updated_at']
 
 
 class Rating(models.Model):
@@ -49,18 +54,19 @@ class Rating(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     score = models.IntegerField()
     comment = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.user.pk}-{self.dish.pk}'
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(score__gt=0), name='score_gt_0'),
-            models.CheckConstraint(check=models.Q(score__lte=5), name='score_lte_5'),
+            models.CheckConstraint(check=models.Q(score__gt=0), name='rating_score_gt_0'),
+            models.CheckConstraint(check=models.Q(score__lte=5), name='rating_score_lte_5'),
         ]
         unique_together = ('user', 'dish')
-        ordering = ['-timestamp']
+        ordering = ['-updated_at']
 
 
 class Menu(models.Model):
@@ -73,10 +79,12 @@ class Menu(models.Model):
     # calories it not necessary but db keep it in local, i am not able to fix it
     calories = models.IntegerField(default=0)
 
+
 class Menu_Dish(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     count = models.IntegerField(default=1)
+
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(count__gt=0), name="count_gt_0")
