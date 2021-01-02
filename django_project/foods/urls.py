@@ -1,3 +1,4 @@
+from django.conf.urls import handler404, handler500
 from django.urls import path, include
 
 from . import user_views, dish_views, menu_views
@@ -8,7 +9,6 @@ urlpatterns = [
         path('register/', user_views.RegisterView.as_view(), name='register'),
     ])),
     path('users/', include([
-        path('', dish_views.UserAllPublicDishView.as_view(), name='user_index'),
         path('profile/', user_views.UpdateProfileView.as_view(), name='account_profile'),
         path('dish/', include([
             path('', dish_views.UserAllDishView.as_view(), name='user_all_dishes'),
@@ -21,10 +21,9 @@ urlpatterns = [
         ]))
     ])),
     path('admins/', include([
-        path('', dish_views.AdminAllPublicDishView.as_view(), name='admin_index'),
         # path('', admin_views.Index.as_view(), name='admin_index'),
         # path('user/', admin_views.UserManagement.as_view(), name='user_management'),
-        path('admin/', user_views.AdminSearchProfile.as_view(), name='admin_search_profile'),
+        path('profile/', user_views.AdminSearchProfile.as_view(), name='admin_search_profile'),
         path('dish/', include([
             path('', dish_views.AdminAllDishView.as_view(), name='admin_all_dishes'),
             path('add/', dish_views.CreateDishView.as_view(), name='admin_add_dish'),
@@ -65,5 +64,5 @@ urlpatterns = [
     ]))
 ]
 
-# handler404 = 'foods.views.error_404'
-# handler500 = 'foods.views.error_500'
+handler404 = 'foods.views.error_404'
+handler500 = 'foods.views.error_500'

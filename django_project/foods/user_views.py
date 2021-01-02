@@ -95,16 +95,19 @@ class ProfileView(View):
 class SearchProfile(View):
     def get(self, request):
         query = self.request.GET.get('search')
-        users = User.objects.filter(
-            Q(username__icontains=query) |
-            Q(first_name=query) |
-            Q(last_name__icontains=query) |
-            Q(email__icontains=query),
-            is_active=True
-        )
-        if not users:
-            users = User.objects.filter(is_active=True).order_by('username')
-            messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+        if query:
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query),
+                is_active=True
+            )
+            if not users:
+                users = User.objects.all().order_by('username')
+                messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+        else:
+            users = User.objects.all().order_by('username')
         p = Paginator(users, PROFILES_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         return render(request, 'profiles.html', {
@@ -115,15 +118,18 @@ class SearchProfile(View):
 class AdminSearchProfile(AdminOnlyView):
     def get(self, request):
         query = self.request.GET.get('search')
-        users = User.objects.filter(
-            Q(username__icontains=query) |
-            Q(first_name=query) |
-            Q(last_name__icontains=query) |
-            Q(email__icontains=query)
-        )
-        if not users:
+        if query:
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query)
+            )
+            if not users:
+                users = User.objects.all().order_by('username')
+                messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+        else:
             users = User.objects.all().order_by('username')
-            messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
         p = Paginator(users, PROFILES_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         return render(request, 'profiles.html', {
