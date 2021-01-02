@@ -15,6 +15,6 @@
 4. Sample accounts:
 
    |Type|Username|Password|
-   |---|---|---|
+      |---|---|---|
    |admin|admin_01|1a2s3d4f|
    |user|user_01|1a2s3d4f|
