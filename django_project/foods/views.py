@@ -97,9 +97,15 @@ class SelfDeleteView(DeleteView, SelfLoginView):
         return self.request.user.pk == self.get_object().user.pk
 
 
+class SuperuserDeleteView(DeleteView, SelfLoginView):
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or (user.pk == self.get_object().user.pk)
+
+
 def error_404(request, exception):
     return render(request, 'error.html')
 
-    
+
 def error_500(request):
     return render(request, 'error.html')

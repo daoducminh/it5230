@@ -10,7 +10,7 @@ from .forms import DishForm, RatingForm
 from .i18n.vi import *
 from .models import Dish, Rating
 from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
-    AdminListView
+    AdminListView, SuperuserDeleteView
 
 
 class AdminDishView(AdminOnlyView):
@@ -68,6 +68,7 @@ class UserAllDishView(UserListView):
 class UpdateDishView(SelfUpdateView):
     form_class = DishForm
     queryset = Dish.objects.all()
+    success_message = DISH_UPDATED
 
     def get_success_url(self):
         if self.request.user.is_staff:
@@ -78,12 +79,21 @@ class UpdateDishView(SelfUpdateView):
 
 class DeleteDishView(SelfDeleteView):
     model = Dish
+    success_message = DISH_DELETED
 
     def get_success_url(self):
         if self.request.user.is_staff:
             return reverse('admin_all_dishes')
         else:
             return reverse('user_all_dishes')
+
+
+class SuperuserDeleteDishView(SuperuserDeleteView):
+    model = Dish
+    success_message = DISH_DELETED
+
+    def get_success_url(self):
+        return reverse('index')
 
 
 class CreateDishView(LoginRequiredView):
@@ -96,13 +106,13 @@ class CreateDishView(LoginRequiredView):
             dish = dish_form.save(False)
             dish.user = request.user
             dish.save()
-            messages.add_message(request, messages.SUCCESS, DISH_CREATED)
+            messages.success(request, DISH_CREATED)
             if request.user.is_staff:
                 return redirect('admin_all_dishes')
             else:
                 return redirect('user_all_dishes')
         else:
-            messages.add_message(request, messages.ERROR, dish_form.errors)
+            messages.error(request, dish_form.errors)
             return render(request, 'foods/dish_add.html')
 
 
@@ -117,9 +127,9 @@ class UserRatingView(UserOnlyView):
                 rating_form = RatingForm(request.POST, instance=rating_instance)
                 if rating_form.is_valid():
                     rating_form.save()
-                    messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+                    messages.success(request, RATE_UPDATED)
                 else:
-                    messages.add_message(request, messages.ERROR, rating_form.errors)
+                    messages.error(request, rating_form.errors)
             else:
                 rating_form = RatingForm(request.POST)
                 if rating_form.is_valid():
@@ -127,9 +137,9 @@ class UserRatingView(UserOnlyView):
                     rating.dish = dish
                     rating.user = user
                     rating.save()
-                    messages.add_message(request, messages.SUCCESS, RATE_CREATED)
+                    messages.success(request, RATE_CREATED)
                 else:
-                    messages.add_message(request, messages.ERROR, rating_form.errors)
+                    messages.error(request, rating_form.errors)
         return redirect('dish_detail', pk=pk)
 
 
@@ -162,7 +172,7 @@ class SearchDishView(View):
         )
         if not dishes:
             dishes = Dish.objects.filter(is_public=True)
-            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            messages.error(request, NO_DISH_FOUND)
         p = Paginator(dishes, DISHES_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         return render(request, 'dishes.html', {
@@ -180,5 +190,5 @@ class AllPublicDishView(View):
                 'page_obj': page
             })
         else:
-            messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
+            messages.error(request, NO_DISH_FOUND)
             return render(request, 'dishes.html')

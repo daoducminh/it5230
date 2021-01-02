@@ -26,12 +26,12 @@ class UpdateProfileView(LoginRequiredView):
         if user_form.is_valid():
             user = user_form.save(False)
             user.save()
-            messages.add_message(request, messages.SUCCESS, PROFILE_UPDATED)
+            messages.success(request, PROFILE_UPDATED)
             return render(request, 'registration/profile.html', {
                 'form': user
             })
         else:
-            messages.add_message(request, messages.ERROR, user_form.errors)
+            messages.error(request, user_form.errors)
             return render(request, 'registration/profile.html', {
                 'form': user_info
             })
@@ -59,7 +59,7 @@ class RegisterView(View):
                     user = user_form.save(commit=False)
                     user.user = base_user
                     user.save()
-                    messages.add_message(request, messages.SUCCESS, REGISTER_SUCCESS)
+                    messages.success(request, REGISTER_SUCCESS)
                 return redirect('login')
             else:
                 return render(request, 'registration/register.html', {
@@ -74,9 +74,9 @@ class UpdateActivationView(AdminOnlyView):
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         if user.is_active:
-            messages.add_message(request, messages.SUCCESS, DEACTIVATE_SUCCESS)
+            messages.success(request, DEACTIVATE_SUCCESS)
         else:
-            messages.add_message(request, messages.SUCCESS, ACTIVATE_SUCCESS)
+            messages.success(request, ACTIVATE_SUCCESS)
         user.is_active = not user.is_active
         user.save()
         return redirect('profile_detail', pk=pk)
@@ -105,7 +105,7 @@ class SearchProfile(View):
             )
             if not users:
                 users = User.objects.all().order_by('username')
-                messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+                messages.error(request, NO_PROFILE_FOUND)
         else:
             users = User.objects.all().order_by('username')
         p = Paginator(users, PROFILES_PER_PAGE)
@@ -127,7 +127,7 @@ class AdminSearchProfile(AdminOnlyView):
             )
             if not users:
                 users = User.objects.all().order_by('username')
-                messages.add_message(request, messages.ERROR, NO_PROFILE_FOUND)
+                messages.error(request, NO_PROFILE_FOUND)
         else:
             users = User.objects.all().order_by('username')
         p = Paginator(users, PROFILES_PER_PAGE)
