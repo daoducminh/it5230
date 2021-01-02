@@ -71,9 +71,9 @@ class UpdateDishView(SelfUpdateView):
 
     def get_success_url(self):
         if self.request.user.is_staff:
-            return reverse('admin_dish_detail', kwargs={'pk': self.object.pk})
+            return redirect('admin_dish_detail', pk=self.object.pk)
         else:
-            return reverse('user_dish_detail', kwargs={'pk': self.object.pk})
+            return redirect('user_dish_detail', pk=self.object.pk)
 
 
 class DeleteDishView(SelfDeleteView):
@@ -81,9 +81,9 @@ class DeleteDishView(SelfDeleteView):
 
     def get_success_url(self):
         if self.request.user.is_staff:
-            return reverse('admin_all_dishes', kwargs={'pk': self.object.pk})
+            return redirect('admin_all_dishes', pk=self.object.pk)
         else:
-            return reverse('user_all_dishes', kwargs={'pk': self.object.pk})
+            return redirect('user_all_dishes', pk=self.object.pk)
 
 
 class CreateDishView(LoginRequiredView):
