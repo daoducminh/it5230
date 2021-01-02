@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 
+from .constants.pagination import *
 from .forms import DishForm, RatingForm
 from .i18n.vi import *
 from .models import Dish, Rating
@@ -16,7 +17,7 @@ class AdminDishView(AdminOnlyView):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk, user=request.user)
         ratings = Rating.objects.filter(dish=dish)
-        p = Paginator(ratings, 5)
+        p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         return render(request, 'admins/dish.html', {
             'object': dish,
@@ -28,7 +29,7 @@ class AdminAllDishView(AdminListView):
     model = Dish
     template_name = 'admins/dishes.html'
     queryset = Dish.objects.all()
-    paginate_by = 10
+    paginate_by = DISHES_PER_PAGE
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -42,7 +43,7 @@ class UserDishView(UserOnlyView):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk, user=request.user)
         ratings = Rating.objects.filter(dish=dish)
-        p = Paginator(ratings, 5)
+        p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         return render(request, 'users/dish.html', {
             'object': dish,
@@ -54,7 +55,7 @@ class UserAllDishView(UserListView):
     model = Dish
     template_name = 'users/dishes.html'
     queryset = Dish.objects.all()
-    paginate_by = 10
+    paginate_by = DISHES_PER_PAGE
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -90,23 +91,19 @@ class CreateDishView(LoginRequiredView):
         return render(request, 'foods/dish_add.html')
 
     def post(self, request):
-        dish_form = DishForm(request.POST)
+        dish_form = DishForm(request.POST, request.FILES)
         if dish_form.is_valid():
             dish = dish_form.save(False)
             dish.user = request.user
             dish.save()
+            messages.add_message(request, messages.SUCCESS, DISH_CREATED)
             if request.user.is_staff:
-                return redirect('admin_all_dishes', {
-                    'message': DISH_CREATED
-                })
+                return redirect('admin_all_dishes')
             else:
-                return redirect('user_all_dishes', {
-                    'message': DISH_CREATED
-                })
+                return redirect('user_all_dishes')
         else:
-            return render(request, 'foods/dish_add.html', {
-                'errors': dish_form.errors
-            })
+            messages.add_message(request, messages.ERROR, dish_form.errors)
+            return render(request, 'foods/dish_add.html')
 
 
 class UserRatingView(UserOnlyView):
@@ -118,21 +115,29 @@ class UserRatingView(UserOnlyView):
             if ratings:
                 rating_instance = ratings.get()
                 rating_form = RatingForm(request.POST, instance=rating_instance)
+                if rating_form.is_valid():
+                    rating_form.save()
+                    messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
+                else:
+                    messages.add_message(request, messages.ERROR, rating_form.errors)
             else:
                 rating_form = RatingForm(request.POST)
-            if rating_form.is_valid():
-                rating_form.save()
-                messages.add_message(request, messages.SUCCESS, RATE_UPDATED)
-            else:
-                messages.add_message(request, messages.ERROR, rating_form.errors)
-        return redirect('dish_detail', kwargs={'pk': pk})
+                if rating_form.is_valid():
+                    rating = rating_form.save(False)
+                    rating.dish = dish
+                    rating.user = user
+                    rating.save()
+                    messages.add_message(request, messages.SUCCESS, RATE_CREATED)
+                else:
+                    messages.add_message(request, messages.ERROR, rating_form.errors)
+        return redirect('dish_detail', pk=pk)
 
 
 class DishDetailView(View):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk)
         ratings = Rating.objects.filter(dish=dish)
-        p = Paginator(ratings, 5)
+        p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         context = {
             'object': dish,
@@ -150,25 +155,26 @@ class SearchDishView(View):
     def get(self, request):
         query = self.request.GET.get('search')
         dishes = Dish.objects.filter(
-            Q(dish_name__icontains=query) | Q(description__icontains=query),
+            Q(dish_name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(ingredients__icontains=query),
             is_public=True
         )
-        if dishes:
-            p = Paginator(dishes, 10)
-            page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'dishes.html', {
-                'page_obj': page
-            })
-        else:
+        if not dishes:
+            dishes = Dish.objects.filter(is_public=True)
             messages.add_message(request, messages.ERROR, NO_DISH_FOUND)
-            return render(request, 'dishes.html')
+        p = Paginator(dishes, DISHES_PER_PAGE)
+        page = p.get_page(request.GET.get('page', 1))
+        return render(request, 'dishes.html', {
+            'page_obj': page
+        })
 
 
 class AllPublicDishView(View):
     def get(self, request):
         dishes = Dish.objects.filter(is_public=True)
         if dishes:
-            p = Paginator(dishes, 10)
+            p = Paginator(dishes, DISHES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
             return render(request, 'dishes.html', {
                 'page_obj': page

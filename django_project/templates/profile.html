@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Foods{% endblock %}
+
+{% block content %}
+    <div>Username {{ user.username }}</div>
+    <div>Email {{ user.email }}</div>
+    <div>Firstname {{ user.first_name }}</div>
+    <div>Lastname {{ user.last_name }}</div>
+    <div>Is active {{ user.is_active }}</div>
+    <div>Is staff {{ user.is_staff }}</div>
+    <div>Birthday {{ user.user.birthday }}</div>
+    <div>Gender {{ user.user.gender }}</div>
+    <div>Height {{ user.user.height }}</div>
+    <div>Weight {{ user.user.weight }}</div>
+    <div>Diet factor {{ user.user.diet_factor }}</div>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+        <form action="activate/" method="post">
+            {% csrf_token %}
+            {% if user.is_active %}
+                <input class="btn btn-danger" type="submit" value="Khoá tài khoản">
+            {% else %}
+                <input class="btn btn-success" type="submit" value="Mở khoá tài khoản">
+            {% endif %}
+        </form>
+    {% endif %}
+{% endblock %}

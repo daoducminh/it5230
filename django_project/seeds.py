@@ -31,7 +31,9 @@ def seed_food_dish():
             'description': fake.text(50),
             'calories': random.randint(10, 3000),
             'is_public': fake.pybool(),
-            'ingredients': ingredients
+            'ingredients': ','.join(ingredients),
+            'created_at': timestamp,
+            'updated_at': timestamp
         }
         rs.append({
             MODEL: model,
@@ -72,7 +74,8 @@ def seed_food_rating():
             'dish': i,
             'score': random.randint(1, 5),
             'comment': fake.text(50),
-            'timestamp': timestamp
+            'created_at': timestamp,
+            'updated_at': timestamp
         }
         rs.append({
             MODEL: 'foods.rating',
