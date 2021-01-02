@@ -6,12 +6,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core import serializers
 from django.db.models.functions import Now
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .views import LoginRequiredView
 from .models import Menu, Dish, Menu_Dish
 from utils.calories import bmr
 import json
 import random
+from datetime import datetime
 
 calories_conf = [
     (-1, -1),
@@ -46,8 +48,9 @@ class create(LoginRequiredView):
         weight = user.weight
         height = user.height
         gender = user.gender
+        age = datetime.now().year - user.birthday.year
         diet_factor = user.diet_factor
-        calories = bmr(weight, height, gender, 20, diet_factor)
+        calories = bmr(weight, height, gender, age, diet_factor)
         data['calories'] = calories
         data['calories_conf'] = calories_conf
         return render(request, 'menu/create.html', data)
@@ -145,37 +148,44 @@ class delete_query(LoginRequiredView):
 
 
 
-class history(ListView, LoginRequiredView):
-    model = Menu
-    paginate_by = 5
-    context_object_name = "menus"
-    template_name = "menu/history.html"
-    def get_queryset(self):
-        menus = Menu.objects.filter(user=self.request.user).order_by('-mealtime') 
+class history(LoginRequiredView):
+    PAGE_NUMBER_DEFAULT = 1
+    ORDER_TYPE_DEFAULT = "newest"
+    DATE_FILTER_DEFAULT = ""
+    def get(self, request):
+        self.page_number = int(request.GET.get("page_number", self.PAGE_NUMBER_DEFAULT))
+        self.order_type = request.GET.get("order_type", self.ORDER_TYPE_DEFAULT)
+        self.date_filter = request.GET.get("date_filter", self.DATE_FILTER_DEFAULT)
+        return self.execute(request)
+    def post(self, request):
+        self.page_number = int(request.POST.get("page_number", self.PAGE_NUMBER_DEFAULT))
+        self.order_type = request.POST.get("order_type", self.ORDER_TYPE_DEFAULT)
+        self.date_filter = request.POST.get("date_filter", self.DATE_FILTER_DEFAULT)
+        return self.execute(request)
+    def execute(self, request):
+        query = Q(user=request.user)
+        if self.date_filter != "":
+            [day, month, year] = self.date_filter.split("-")
+            print(day, month, year)
+            query = query & Q(mealtime__day=day, mealtime__month=month, mealtime__year=year)
+        menus = Menu.objects.filter(query).order_by('-mealtime' if self.order_type == self.ORDER_TYPE_DEFAULT else 'mealtime') 
         for menu in menus:
             dishes = menu.dishes.all()
             calories = sum((dish.calories for dish in dishes))
             menu.calories = calories
-        return menus
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["xxx"] = "Toi la toi =))"
-        return context
-    
-    # def get(self, request):
-    #     return self.execute(request)
-    # def post(self, request):
-    #     return self.execute(request)
-    # def execute(self, request):
-    #     user = request.user.user
-    #     user_id = user.id
-    #     menus = Menu.objects.filter(user = request.user)
-    #     print(menus.values())
-    #     # for m in menus:
-    #     #     dishs = m.dishes.all()
-    #     #     for d in dishs:
-    #     #         print(d.id, d.dish_name, d.description, d.calories)
-    #     return HttpResponse("Menu History")
+        res_menus, page_count = data_paginator(menus, self.page_number)
+        return render(
+            request,
+            "menu/history.html", 
+            {
+                "menus": res_menus,
+                "page_count": page_count,
+                "cur_page": self.page_number,
+                "has_next": page_count>self.page_number,
+                "has_previous": self.page_number>1,
+                "date_filter": self.date_filter
+            }
+        )
 
 
 class detail(LoginRequiredView):
@@ -240,3 +250,15 @@ def query_filter_dish(request):
 
     json_dishs = serializers.serialize('json', dishs)
     return JsonResponse(json_dishs, content_type="text/json-comment-filtered", safe=False)
+
+
+def data_paginator(data, page):
+    paginator = Paginator(data, 10)
+    try:
+        rate_paged = paginator.page(page)        
+    except PageNotAnInteger:
+        rate_paged = paginator.page(1)
+    except EmptyPage:
+        rate_paged = paginator.page(paginator.num_pages)
+
+    return rate_paged, paginator.num_pages

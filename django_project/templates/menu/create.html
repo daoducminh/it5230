@@ -4,24 +4,15 @@
 {% endblock title %}
 {% block app_name %}
     Tạo thực đơn
-    <style>
-        {% comment %} li {
-        overflow: auto;
-        white-space: nowrap;
-        } {% endcomment %}
-        i.fas {
-            cursor: pointer;
-        }
-        i.fas:hover {
-            filter: alpha(opacity=100);
-        }
+    {% load static %}
+        <link rel="stylesheet" href="{% static 'css/menu/menu_create.css' %}"></link>
     </style>
 {% endblock app_name %}
 {% block content %}
     {% load static %}
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
         <script src="{% static 'js/toastr.min.js' %}" defer></script>
-        <script src="{% static 'js/menu_create.js' %}" defer></script>
+        <script src="{% static 'js/menu/menu_create.js' %}" defer></script>
         <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <script>
         let target_calories = "{{calories}}"
