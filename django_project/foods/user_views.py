@@ -62,6 +62,10 @@ class RegisterView(View):
                     messages.success(request, REGISTER_SUCCESS)
                 return redirect('login')
             else:
+                if base_user_form.errors:
+                    messages.error(request, base_user_form.errors)
+                if user_form.errors:
+                    messages.error(request, user_form.errors)
                 return render(request, 'registration/register.html', {
                     'user_form': user_form,
                     'base_user_form': base_user_form
