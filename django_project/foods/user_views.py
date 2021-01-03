@@ -102,7 +102,7 @@ class SearchProfile(View):
         if query:
             users = User.objects.filter(
                 Q(username__icontains=query) |
-                Q(first_name=query) |
+                Q(first_name__icontains=query) |
                 Q(last_name__icontains=query) |
                 Q(email__icontains=query),
                 is_active=True
@@ -125,7 +125,7 @@ class AdminSearchProfile(AdminOnlyView):
         if query:
             users = User.objects.filter(
                 Q(username__icontains=query) |
-                Q(first_name=query) |
+                Q(first_name__icontains=query) |
                 Q(last_name__icontains=query) |
                 Q(email__icontains=query)
             )
