@@ -1,7 +1,7 @@
-import random
-from datetime import datetime
 import json
 import pickle
+import random
+from datetime import datetime
 
 from faker import Faker
 
@@ -55,7 +55,10 @@ def get_vn_dish(pool):
 
 
 def get_en_dish(pool):
-    return '{0} {0}'.format(randlist(pool['en']))
+    return '{0} {1}'.format(
+        randlist(pool['en']),
+        randlist(pool['en'])
+    )
 
 
 def seed_user():
@@ -101,7 +104,7 @@ def seed_user():
             'password': HASHED_PASSWORD,
             'last_login': None,
             'is_superuser': False,
-            'username': 'user_{}'.format(i),
+            'username': 'user_{}'.format(i - ADMINS),
             'first_name': fake.first_name_male() if gender else fake.first_name_female(),
             'last_name': fake.last_name_male() if gender else fake.last_name_female(),
             'email': fake.email(),
@@ -114,7 +117,7 @@ def seed_user():
         foods_user = {
             'user': i,
             'birthday': BIRTHDAY,
-            'height': fake.pyint(min_value=100, max_value=250),
+            'height': fake.pyint(min_value=101, max_value=250),
             'weight': fake.pyint(min_value=20, max_value=200),
             'gender': gender,
             'diet_factor': 1
@@ -135,12 +138,12 @@ def seed_user():
 def seed_food_dish(real_dishes, pool):
     rs = []
     count = real_dishes
-    dish_range = (1, 1+DISHES)
+    dish_range = (1, 1 + DISHES)
     for u in range(*ALL_USER_RANGE):
-        for i in range(*dish_range):
+        for _ in range(*dish_range):
             count += 1
             is_vn = fake.pybool()
-            ingredients = get_ingredients(pool, random.randint(5, 15), is_vn)
+            ingredients = get_ingredients(pool, random.randint(5, 10), is_vn)
             d = {
                 'user': u,
                 'dish_name': get_vn_dish(pool) if is_vn else get_en_dish(pool),
@@ -160,7 +163,7 @@ def seed_food_dish(real_dishes, pool):
 
 
 def seed_food_rating(real_dishes):
-    dish_range = (1, 1+real_dishes+DISHES)
+    dish_range = (1, 1 + real_dishes + DISHES)
     rs = []
     for _ in range(5):
         for i in range(*dish_range):
@@ -192,9 +195,9 @@ def test_dish_data(filename):
         c = set(b)
         print(len(c))
 
-        for i in range(len(b)-1):
-            if b[i]+1 != b[i+1]:
-                print('Diff: {}-{}'.format(b[i], b[i+1]))
+        for i in range(len(b) - 1):
+            if b[i] + 1 != b[i + 1]:
+                print('Diff: {}-{}'.format(b[i], b[i + 1]))
 
 
 def generate_data():
