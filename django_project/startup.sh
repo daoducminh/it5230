@@ -4,6 +4,9 @@ echo "\n>>>>> Migrating the database before starting the server\n"
 python manage.py makemigrations
 python manage.py migrate
 
+echo "\n>>>>> Unzip data\n"
+unzip -o data.zip
+
 echo "\n>>>>> Load data\n"
 python manage.py loaddata data.json
 

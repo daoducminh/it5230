@@ -1,7 +1,7 @@
 FROM python:3
 ENV PYTHONUNBUFFERED=1
 # Install crontab
-RUN apt update && apt install cron -y
+RUN apt update && apt install cron unzip -y
 
 # Copy cron file
 COPY update-score-cron /etc/cron.d/update-score-cron
