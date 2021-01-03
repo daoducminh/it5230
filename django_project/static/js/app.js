@@ -54,4 +54,10 @@
     });
   
   })(jQuery); // End of use strict
+
+  function get_action(form) {
+    var sf=document.searchForm;
+    var actionValue = sf.sengines.options[sf.sengines.selectedIndex].value;
+    form.action = actionValue;
+    }
   
