@@ -2,14 +2,9 @@
 {% block title %}
     Tạo thực đơn
 {% endblock title %}
-{% block app_name %}
-    Tạo thực đơn
-    {% load static %}
-        <link rel="stylesheet" href="{% static 'css/menu/menu_create.css' %}"></link>
-    </style>
-{% endblock app_name %}
 {% block content %}
     {% load static %}
+        <link rel="stylesheet" href="{% static 'css/menu/menu_create.css' %}"></link>
         <script src="{% static 'js/js.cookie.min.js' %}" defer></script>
         <script src="{% static 'js/toastr.min.js' %}" defer></script>
         <script src="{% static 'js/menu/menu_create.js' %}" defer></script>
@@ -81,7 +76,7 @@
                     <label
                         class="text-white ml-1"
                     >
-                        Tiêu thụ: <strong><u>{{calories}}</u></strong> calories
+                        Tiêu thụ: <strong><u>{{calories}}</u></strong> kcal
                     </label>
                     <br>
                 </div>

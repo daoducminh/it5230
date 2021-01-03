@@ -64,7 +64,7 @@ const get_limit = ()=>{
 
 const update_current_metric = ()=>{
     let total_calories = get_total_calories()
-    $("#curent_calories").html(total_calories + " calories")
+    $("#curent_calories").html(total_calories + " kcal")
     let percent = ((total_calories/target_calories)*100).toFixed(2) + "%"
     $("#current_calorie_bar").css("width", percent)
     $("#current_calories_percent").html(percent)
