@@ -3,6 +3,7 @@
 
 # Data files
 *.json
+*.pkl
 
 # IDE
 .vscode/

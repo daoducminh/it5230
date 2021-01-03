@@ -1,17 +1,21 @@
 import random
 from datetime import datetime
-from json import dump
+import json
+import pickle
 
 from faker import Faker
+
+REAL_DISHES_DATA = 'real_dishes.pkl'
+POOL_DATA = 'pool.pkl'
 
 ADMINS = 20
 USERS = 30
 DISHES = 200
 
-ADMIN_RANGE = (1, 1+ADMINS)
-USER_RANGE = (1+ADMINS, 1+ADMINS+USERS)
-ALL_USER_RANGE = (1, 1+ADMINS+USERS)
-DISH_RANGE = (1, 1+DISHES)
+ADMIN_RANGE = (1, 1 + ADMINS)
+USER_RANGE = (1 + ADMINS, 1 + ADMINS + USERS)
+ALL_USERS = ADMINS + USERS
+ALL_USER_RANGE = (1, 1 + ALL_USERS)
 
 MODEL = 'model'
 PK = 'pk'
@@ -28,12 +32,30 @@ fake = Faker()
 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
-pool = {
-    'vn-1': ['phở', 'bún', 'bầu', 'trứng', 'cá bạc má', 'cá chép', 'chim cút', 'gan heo', 'mướp', 'bơ', 'đậu hũ', 'bánh bao', 'bông cải', 'mỡ hành', 'cá cơm', 'bột', 'cá mòi', 'cà ri', 'cà tím', 'canh', 'canh khổ qua', 'cơm', 'xả ớt', 'đùi gà', 'gỏi', 'hủ tiếu', 'nấm rơm', 'bánh', 'phở', 'mì', 'cháo', 'chay', 'tôm lăn bột', 'bánh canh', 'vịt'],
-    'vn-2': ['xào', 'chiên', 'chưng', 'tương', 'bò', 'riêu cua', 'nhồi thịt', 'chay', 'thập cẩm', 'thịt nướng', 'kho', 'gà', 'nướng', 'chua', 'nhồi thịt', 'rau ngót', 'chiên giòn', 'bắp chuối', 'ngó sen', 'bò kho', 'chiên xù', 'cua', 'mắm', 'măng', 'mọc', 'ốc', 'đậu đỏ', 'pía'],
-    'ing': ['bầu', 'trứng gà', 'trứng vịt', 'hành', 'ngò', 'tôm', 'củ sắn', 'lạp xướng', 'xà lách', 'rau thơm', 'bánh tráng', 'lạc rang', 'cá bạc má', 'tiêu xay', 'hành lá', 'cá diêu hồng', 'mộc nhĩ', 'cần tây', 'cà chua', 'hành tây', 'bún tàu', 'rau sống', 'chim cút', 'bột cà ri', 'ngũ vị hương', 'tỏi', 'hành tím', 'gan heo', 'mướp hương', 'nấm rơm', 'giá đỗ', 'thịt thăn bò', 'nấm kim', 'nấm hương', 'cà tốt', 'bún', 'thịt bắp bò', 'giò heo', 'cua đồng', 'thịt xay', 'tôm', 'đậu hũ', 'bột bánh bao', 'tôm khô', 'nấm mèo', 'sườn chay', 'bông cải xanh', 'đậu hà lan', 'nấm đông cô', 'thịt heo', 'chả giò', 'bún tươi', 'bún gạo', 'cải ngọt', 'đậu phộng', 'cá cơm', 'bột mì', 'trứng', 'dưa muối', 'cá mòi', 'thịt ba chỉ', 'khoai tây', 'ớt', 'cà tím', 'cá lóc', 'thơm', 'dọc mùng', 'giá đậu', 'khổ qua', 'thịt xay', 'hành củ', 'rau ngót', 'tôm sú', 'cơm', 'đậu hà lan', 'sả', 'đùi gà', 'bột chiên giòn', 'bắp chuối', 'dưa chuột', 'ngó sen', 'rau răm', 'thịt nạm bò', 'thịt ba rọi', 'cua biển', 'chân giò', 'xương heo', 'con mực', 'ngò rí', 'con vịt', 'măng tươi', 'sườn non', 'chả lụa', 'giò sống', 'gạo tẻ', 'dừa nạo', 'mì tôm', 'cải thìa', 'bột bánh bò', 'dừa tươi', 'lá dứa'],
-    'en': ['Fresh Spring Rolls', 'Maine', 'Lobster', 'Lasagna', 'Honey', 'Walnut', 'Shrimp', 'Fra Diavolo Sauce', 'Pasta', 'Crab Cakes', 'Scallops', 'Orleans Creole', 'Gumbo', 'Scampi', 'Baked', 'Pinakbet', 'Bringhe', 'Curry', 'Fried Rice', 'Coconut Curry', 'Tofu', 'Sweet Potato Soup', 'Vegan Thai Curry', 'Thai Green Curry', 'Chicken', 'Basic Mashed Potatoes', 'Apple Pie', 'Grandma Ople', 'Banana Bread', 'Pancakes', 'Homemade Mac', 'Cheese', 'Fried Rice', 'Crab-Stuffed', 'Mushrooms', 'Grilled Onions', 'Cheese Stuffed Mushrooms', 'Tennessee Meatloaf', 'Ordinary Meatloaf', 'Meat Pie', 'Southern Version', 'Treasures Ranch Pockets', 'Summer Feta Burger', 'Gourmet Cheese Spread']
-}
+def randlist(array):
+    return array[random.randrange(0, len(array))]
+
+
+def get_ingredients(pool, number, is_vn):
+    rs = []
+    if is_vn:
+        for _ in range(number):
+            rs.append(randlist(pool['ing']))
+    else:
+        for _ in range(number):
+            rs.append(randlist(pool['en']))
+    return tuple(rs)
+
+
+def get_vn_dish(pool):
+    return '{} {}'.format(
+        randlist(pool['vn-1']),
+        randlist(pool['vn-2'])
+    )
+
+
+def get_en_dish(pool):
+    return '{0} {0}'.format(randlist(pool['en']))
 
 
 def seed_user():
@@ -58,7 +80,7 @@ def seed_user():
         foods_admin = {
             'user': i,
             'birthday': BIRTHDAY,
-            'height': fake.pyint(min_value=100, max_value=250),
+            'height': fake.pyint(min_value=101, max_value=250),
             'weight': fake.pyint(min_value=20, max_value=200),
             'gender': gender,
             'diet_factor': 1
@@ -110,16 +132,18 @@ def seed_user():
     return auth_users + foods_users
 
 
-def seed_food_dish():
+def seed_food_dish(real_dishes, pool):
     rs = []
+    count = real_dishes
+    dish_range = (1, 1+DISHES)
     for u in range(*ALL_USER_RANGE):
-        for i in range(*DISH_RANGE):
-            ingredients = []
-            for _ in range(5):
-                ingredients.append(f'ingredient {random.randint(0, 1000)}')
+        for i in range(*dish_range):
+            count += 1
+            is_vn = fake.pybool()
+            ingredients = get_ingredients(pool, random.randint(5, 15), is_vn)
             d = {
                 'user': u,
-                'dish_name': f'dish {u}-{i}',
+                'dish_name': get_vn_dish(pool) if is_vn else get_en_dish(pool),
                 'description': fake.text(50),
                 'calories': random.randint(10, 3000),
                 'is_public': fake.pybool(),
@@ -129,16 +153,17 @@ def seed_food_dish():
             }
             rs.append({
                 MODEL: FOODS_DISH,
-                PK: i,
+                PK: count,
                 FIELDS: d
             })
     return rs
 
 
-def seed_food_rating():
+def seed_food_rating(real_dishes):
+    dish_range = (1, 1+real_dishes+DISHES)
     rs = []
     for _ in range(5):
-        for i in range(*DISH_RANGE):
+        for i in range(*dish_range):
             r = {
                 'user': random.randrange(*USER_RANGE),
                 'dish': i,
@@ -155,9 +180,34 @@ def seed_food_rating():
     return rs
 
 
-if __name__ == '__main__':
+def load_pickle(filename):
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
+
+
+def test_dish_data(filename):
+    with open(filename, 'r') as f:
+        a = json.load(f)
+        b = [i['pk'] for i in a if i['model'] == 'foods.dish']
+        c = set(b)
+        print(len(c))
+
+        for i in range(len(b)-1):
+            if b[i]+1 != b[i+1]:
+                print('Diff: {}-{}'.format(b[i], b[i+1]))
+
+
+def generate_data():
+    real_dishes = load_pickle(REAL_DISHES_DATA)
+    pool = load_pickle(POOL_DATA)
     a = seed_user()
-    a += seed_food_dish()
-    a += seed_food_rating()
+    a += real_dishes
+    a += seed_food_dish(len(real_dishes), pool)
+    a += seed_food_rating(len(real_dishes))
     with open('data.json', 'w') as file:
-        dump(a, file)
+        json.dump(a, file)
+
+
+if __name__ == '__main__':
+    generate_data()
+    test_dish_data('data.json')
