@@ -13,7 +13,7 @@
 
 ## Hướng dẫn cài đặt và chạy chương trình
 
-1. Yêu cầu đã cài đặt `docker` và `docker-compose`
+1. Yêu cầu đã cài đặt `docker` và `docker-compose` (`Docker version 20.10.1, build 831ebea` và `docker-compose version 1.27.4, build 40524192`)
 2. Chuyển vào thư mục `django_project`: `cd django_project`
 3. Chạy container: `docker-compose up`
 4. Mở trình duyệt với đường dẫn: `http://localhost` hoặc `http://127.0.0.1`
