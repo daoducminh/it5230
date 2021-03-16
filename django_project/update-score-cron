@@ -1,1 +1,1 @@
-@hourly python manage.py
+@hourly python manage.py update_score
