@@ -5,7 +5,13 @@
 {% block content %}
 <div class="row m-5">
     <div class="col-lg-6">
-        <img class="card-img-top" src="/media/{{ object.image|default:"default.jpg" }}" alt="Không có hình ảnh">
+        {% if object.image %}
+        <img class="card-img-top" src="/media/{{ object.image|default:'default.jpg' }}" alt="Không có hình ảnh">
+        {% elif object.image_url %}
+        <img class="card-img-top" src="{{ object.image_url }}" alt="Không có hình ảnh">
+        {% else %}
+        <img class="card-img-top" src="/media/default.jpg" alt="Không có hình ảnh">
+        {% endif %}
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-center">
@@ -15,6 +21,10 @@
             <tr>
                 <th>Người sở hữu:</th>
                 <td><a href="{% url 'profile_detail' object.user.pk %}">{{ object.user }}</a></td>
+            </tr>
+            <tr>
+                <th>Nguyên liệu:</th>
+                <td>{{ object.ingredients }}</td>
             </tr>
             <tr>
                 <th>Mô tả:</th>
