@@ -41,6 +41,7 @@ class Dish(models.Model):
     image = models.ImageField(
         upload_to=dish_image_path
     )
+    image_url = models.CharField(max_length=1000, null=True)
     ingredients = models.CharField(max_length=500)
     score = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,8 +82,8 @@ class Rating(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(score__gt=0),
-                name='rating_score_gt_0'
+                check=models.Q(score__gte=0),
+                name='rating_score_gte_0'
             ),
             models.CheckConstraint(
                 check=models.Q(score__lte=5),
