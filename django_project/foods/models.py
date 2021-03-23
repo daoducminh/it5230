@@ -34,15 +34,15 @@ class User(models.Model):
 
 class Dish(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
-    dish_name = models.CharField(max_length=50)
-    description = models.CharField(max_length=500)
+    dish_name = models.CharField(max_length=200)
+    description = models.CharField(max_length=5000)
     calories = models.IntegerField()
     is_public = models.BooleanField()
     image = models.ImageField(
         upload_to=dish_image_path
     )
     image_url = models.CharField(max_length=1000, null=True)
-    ingredients = models.CharField(max_length=500)
+    ingredients = models.CharField(max_length=5000)
     score = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -72,7 +72,7 @@ class Rating(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     score = models.IntegerField()
-    comment = models.CharField(max_length=100)
+    comment = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

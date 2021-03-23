@@ -1,12 +1,11 @@
 import json
 import random
+import pickle
 from datetime import datetime
 from faker import Faker
 
 FOLDER = 'downloads/'
-USER_DATA = FOLDER+'user.dat'
-RECIPE_DATA = FOLDER+'recipe.jsonl'
-REVIEW_DATA = FOLDER+'review.dat'
+DATA = FOLDER + 'data.pkl'
 
 MODEL = 'model'
 PK = 'pk'
@@ -19,17 +18,44 @@ HASHED_PASSWORD = 'pbkdf2_sha256$216000$E7eK2AnWdjH7$vA0IUnEP2MzszO+Ubxp00DSiXq2
 DATE_JOINED = '2020-12-23T14:49:21Z'
 BIRTHDAY = '2000-01-01'
 
+RECIPE = 'recipe'
+USER = 'user'
+ERROR = 'error'
+REVIEW = 'review'
+URL = 'url'
+TYPE = 'type'
+
+RECIPE_ID = 'recipe_id'
+SHORT_NAME = 'short_name'
+FULL_NAME = 'full_name'
+AUTHOR = 'author'
+INGREDIENTS = 'ingredients'
+DIRECTIONS = 'directions'
+DETAIL = 'detail'
+IMAGE_URL = 'image_url'
+DESCRIPTION = 'description'
+FACTS_TIME = 'facts_time'
+FACTS_SERVES = 'facts_serves'
+REVIEW_COUNT = 'review_count'
+RATING = 'rating'
+COMMENT = 'comment'
+REVIEW_ID = 'review_id'
+
+USERNAME = 'username'
+FOLLOWER = 'follower'
+FOLLOWING = 'following'
+USER_ID = 'user_id'
+FOLLOW = 'follow'
+
+SCRIPT = 'script'
+
 fake = Faker()
 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
-def preprocess_user_data(x):
-    a = x.strip().split(',')
-    try:
-        a[0] = int(a[0])
-        return a
-    except:
-        pass
+def read_pickle(filename):
+    with open(filename, 'rb') as file:
+        return pickle.load(file)
 
 
 def generate_auth_user(x):
@@ -37,8 +63,8 @@ def generate_auth_user(x):
         'password': HASHED_PASSWORD,
         'last_login': None,
         'is_superuser': False,
-        'username': 'user_{}'.format(x[0]),
-        'first_name': x[1],
+        'username': 'user_{}'.format(x[USER_ID]),
+        'first_name': x[USERNAME],
         'last_name': '',
         'email': fake.email(),
         'is_staff': False,
@@ -49,14 +75,14 @@ def generate_auth_user(x):
     }
     return {
         MODEL: AUTH_USER,
-        PK: x[0],
+        PK: x[USER_ID],
         FIELDS: auth_user
     }
 
 
 def generate_food_user(x):
     foods_user = {
-        'user': x[0],
+        'user': x[USER_ID],
         'birthday': BIRTHDAY,
         'height': fake.pyint(min_value=101, max_value=250),
         'weight': fake.pyint(min_value=20, max_value=200),
@@ -65,45 +91,45 @@ def generate_food_user(x):
     }
     return {
         MODEL: FOODS_USER,
-        PK: x[0],
+        PK: x[USER_ID],
         FIELDS: foods_user
     }
 
 
-def seed_user():
-    with open(USER_DATA, 'r') as file:
-        lines = file.readlines()
-        a = list(map(preprocess_user_data, lines))
-        auth_users = list(map(generate_auth_user, a))
-        food_users = list(map(generate_food_user, a))
-        return auth_users+food_users
+def seed_user(data):
+    users = data[USER]
+    auth_users = list(map(generate_auth_user, users))
+    food_users = list(map(generate_food_user, users))
+    return auth_users + food_users
 
 
-def preprocess_recipe_data(x):
-    r = json.loads(x)
-    try:
-        r['author'] = int(r['author'])
-        r['recipe_id'] = int(r['recipe_id'])
-        r['directions'] = list(map(lambda x: x.strip(), r['directions']))
-        return r
-    except Exception as e:
-        print(e)
+def handle_ingredients(x):
+    return ' '.join(x.split())
+
+
+def handle_url(x):
+    a = x.strip()
+    return a[1:-2]
 
 
 def generate_food_recipe(x):
-    desc = '\n'.join(x['directions'])
-    if len(desc) > 500:
-        desc = desc[:500]
-    full_name = x['full_name']
-    if len(full_name) > 50:
-        full_name = full_name[:50]
+    ingredients = list(map(handle_ingredients, x[INGREDIENTS]))
+    image_url = None
+    if SCRIPT in x:
+        a = x[SCRIPT].split('photoUrl: ')
+        a = list(filter(lambda x: x, a))
+        a = list(map(handle_url, a))
+        image_url = a[0]
+        if len(a[0]) < 100:
+            image_url = a[0]
     recipe = {
-        'user': x['author'],
-        'dish_name': full_name,
-        'description': desc,
+        'user': x[AUTHOR],
+        'dish_name': x[FULL_NAME],
+        'description': ' '.join(x[DIRECTIONS]),
         'calories': random.randint(10, 3000),
         'is_public': True,
-        'ingredients': '',
+        'ingredients': ', '.join(ingredients),
+        'image_url': image_url,
         'created_at': timestamp,
         'updated_at': timestamp
     }
@@ -114,63 +140,37 @@ def generate_food_recipe(x):
     }
 
 
-def seed_recipe():
-    with open(RECIPE_DATA, 'r') as file:
-        lines = file.readlines()
-        a = list(map(preprocess_recipe_data, lines))
-        return list(map(generate_food_recipe, a))
-
-
-def preprocess_review_data(x):
-    a = x.split(',')
-    try:
-        a[0] = int(a[0])
-        a[1] = int(a[1])
-        a[2] = int(a[2])
-        a[3] = int(a[3])
-        c = ','.join(a[4:])
-        return a[0], a[1], a[2], a[3], c
-    except Exception as e:
-        print('Error:', e, a)
+def seed_recipe(data):
+    recipes = data[RECIPE]
+    return list(map(generate_food_recipe, recipes))
 
 
 def generate_food_review(x):
-    c = x[4]
-    if len(c) > 100:
-        c = c[:100]
-    s = x[3]
-    if s == 0:
-        s = 0.5
+    r = x[REVIEW]
     rv = {
-        'user': x[2],
-        'dish': x[1],
-        'score': x[3],
-        'comment': c,
+        'user': r[USER_ID],
+        'dish': r[REVIEW_ID],
+        'score': r[RATING],
+        'comment': r[COMMENT],
         'created_at': timestamp,
         'updated_at': timestamp
     }
     return {
         MODEL: FOODS_RATING,
-        PK: x[0],
+        PK: r[REVIEW_ID],
         FIELDS: rv
     }
 
 
-def seed_review():
-    with open(REVIEW_DATA, 'r') as file:
-        lines = file.readlines()
-        a = list(map(preprocess_review_data, lines))
-        a = list(filter(lambda x: x, a))
-        return list(map(generate_food_review, a))
+def seed_review(data):
+    reviews = data[REVIEW]
+    return list(map(generate_food_review, reviews))
 
 
 if __name__ == '__main__':
-    # u = seed_user()
-    # with open('u.json', 'w') as file:
-    #     json.dump(u, file)
-    # r = seed_recipe()
-    # with open('r.json', 'w') as file:
-    #     json.dump(r, file)
-    rv = seed_review()
-    with open('rv.json', 'w') as file:
-        json.dump(rv, file)
+    data = read_pickle(DATA)
+    u = seed_user(data)
+    r = seed_recipe(data)
+    rv = seed_review(data)
+    with open('data1.json', 'w') as file:
+        json.dump(u+r+rv, file)
