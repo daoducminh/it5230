@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import user_views, dish_views, menu_views
+from . import user_views, dish_views, menu_views, recsys_views
 
 urlpatterns = [
     path('', dish_views.AllPublicDishView.as_view(), name='index'),
@@ -61,7 +61,8 @@ urlpatterns = [
         path('update', menu_views.update.as_view(), name="menu_update"),
         path('delete', menu_views.delete.as_view(), name="menu_delete"),
         path('query_filter_dish', menu_views.query_filter_dish, name="menu_query_filter_dish")
-    ]))
+    ])),
+    path('rec/recipe/<int:pk>/', recsys_views.ItemKNNView.as_view(), name='rec_recipe')
 ]
 
 handler404 = 'foods.views.error_404'
