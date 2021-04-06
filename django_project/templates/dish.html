@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row m-5">
-    <div class="col-lg-6">
+    <div class="col-lg-3">
         {% if object.image %}
         <img class="card-img-top" src="/media/{{ object.image|default:'default.jpg' }}" alt="Không có hình ảnh">
         {% elif object.image_url %}
@@ -13,7 +13,7 @@
         <img class="card-img-top" src="/media/default.jpg" alt="Không có hình ảnh">
         {% endif %}
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-9">
         <div class="d-flex justify-content-center">
             <h2 class="text-uppercase">{{ object.dish_name }}</h2>
         </div>
@@ -37,10 +37,6 @@
             <tr>
                 <th>Trạng thái:</th>
                 <td>{{ object.is_public|yesno:"Công khai, Riêng tư" }}</td>
-            </tr>
-            <tr>
-                <th>Thành phần:</th>
-                <td>{{ object.ingredients }}</td>
             </tr>
             <tr>
                 <th>Đánh giá trung bình:</th>

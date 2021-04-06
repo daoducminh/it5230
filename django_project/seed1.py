@@ -29,6 +29,7 @@ RECIPE_ID = 'recipe_id'
 SHORT_NAME = 'short_name'
 FULL_NAME = 'full_name'
 AUTHOR = 'author'
+AUTHOR_ID = 'author_id'
 INGREDIENTS = 'ingredients'
 DIRECTIONS = 'directions'
 DETAIL = 'detail'
@@ -40,6 +41,9 @@ REVIEW_COUNT = 'review_count'
 RATING = 'rating'
 COMMENT = 'comment'
 REVIEW_ID = 'review_id'
+CATEGORY = 'category'
+AUTHOR_URL = 'author_url'
+USER_AVATAR_URL = 'user_avatar_url'
 
 USERNAME = 'username'
 FOLLOWER = 'follower'
@@ -96,11 +100,59 @@ def generate_food_user(x):
     }
 
 
+def generate_auth_user_by_id(x):
+    auth_user = {
+        'password': HASHED_PASSWORD,
+        'last_login': None,
+        'is_superuser': False,
+        'username': 'user_{}'.format(x),
+        'first_name': fake.first_name(),
+        'last_name': fake.last_name(),
+        'email': fake.email(),
+        'is_staff': False,
+        'is_active': True,
+        'date_joined': DATE_JOINED,
+        'groups': (),
+        'user_permissions': ()
+    }
+    return {
+        MODEL: AUTH_USER,
+        PK: x,
+        FIELDS: auth_user
+    }
+
+
+def generate_food_user_by_id(x):
+    foods_user = {
+        'user': x,
+        'birthday': BIRTHDAY,
+        'height': fake.pyint(min_value=101, max_value=250),
+        'weight': fake.pyint(min_value=20, max_value=200),
+        'gender': fake.pybool(),
+        'diet_factor': 1
+    }
+    return {
+        MODEL: FOODS_USER,
+        PK: x,
+        FIELDS: foods_user
+    }
+
+
 def seed_user(data):
     users = data[USER]
     auth_users = list(map(generate_auth_user, users))
     food_users = list(map(generate_food_user, users))
-    return auth_users + food_users
+    u1 = {i[USER_ID] for i in users}
+    u2 = {i[AUTHOR_ID] for i in data[RECIPE]}
+    u3 = {i[USER_ID] for i in data[REVIEW]}
+    s1 = u2-u1
+    s2 = u3-u1
+    a1 = []
+    a2 = []
+    for i in s1.union(s2):
+        a1.append(generate_auth_user_by_id(i))
+        a2.append(generate_food_user_by_id(i))
+    return auth_users + food_users + a1 + a2
 
 
 def handle_ingredients(x):
@@ -114,21 +166,20 @@ def handle_url(x):
 
 def generate_food_recipe(x):
     ingredients = list(map(handle_ingredients, x[INGREDIENTS]))
-    image_url = None
-    if SCRIPT in x:
-        a = x[SCRIPT].split('photoUrl: ')
-        a = list(filter(lambda x: x, a))
-        a = list(map(handle_url, a))
-        image_url = a[0]
-        if len(a[0]) < 100:
-            image_url = a[0]
+    image_url = x.get(IMAGE_URL, '')
+    desc = ' '.join(x[DIRECTIONS])
+    if len(desc) > 5000:
+        desc = desc[:5000]
+    ing = ', '.join(ingredients)
+    if len(ing) > 1000:
+        ing = ing[:1000]
     recipe = {
-        'user': x[AUTHOR],
+        'user': x[AUTHOR_ID],
         'dish_name': x[FULL_NAME],
-        'description': ' '.join(x[DIRECTIONS]),
+        'description': desc,
         'calories': random.randint(10, 3000),
         'is_public': True,
-        'ingredients': ', '.join(ingredients),
+        'ingredients': ing,
         'image_url': image_url,
         'created_at': timestamp,
         'updated_at': timestamp
@@ -146,18 +197,21 @@ def seed_recipe(data):
 
 
 def generate_food_review(x):
-    r = x[REVIEW]
+    c = x[COMMENT]
+    if len(c) > 1000:
+        c = c[:1000]
+    c = c.replace('\x00', '')
     rv = {
-        'user': r[USER_ID],
-        'dish': r[REVIEW_ID],
-        'score': r[RATING],
-        'comment': r[COMMENT],
+        'user': x[USER_ID],
+        'dish': x[RECIPE_ID],
+        'score': x[RATING],
+        'comment': c,
         'created_at': timestamp,
         'updated_at': timestamp
     }
     return {
         MODEL: FOODS_RATING,
-        PK: r[REVIEW_ID],
+        PK: x[REVIEW_ID],
         FIELDS: rv
     }
 
@@ -170,7 +224,11 @@ def seed_review(data):
 if __name__ == '__main__':
     data = read_pickle(DATA)
     u = seed_user(data)
+    with open('u1.json', 'w') as file:
+        json.dump(u, file)
     r = seed_recipe(data)
+    with open('r1.json', 'w') as file:
+        json.dump(r, file)
     rv = seed_review(data)
-    with open('data1.json', 'w') as file:
-        json.dump(u+r+rv, file)
+    with open('rv1.json', 'w') as file:
+        json.dump(rv, file)
