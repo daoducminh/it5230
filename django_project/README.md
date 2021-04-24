@@ -1,4 +1,4 @@
-# IT4421 - Django Web Application
+# IT5230 - Django Web Application
 
 ## Prerequisite
 
