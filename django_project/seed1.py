@@ -6,6 +6,11 @@ from faker import Faker
 
 FOLDER = 'downloads/'
 DATA = FOLDER + 'data.pkl'
+FULL_FOLDER = FOLDER+'full/'
+USER_DATA = FULL_FOLDER + 'users.pkl'
+RECIPE_DATA = FULL_FOLDER + 'recipes.pkl'
+REVIEW_DATA = FULL_FOLDER + 'review.pkl'
+FOLLOW = FULL_FOLDER + 'follows.pkl'
 
 MODEL = 'model'
 PK = 'pk'
@@ -221,7 +226,7 @@ def seed_review(data):
     return list(map(generate_food_review, reviews))
 
 
-if __name__ == '__main__':
+def seed_combined_data():
     data = read_pickle(DATA)
     u = seed_user(data)
     with open('u1.json', 'w') as file:
@@ -232,3 +237,14 @@ if __name__ == '__main__':
     rv = seed_review(data)
     with open('rv1.json', 'w') as file:
         json.dump(rv, file)
+
+
+def seed_split_data():
+    u_data = read_pickle(USER_DATA)
+
+
+if __name__ == '__main__':
+    # seed_split_data()
+    # seed_combined_data()
+    data = read_pickle(DATA)
+    print(data.keys())
