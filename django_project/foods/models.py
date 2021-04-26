@@ -41,6 +41,7 @@ class Dish(models.Model):
     image = models.ImageField(
         upload_to=dish_image_path
     )
+    category = models.CharField(max_length=500, null=True)
     image_url = models.CharField(max_length=1000, null=True)
     ingredients = models.CharField(max_length=5000)
     score = models.FloatField(default=0)
