@@ -12,8 +12,8 @@ rm foods/migrations/*.py
 mv foods/migrations/__init__ foods/migrations/__init__.py
 
 # Migration
-python manage.py makemigrations
-python manage.py migrate
+# python manage.py makemigrations
+# python manage.py migrate
 
 # Load data
 # unzip -o data.zip

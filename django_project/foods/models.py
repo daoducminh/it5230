@@ -66,7 +66,12 @@ class Dish(models.Model):
                 name='dish_score_lte_5'
             )
         ]
-        ordering = ['-updated_at']
+        indexes = [
+            models.Index(fields=['dish_name'], name='dish_name_idx'),
+            models.Index(fields=['is_public'], name='is_public_idx'),
+            models.Index(fields=['category'], name='category_idx'),
+            models.Index(fields=['-created_at', '-updated_at'])
+        ]
 
 
 class Rating(models.Model):
@@ -92,7 +97,9 @@ class Rating(models.Model):
             ),
         ]
         unique_together = ('user', 'dish')
-        ordering = ['-updated_at']
+        indexes = [
+            models.Index(fields=['-created_at', '-updated_at'])
+        ]
 
 
 class Menu(models.Model):
