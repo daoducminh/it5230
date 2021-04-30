@@ -9,7 +9,7 @@ from django.db.models.functions import Now
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .views import LoginRequiredView
-from .models import Menu, Dish, Menu_Dish
+from .models import Menu, Dish, MenuDish
 from utils.calories import bmr
 import json
 import random
@@ -79,7 +79,7 @@ class create_query(LoginRequiredView):
         for d in dishes:
             print(d)
             dish = Dish.objects.get(pk=d['dish_id'])
-            m_d = Menu_Dish.objects.create(
+            m_d = MenuDish.objects.create(
                 dish=dish,
                 menu = menu,
                 count=d['count']
@@ -113,11 +113,11 @@ class update_query(LoginRequiredView):
         menu.limit = limit
         menu.save()
 
-        Menu_Dish.objects.filter(menu=menu).delete()
+        MenuDish.objects.filter(menu=menu).delete()
 
         for d in dishes:
             dish = Dish.objects.get(pk=d['dish_id'])
-            m_d = Menu_Dish.objects.create(
+            m_d = MenuDish.objects.create(
                 dish=dish,
                 menu = menu,
                 count=d['count']
@@ -142,7 +142,7 @@ class delete_query(LoginRequiredView):
     def execute(self, request, content):
         menu_id = content['menu_id']
         menu = Menu.objects.get(pk = menu_id)
-        Menu_Dish.objects.filter(menu=menu).delete()
+        MenuDish.objects.filter(menu=menu).delete()
         menu.delete()
         return HttpResponse(CRUD_SUCCESS_NAVIGATE)
 
@@ -207,7 +207,7 @@ class detail(LoginRequiredView):
         menus_dishes = []
         for dish in dishes:
             md = {}
-            md['count'] = Menu_Dish.objects.get(menu=menu, dish=dish).count
+            md['count'] = MenuDish.objects.get(menu=menu, dish=dish).count
             menus_dishes.append(md)
         return render(request, "menu/detail.html", {
             'menu': menu,

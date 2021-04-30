@@ -1,3 +1,7 @@
+# Migration files
+foods/migrations/*.py
+!foods/migrations/__init__.py
+
 # Env
 .env-ci
 

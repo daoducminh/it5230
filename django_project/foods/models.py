@@ -15,22 +15,6 @@ class User(models.Model):
     def __str__(self):
         return self.user.username
 
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(weight__gt=0),
-                name='weight_gt_0'
-            ),
-            models.CheckConstraint(
-                check=models.Q(height__gt=100),
-                name='height_gt_100'
-            ),
-            models.CheckConstraint(
-                check=models.Q(diet_factor__gt=0),
-                name='diet_factor_gt_0'
-            )
-        ]
-
 
 class Dish(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
@@ -42,6 +26,7 @@ class Dish(models.Model):
         upload_to=dish_image_path
     )
     category = models.CharField(max_length=500, null=True)
+    total_time = models.IntegerField()
     image_url = models.CharField(max_length=1000, null=True)
     ingredients = models.CharField(max_length=5000)
     score = models.FloatField(default=0)
@@ -52,20 +37,6 @@ class Dish(models.Model):
         return self.dish_name
 
     class Meta:
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(calories__gt=0),
-                name='calories_gt_0'
-            ),
-            models.CheckConstraint(
-                check=models.Q(score__gte=0),
-                name='dish_score_gte_0'
-            ),
-            models.CheckConstraint(
-                check=models.Q(score__lte=5),
-                name='dish_score_lte_5'
-            )
-        ]
         indexes = [
             models.Index(fields=['dish_name'], name='dish_name_idx'),
             models.Index(fields=['is_public'], name='is_public_idx'),
@@ -86,16 +57,6 @@ class Rating(models.Model):
         return f'{self.user.pk}-{self.dish.pk}'
 
     class Meta:
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(score__gte=0),
-                name='rating_score_gte_0'
-            ),
-            models.CheckConstraint(
-                check=models.Q(score__lte=5),
-                name='rating_score_lte_5'
-            ),
-        ]
         unique_together = ('user', 'dish')
         indexes = [
             models.Index(fields=['-created_at', '-updated_at'])
@@ -107,21 +68,13 @@ class Menu(models.Model):
     description = models.CharField(max_length=250)
     mealtime = models.DateTimeField()
     limit = models.IntegerField()
-    dishes = models.ManyToManyField(Dish, null=True, through="Menu_Dish")
+    dishes = models.ManyToManyField(Dish, null=True, through="MenuDish")
 
     # calories it not necessary but db keep it in local, i am not able to fix it
     calories = models.IntegerField(default=0)
 
 
-class Menu_Dish(models.Model):
+class MenuDish(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     count = models.IntegerField(default=1)
-
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(count__gt=0),
-                name="count_gt_0"
-            )
-        ]
