@@ -26,7 +26,6 @@
                     <a href="{% url 'dish_detail' dish.pk %}">{{ dish.dish_name }}</a>
                 </h4>
                 <h5>{{dish.calories}} kcal</h5>
-                <p class="card-text">{{ dish.description }}</p>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Đánh giá trung bình: {{dish.score}}/5</small>
