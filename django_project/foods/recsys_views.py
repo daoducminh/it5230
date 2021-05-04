@@ -7,7 +7,7 @@ from django.views.generic import View
 from django.http import JsonResponse
 from .constants.pagination import *
 from django.core import serializers
-from .i18n.vi import *
+from .i18n.en import *
 from .models import Dish, Rating
 from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
     AdminListView, SuperuserDeleteView

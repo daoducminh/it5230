@@ -8,8 +8,8 @@ from faker import Faker
 REAL_DISHES_DATA = 'real_dishes.pkl'
 POOL_DATA = 'pool.pkl'
 
-ADMINS = 20
-USERS = 30
+ADMINS = 1
+USERS = 1
 DISHES = 200
 
 ADMIN_RANGE = (1, 1 + ADMINS)
@@ -201,16 +201,16 @@ def test_dish_data(filename):
 
 
 def generate_data():
-    real_dishes = load_pickle(REAL_DISHES_DATA)
-    pool = load_pickle(POOL_DATA)
+    # real_dishes = load_pickle(REAL_DISHES_DATA)
+    # pool = load_pickle(POOL_DATA)
     a = seed_user()
-    a += real_dishes
-    a += seed_food_dish(len(real_dishes), pool)
-    a += seed_food_rating(len(real_dishes))
+    # a += real_dishes
+    # a += seed_food_dish(len(real_dishes), pool)
+    # a += seed_food_rating(len(real_dishes))
     with open('data.json', 'w') as file:
         json.dump(a, file)
 
 
 if __name__ == '__main__':
     generate_data()
-    test_dish_data('data.json')
+    # test_dish_data('data.json')

@@ -1,58 +1,60 @@
-{% extends "base.html" %}
+{% extends "base/default.html" %}
 
 {% load static %}
 
 {% block title %}Dishes{% endblock %}
 
 {% block content %}
-<div class="row">
-    {% for dish in page_obj.object_list %}
-    <div class="col-lg-3 col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="h-75 d-flex align-items-center">
-                <a href="{% url 'dish_detail' dish.pk %}">
-                    {% if dish.image %}
-                    <img class="card-img-top rounded mx-auto d-block"
-                        src="/media/{{ dish.image|default:'default.jpg' }}" alt="Không có hình ảnh">
-                    {% elif dish.image_url %}
-                    <img class="img-fluid img-thumbnail" src="{{ dish.image_url }}" alt="Không có hình ảnh">
-                    {% else %}
-                    <img class="card-img-top rounded mx-auto d-block" src="/media/default.jpg" alt="Không có hình ảnh">
-                    {% endif %}
-                </a>
+    <div class="row">
+        {% for dish in page_obj.object_list %}
+            <div class="col-lg-3 col-md-3 mb-3">
+                <div class="card h-100">
+                    <a href="{% url 'dish_detail' dish.pk %}">
+                        {% if dish.image %}
+                            <img class="card-img-top"
+                                 src="/media/{{ dish.image|default:'default.jpg' }}"
+                                 alt="No image"
+                            >
+                        {% elif dish.image_url %}
+                            <img class="card-img-top" src="{{ dish.image_url }}" alt="No image">
+                        {% else %}
+                            <img class="card-img-top"
+                                 src="/media/default.jpg"
+                                 alt="No image"
+                            >
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="{% url 'dish_detail' dish.pk %}">{{ dish.dish_name }}</a>
+                        </h4>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Ratings: {{ dish.score }}/5</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h4 class="card-title">
-                    <a href="{% url 'dish_detail' dish.pk %}">{{ dish.dish_name }}</a>
-                </h4>
-                <h5>{{dish.calories}} kcal</h5>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">Đánh giá trung bình: {{dish.score}}/5</small>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-<div class="mb-4">
-    <div class="pagination d-flex justify-content-center">
+    <div class="mb-4">
+        <div class="pagination d-flex justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
-            <a class="btn btn-primary" href="?page=1">&laquo; first</a>
-            <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a class="btn btn-primary" href="?page=1">&laquo; first</a>
+                <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
                 <button class="btn btn-secondary" disabled>
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages}}
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                 </button>
             </span>
 
             {% if page_obj.has_next %}
-            <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
-            <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
+                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
+        </div>
     </div>
-</div>
 {% endblock %}

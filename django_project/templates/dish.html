@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base/default.html" %}
 
 {% block title %}Dish{% endblock %}
 
@@ -6,11 +6,11 @@
     <div class="row m-5">
         <div class="col-lg-3">
             {% if object.image %}
-                <img class="card-img-top" src="/media/{{ object.image|default:'default.jpg' }}" alt="Không có hình ảnh">
+                <img class="card-img-top" src="/media/{{ object.image|default:'default.jpg' }}" alt="No image">
             {% elif object.image_url %}
-                <img class="card-img-top" src="{{ object.image_url }}" alt="Không có hình ảnh">
+                <img class="card-img-top" src="{{ object.image_url }}" alt="No image">
             {% else %}
-                <img class="card-img-top" src="/media/default.jpg" alt="Không có hình ảnh">
+                <img class="card-img-top" src="/media/default.jpg" alt="No image">
             {% endif %}
         </div>
         <div class="col-lg-9">
@@ -19,27 +19,26 @@
             </div>
             <table class="table table-hover">
                 <tr>
-                    <th>Người sở hữu:</th>
-                    <td><a href="{% url 'profile_detail' object.user.pk %}">{{ object.user }}</a></td>
+                    <th>Owner:</th>
+                    <td><a href="{% url 'profile_detail' object.user.pk %}">{{ object.user.first_name }} {{ object.user.last_name }}</a></td>
                 </tr>
                 <tr>
-                    <th>Nguyên liệu:</th>
+                    <th>Ingredients:</th>
                     <td>{{ object.ingredients }}</td>
                 </tr>
                 <tr>
-                    <th>Mô tả:</th>
+                    <th>Description:</th>
                     <td>{{ object.description }}</td>
                 </tr>
                 <tr>
-                    <th>Lượng calories:</th>
+                    <th>Calories:</th>
                     <td>{{ object.calories }} kcal</td>
                 </tr>
                 <tr>
-                    <th>Trạng thái:</th>
-                    <td>{{ object.is_public|yesno:"Công khai, Riêng tư" }}</td>
+                    <td>{{ object.is_public|yesno:"Public, Private" }}</td>
                 </tr>
                 <tr>
-                    <th>Đánh giá trung bình:</th>
+                    <th>Ratings:</th>
                     <td><span class="mr-2">{{ object.score }}/5</span><i class="fas fa-star"></i></td>
                 </tr>
             </table>
@@ -86,7 +85,7 @@
                         <a type="button" class="btn btn-primary m-2" href="{% url 'user_update_dish' object.id %}">Chỉnh
                             sửa</a>
                         <a type="button" class="btn btn-danger m-2" href="#" data-toggle="modal"
-                           data-target="#confirmModal">Xóa</a>
+                           data-target="#confirmModal">Delete</a>
                     {% endif %}
                 {% endif %}
             </div>
@@ -96,14 +95,14 @@
     <div class="row d-flex justify-content-center m-5">
         <div class="panel panel-default w-100">
             <div class="panel-heading">
-                <h3 class="panel-title">Đánh giá bởi người dùng</h3>
+                <h3 class="panel-title">User's reviews:</h3>
             </div>
             <div class="panel-body">
                 <ul class="list-group">
                     {% for dish in page_obj.object_list %}
                         <li class="list-group-item">
                             <div>
-                                <a href="{% url 'profile_detail' dish.user.pk %}">{{ dish.user }}</a>
+                                <a href="{% url 'profile_detail' dish.user.pk %}">{{ dish.user.first_name }} {{ dish.user.last_name }}</a>
                                 <div>
                                     <span>{{ dish.score }}</span>
                                     <i class="fas fa-star"></i>
@@ -145,7 +144,7 @@
     <div class="row d-flex justify-content-center m-5">
         <div class="panel panel-default w-100">
             <div class="panel-heading">
-                <h3 class="panel-title">Sản phẩm tương tự</h3>
+                <h3 class="panel-title">Recommendations</h3>
             </div>
             <div class="panel-body container-fluid">
                 <div class="row flex-nowrap" id="knn" style="overflow-x: auto; white-space: nowrap;">

@@ -8,7 +8,7 @@ from django.views.generic.base import View
 
 from .constants.pagination import PROFILES_PER_PAGE
 from .forms import UserForm, BaseUserForm
-from .i18n.vi import *
+from .i18n.en import *
 from .models import Dish
 from .views import LoginRequiredView, AdminOnlyView
 

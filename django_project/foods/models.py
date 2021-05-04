@@ -61,20 +61,3 @@ class Rating(models.Model):
         indexes = [
             models.Index(fields=['-created_at', '-updated_at'])
         ]
-
-
-class Menu(models.Model):
-    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
-    description = models.CharField(max_length=250)
-    mealtime = models.DateTimeField()
-    limit = models.IntegerField()
-    dishes = models.ManyToManyField(Dish, null=True, through="MenuDish")
-
-    # calories it not necessary but db keep it in local, i am not able to fix it
-    calories = models.IntegerField(default=0)
-
-
-class MenuDish(models.Model):
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
-    count = models.IntegerField(default=1)

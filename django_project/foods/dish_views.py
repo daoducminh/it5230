@@ -7,7 +7,7 @@ from django.views.generic import View
 
 from .constants.pagination import *
 from .forms import DishForm, RatingForm
-from .i18n.vi import *
+from .i18n.en import *
 from .models import Dish, Rating
 from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
     AdminListView, SuperuserDeleteView

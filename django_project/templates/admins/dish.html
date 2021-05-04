@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "base/default.html" %}
 
 {% block title %}Dish{% endblock %}
 
 {% block content %}
 <div class="row m-5">
     <div class="col-lg-6">
-        <img class="card-img-top" src="/media/{{ object.image|default:"default.jpg" }}" alt="Không có hình ảnh">
+        <img class="card-img-top" src="/media/{{ object.image|default:"default.jpg" }}" alt="No image">
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-center">
@@ -13,33 +13,33 @@
         </div>
         <table class="table table-hover">
             <tr>
-                <th>Người sở hữu:</th>
+                <th>Owner:</th>
                 <td><a href="{% url 'profile_detail' object.user.pk %}">{{ object.user }}</a></td>
             </tr>
             <tr>
-                <th>Mô tả:</th>
+                <th>Description:</th>
                 <td>{{ object.description }}</td>
             </tr>
             <tr>
-                <th>Lượng calories:</th>
+                <th>Calories:</th>
                 <td>{{ object.calories }} kcal</td>
             </tr>
             <tr>
-                <th>Trạng thái:</th>
-                <td>{{ object.is_public|yesno:"Công khai, Riêng tư" }}</td>
+                <th>Status:</th>
+                <td>{{ object.is_public|yesno:"Public, Private" }}</td>
             </tr>
             <tr>
-                <th>Thành phần:</th>
+                <th>Ingredients:</th>
                 <td>{{ object.ingredients }}</td>
             </tr>
             <tr>
-                <th>Đánh giá trung bình:</th>
+                <th>Ratings:</th>
                 <td><span class="mr-2">{{ object.score }}/5</span><i class="fas fa-star"></i></td>
             </tr>
         </table>
         <div class="row m-3 d-flex justify-content-center">
-            <a type="button" class="btn btn-primary m-2" href="{% url 'admin_update_dish' object.id %}">Chỉnh sửa</a>
-            <a type="button" class="btn btn-danger m-2" href="#" data-toggle="modal" data-target="#confirmModal">Xóa</a>
+            <a type="button" class="btn btn-primary m-2" href="{% url 'admin_update_dish' object.id %}">Update</a>
+            <a type="button" class="btn btn-danger m-2" href="#" data-toggle="modal" data-target="#confirmModal">Delete</a>
         </div>
     </div>
 </div>
@@ -47,7 +47,7 @@
 <div class="row d-flex justify-content-center m-5">
     <div class="panel panel-default w-100">
         <div class="panel-heading">
-            <h3 class="panel-title">Đánh giá bởi người dùng</h3>
+            <h3 class="panel-title">User's reviews</h3>
         </div>
         <div class="panel-body">
             <ul class="list-group">
