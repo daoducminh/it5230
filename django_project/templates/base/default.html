@@ -13,31 +13,49 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
           crossorigin="anonymous">
-    <!-- Custom styles for this template-->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
     <link rel="shortcut icon" type="image/png" href="/media/favicon.ico"/>
+    <!-- Bootstrap core JavaScript-->
+    <!-- jQuery library -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    {#<script src="{% static 'js/jquery-ui.min.js' %}"></script>#}
+    <!-- Popper JS -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Custom styles for this base template-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <!-- Custom style for this template-->
     {% block style %}
     {% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-gradient-light">
+<nav class="navbar navbar-expand-lg bg-light navbar-light">
     <div class="container">
         <a class="navbar-brand" href="/">
             <img src="/media/logo.jpg" width="40px">
             Food Delicious
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-responsive"
+                aria-controls="navbar-responsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <form class="form-inline ml-auto w-50">
-                <input type="text" class="form-control w-75" placeholder="Search the site">
-                <button class="btn btn-link" type="submit">
-                    <span class="fas fa-search"></span>
-                </button>
-            </form>
+        <div class="collapse navbar-collapse" id="navbar-responsive">
+            <div class="navbar-nav mx-auto">
+                <form class="form-inline">
+                    <div class="input-group" id="box-search">
+                        <input type="text" class="form-control border-0"
+                               placeholder="Search the site" name="search"
+                               id="input-search">
+                        <div class="input-group-append bg-white">
+                            <button class="input-group-text bg-white border-0" id="btn-search">
+                                <i class="fas fa-search bg-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <ul class="navbar-nav ml-auto">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
@@ -95,14 +113,6 @@
 <footer class="container-fluid sticky-footer py-5 bg-dark mt-auto">
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Food Delicious 2021</p></div>
 </footer>
-<!-- Bootstrap core JavaScript-->
-<!-- jQuery library -->
-<script src="{% static 'js/jquery.min.js' %}"></script>
-{#<script src="{% static 'js/jquery-ui.min.js' %}"></script>#}
-<!-- Popper JS -->
-<script src="{% static 'js/popper.min.js' %}"></script>
-<!-- Latest compiled JavaScript -->
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
 <!-- Custom scripts for all pages-->
 {#<script src="{% static 'js/app.js' %}"></script>#}
 </body>

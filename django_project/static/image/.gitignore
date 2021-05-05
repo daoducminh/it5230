@@ -1,2 +1,5 @@
 *
 !.gitignore
+!default.jpg
+!logo.jpg
+!favicon.ico
