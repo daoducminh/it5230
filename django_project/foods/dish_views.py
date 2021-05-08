@@ -182,7 +182,7 @@ class SearchDishView(View):
 
 class AllPublicDishView(View):
     def get(self, request):
-        dishes = Dish.objects.filter(is_public=True)[:24]
+        dishes = Dish.objects.filter(is_public=True)[:4]
         if dishes:
             p = Paginator(dishes, DISHES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))

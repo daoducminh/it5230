@@ -15,7 +15,7 @@
                     {% elif dish.image_url %}
                     <img class="card-img-top" src="{{ dish.image_url }}" alt="No image">
                     {% else %}
-                    <img class="card-img-top" src="/media/default.jpg" alt="No image">
+                    <img class="card-img-top" src="{% static 'image/default.jpg' %}" alt="No image">
                     {% endif %}
                 </a>
             </div>

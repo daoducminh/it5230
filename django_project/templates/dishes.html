@@ -2,14 +2,20 @@
 
 {% load static %}
 
-{% block title %}Dishes{% endblock %}
+{% block title %}Homepage{% endblock %}
 
 {% block content %}
+    <div class="jumbotron py-4 text-center ads-book mt-3 d-flex flex-row justify-content-between">
+        <div></div>
+        <div>The Two Peas & Their Pod Cookbook is here. <a href="bit.ly/2TJmXMQ">Order Now!</a></div>
+        <img class="img-fluid" src="{% static 'image/book-cover-small.jpg' %}"
+             alt="" width="80">
+    </div>
     <div class="row">
         {% for dish in page_obj.object_list %}
             <div class="col-lg-3 col-md-3 mb-3">
                 <div class="card h-100">
-                    <a href="{% url 'dish_detail' dish.pk %}">
+                    <a href="{% url 'dish_detail' dish.pk %}" class="link-decoration-none">
                         {% if dish.image %}
                             <img class="card-img-top"
                                  src="/media/{{ dish.image|default:'default.jpg' }}"
@@ -19,14 +25,17 @@
                             <img class="card-img-top" src="{{ dish.image_url }}" alt="No image">
                         {% else %}
                             <img class="card-img-top"
-                                 src="/media/default.jpg"
+                                 src="{% static 'image/default.jpg' %}"
                                  alt="No image"
                             >
                         {% endif %}
                     </a>
                     <div class="card-body">
                         <h4 class="card-title">
-                            <a href="{% url 'dish_detail' dish.pk %}">{{ dish.dish_name }}</a>
+                            <a href="{% url 'dish_detail' dish.pk %}"
+                               class="link-decoration-none">
+                                {{ dish.dish_name }}
+                            </a>
                         </h4>
                     </div>
                     <div class="card-footer">
