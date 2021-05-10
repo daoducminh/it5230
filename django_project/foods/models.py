@@ -16,6 +16,11 @@ class User(models.Model):
         return self.user.username
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100)
+
+
 class Dish(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     dish_name = models.CharField(max_length=200)
@@ -25,7 +30,7 @@ class Dish(models.Model):
     image = models.ImageField(
         upload_to=dish_image_path
     )
-    category = models.CharField(max_length=500, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=0)
     total_time = models.IntegerField()
     image_url = models.CharField(max_length=1000, null=True)
     ingredients = models.CharField(max_length=5000)

@@ -41,11 +41,11 @@ footer {
     font-size: small;
 }
 
-.menu-item {
+.link-green {
     color: #757575;
 }
 
-.menu-item:hover {
+.link-green:hover {
     color: #53800A;
 }
 
@@ -59,4 +59,15 @@ footer {
 
 .ads-book {
     background-color: #e5f5f7;
+}
+
+.bg-lime {
+    background: linear-gradient(0deg, #83B334 0%, #90C041 89%);
+}
+
+#banner-category-container {
+    border-radius: 10px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    transform: translateY(-25%);
 }

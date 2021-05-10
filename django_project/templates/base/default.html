@@ -7,21 +7,22 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>{% block title %}Home{% endblock %} - Food Delicious</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <!-- Custom fonts for this template-->
+    <link rel="shortcut icon" type="image/png" href="/media/favicon.ico"/>
+    <!-- Bootstrap 4.1.3 CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
           crossorigin="anonymous">
-    <link rel="shortcut icon" type="image/png" href="/media/favicon.ico"/>
-    <!-- Bootstrap core JavaScript-->
-    <!-- jQuery library -->
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    {#<script src="{% static 'js/jquery-ui.min.js' %}"></script>#}
-    <!-- Popper JS -->
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <!-- Latest compiled JavaScript -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Bootstrap 4.1.3 JS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
     <!-- Custom styles for this base template-->
     <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
     <!-- Custom style for this template-->
@@ -89,17 +90,17 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item menu-item">Dessert</a>
-                        <a href="#" class="dropdown-item menu-item">Lunch</a>
-                        <a href="#" class="dropdown-item menu-item">One-Dish Meal</a>
-                        <a href="#" class="dropdown-item menu-item">Vegetable</a>
-                        <a href="#" class="dropdown-item menu-item">Breakfast</a>
-                        <a href="#" class="dropdown-item menu-item">Beverages</a>
-                        <a href="#" class="dropdown-item menu-item">Meat</a>
-                        <a href="#" class="dropdown-item menu-item">Chicken</a>
-                        <a href="#" class="dropdown-item menu-item">Sauces</a>
-                        <a href="#" class="dropdown-item menu-item">Pork</a>
-                        <a href="#" class="dropdown-item menu-item">All Recipes</a>
+                        <a href="#" class="dropdown-item link-green">Dessert</a>
+                        <a href="#" class="dropdown-item link-green">Lunch</a>
+                        <a href="#" class="dropdown-item link-green">One-Dish Meal</a>
+                        <a href="#" class="dropdown-item link-green">Vegetable</a>
+                        <a href="#" class="dropdown-item link-green">Breakfast</a>
+                        <a href="#" class="dropdown-item link-green">Beverages</a>
+                        <a href="#" class="dropdown-item link-green">Meat</a>
+                        <a href="#" class="dropdown-item link-green">Chicken</a>
+                        <a href="#" class="dropdown-item link-green">Sauces</a>
+                        <a href="#" class="dropdown-item link-green">Pork</a>
+                        <a href="#" class="dropdown-item link-green">All Recipes</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -111,10 +112,10 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item menu-item">Chicken</a>
-                        <a href="#" class="dropdown-item menu-item">Spaghetti</a>
-                        <a href="#" class="dropdown-item menu-item">Steak</a>
-                        <a href="#" class="dropdown-item menu-item">Stew</a>
+                        <a href="#" class="dropdown-item link-green">Chicken</a>
+                        <a href="#" class="dropdown-item link-green">Spaghetti</a>
+                        <a href="#" class="dropdown-item link-green">Steak</a>
+                        <a href="#" class="dropdown-item link-green">Stew</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -126,10 +127,10 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item menu-item">Cookies and Brownies</a>
-                        <a href="#" class="dropdown-item menu-item">Bars</a>
-                        <a href="#" class="dropdown-item menu-item">Cake</a>
-                        <a href="#" class="dropdown-item menu-item">Frozen desserts</a>
+                        <a href="#" class="dropdown-item link-green">Cookies and Brownies</a>
+                        <a href="#" class="dropdown-item link-green">Bars</a>
+                        <a href="#" class="dropdown-item link-green">Cake</a>
+                        <a href="#" class="dropdown-item link-green">Frozen desserts</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -146,7 +147,6 @@
         </div>
     </div>
 </nav>
-<!-- Page Content-->
 <div class="container">
     {% if messages %}
         {% for message in messages %}
@@ -164,8 +164,6 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    {% block content %}
-    {% endblock %}
     <!-- Logout Modal-->
     <div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -185,6 +183,8 @@
         </div>
     </div>
 </div>
+{% block content %}
+{% endblock %}
 <!-- Footer-->
 <footer class="container-fluid sticky-footer py-5 mt-auto">
     <div class="container"><p class="m-0 text-center">Copyright &copy; Food Delicious 2021</p></div>
