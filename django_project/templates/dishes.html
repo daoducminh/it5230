@@ -4,6 +4,22 @@
 
 {% block title %}Homepage{% endblock %}
 
+{% block style %}
+    <style>
+        .card-img-top {
+            object-fit: cover;
+        }
+
+        #jumbotron-author {
+            background-color: #F3F8EC;
+        }
+
+        #author-intro {
+            font-size: 18px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="container mb-5">
         <div class="jumbotron py-4 ads-book mt-3 d-flex flex-row justify-content-sm-start justify-content-lg-center"
@@ -123,7 +139,7 @@
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <select name="course" id="input-course"
-                                    class="form-control w-100 custom-select">
+                                    class="form-control w-100 custom-select link-select">
                                 <option value="" disabled selected>By Course...</option>
                                 <option value="">Main Dishes</option>
                                 <option value="">Desserts</option>
@@ -136,8 +152,8 @@
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
-                            <select name="course" id="input-course"
-                                    class="form-control w-100 custom-select">
+                            <select name="diet" id="input-diet"
+                                    class="form-control w-100 custom-select link-select">
                                 <option value="" disabled selected>By Diet...</option>
                                 <option value="">Vegetarian</option>
                                 <option value="">Vegan</option>
@@ -147,8 +163,8 @@
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
-                            <select name="course" id="input-course"
-                                    class="form-control w-100 custom-select">
+                            <select name="category" id="input-category"
+                                    class="form-control w-100 custom-select link-select">
                                 <option value="" disabled selected>Most Popular...</option>
                                 <option value="">Pumpkin</option>
                                 <option value="">Vegetarian</option>
@@ -165,6 +181,144 @@
         </div>
     </div>
     <!-- End of category banner-->
+    <!-- Section latest-->
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-between">
+            <h2>The Latest</h2>
+            <a href="#" class="link-green align-self-center">View All Recent Posts</a>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 col-md-6">
+                <div class="card border-0">
+                    <img src="{% static 'image/index/post-1.jpg' %}" alt="" class="img-fluid">
+                    <div class="card-body">
+                        <h4>This and That</h4>
+                        <p>His We planted our garden and now we watch it grow. I also planted an espalier apple tree and
+                            more flowers. The lilacs are in full bloom right now. Tiger on the loose. Yikes. I have a
+                            bad case of tennis elbow and had to go to the doctor this week. No mountain biking for…</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-between justify-content-sm-start">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card border-0">
+                            <img src="{% static 'image/index/post-2.jpg' %}" alt="" class="card-img-top img-fluid">
+                            <div class="card-body">
+                                <h5>Skillet Chocolate Chip Cookie</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0">
+                            <img src="{% static 'image/index/post-3.jpg' %}" alt="" class="card-img-top img-fluid">
+                            <div class="card-body">
+                                <h5>Creamy Lemon Ravioli with Spinach & Peas</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card border-0">
+                            <img src="{% static 'image/index/post-4.jpg' %}" alt="" class="card-img-top img-fluid">
+                            <div class="card-body">
+                                <h5>25 Mother’s Day Recipes</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0">
+                            <img src="{% static 'image/index/post-5.jpg' %}" alt="" class="card-img-top img-fluid">
+                            <div class="card-body">
+                                <h5>Breakfast Burritos</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of section latest-->
+    <!-- Section vegetarian-->
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-between">
+            <h2>Vegetarian Recipes</h2>
+            <a href="#" class="link-green align-self-center">View All Vegetarian Recipes</a>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <div class="card border-0">
+                    <img src="{% static 'image/index/veg-1.jpg' %}" alt="" class="card-img img-fluid">
+                    <div class="card-body">
+                        <h4>Takeout Sesame Noodles</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card border-0">
+                    <img src="{% static 'image/index/veg-2.jpg' %}" alt="" class="card-img img-fluid">
+                    <div class="card-body">
+                        <h4>Pasta Primavera</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex flex-column justify-content-around">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="{% static 'image/index/veg-3.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>Hearty Vegetarian Chili</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <img src="{% static 'image/index/veg-4.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>Vegetable Lasagna</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <img src="{% static 'image/index/veg-5.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>Easy White Bean Skillet</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of section vegetarian-->
+    <!-- Banner about-->
+    <div class="jumbotron jumbotron-fluid mt-5" id="jumbotron-author">
+        <div class="container">
+            <div class="row d-flex flex-md-row flex-column-reverse">
+                <div class="col-12 col-md-7">
+                    <h2 class="my-4">Hi, I'm Maria</h2>
+                    <p id="author-intro" class="mr-5">I am so excited to cook and bake with you. The recipes you’ll find here are
+                        simple, fresh, family friendly, and sometimes a little decadent. I love vegetables, but I also
+                        have a sweet tooth. I am a cookie connoisseur and believe cookies make the world a better place.
+                        The kitchen is my happy place and the center of our home. It isn’t always clean, but it is
+                        always filled with laughter, good conversation, dancing, and delicious food. I hope you enjoy
+                        our recipes!</p>
+                    <button class="btn btn-success">Learn More</button>
+                </div>
+                <div class="col-12 col-md-5">
+                    <img src="{% static 'image/index/maria.jpg' %}" alt=""
+                         class="img-thumbnail img-fluid rounded-circle">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of banner about-->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
     <!-- -->
     {#    <div class="row">#}
     {#        {% for dish in page_obj.object_list %}#}
