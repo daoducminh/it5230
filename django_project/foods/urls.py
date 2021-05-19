@@ -48,7 +48,6 @@ urlpatterns = [
             path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
         ])),
     ])),
-
     # path('menu/', include([
     #     path('', menu_views.index.as_view(), name="menu_index"),
     #     path('create', menu_views.create.as_view(), name="menu_create"),
@@ -62,7 +61,7 @@ urlpatterns = [
     #     path('delete', menu_views.delete.as_view(), name="menu_delete"),
     #     path('query_filter_dish', menu_views.query_filter_dish, name="menu_query_filter_dish")
     # ])),
-    # path('rec/recipe/<int:pk>/', recsys_views.ItemKNNView.as_view(), name='rec_recipe')
+    # path('rec/recipe/<int:pk>/', recsys_views.ItemSVDView.as_view(), name='rec_recipe')
 ]
 
 handler404 = 'foods.views.error_404'

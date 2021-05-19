@@ -46,7 +46,7 @@
         <div class="collapse navbar-collapse flex-column" id="navbar-responsive">
             <div class="navbar-nav d-flex justify-content-between w-100 my-2 my-lg-0">
                 <span></span>
-                <form class="form-inline my-2 my-lg-0">
+                <form class="form-inline my-2 my-lg-0" action="/dish/">
                     <div class="input-group" id="box-search">
                         <input type="text" class="form-control border-0"
                                placeholder="Search the site" name="search"
@@ -147,7 +147,8 @@
         </div>
     </div>
 </nav>
-<div class="container">
+<!-- End of navigation-->
+<div class="container mb-3">
     {% if messages %}
         {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
@@ -189,6 +190,7 @@
 <footer class="container-fluid sticky-footer py-5 mt-auto">
     <div class="container"><p class="m-0 text-center">Copyright &copy; Food Delicious 2021</p></div>
 </footer>
+<!-- End of footer-->
 <!-- Custom scripts for all pages-->
 <script src="{% static 'js/common.js' %}"></script>
 {% block script %}

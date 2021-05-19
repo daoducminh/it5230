@@ -6,13 +6,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
 
-def index(request):
-    context = {
-        'app_name': 'Foods'
-    }
-    return render(request, 'index.html', context)
-
-
 class LoginRequiredView(LoginRequiredMixin, View):
     login_url = '/accounts/login'
 

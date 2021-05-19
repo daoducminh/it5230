@@ -1,9 +1,385 @@
 {% extends "base/default.html" %}
 
-{% block title %}Foods{% endblock %}
+{% load static %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block style %}
+    <style>
+        .card-img-top {
+            object-fit: cover;
+            height: 40vh;
+        }
+
+        #jumbotron-author {
+            background-color: #F3F8EC;
+        }
+
+        #author-intro {
+            font-size: 18px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-
-    <h1>Edit here!</h1>
-
+    <div class="container mb-5">
+        <div class="jumbotron py-4 ads-book mt-3 d-flex flex-row justify-content-sm-start justify-content-lg-center"
+             style="position: relative;">
+            <div class="w-75 text-center">The Two Peas & Their Pod Cookbook is here. <a href="bit.ly/2TJmXMQ">Order
+                Now!</a>
+            </div>
+            <img class="img-fluid" src="{% static 'image/index/book-cover-small.jpg' %}"
+                 alt="" width="70" style="position: absolute; right: 10px;top: 0; transform: rotate(10deg);">
+        </div>
+        <!-- First category row-->
+        <div class="row">
+            <div class="col-6 col-lg-3">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/main-dishes.jpg' %}"
+                             alt="" class="figure-img img-fluid">
+                        <h4>Main Dishes</h4>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/soups.jpg' %}"
+                             alt="" class="figure-img img-fluid">
+                        <h4>Soup</h4>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/cookies.jpg' %}"
+                             alt="" class="figure-img img-fluid">
+                        <h4>Cookies</h4>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/desserts.jpg' %}"
+                             alt="" class="figure-img img-fluid">
+                        <h4>Desserts</h4>
+                    </figure>
+                </a>
+            </div>
+        </div>
+        <!-- End of first category row-->
+        <!-- Second category row-->
+        <div class="row">
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/breakfast.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Breakfast</h6>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/vegetables.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Vegetarian</h6>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/appetizers.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Appetizers</h6>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/salads.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Salads</h6>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/pasta.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Pasta</h6>
+                    </figure>
+                </a>
+            </div>
+            <div class="col-4 col-lg-2">
+                <a href="#" class="link-decoration-none link-green">
+                    <figure class="figure d-flex flex-column align-items-center">
+                        <img src="{% static 'image/index/side-dishes.jpg' %}"
+                             alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
+                        <h6>Side Dishes</h6>
+                    </figure>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End of second category row-->
+    <!-- Category banner-->
+    <div class="jumbotron jumbotron-fluid bg-lime d-flex justify-content-center p-0 mt-5">
+        <div class="container d-flex justify-content-center px-0 px-md-5">
+            <div class="bg-light d-flex flex-column align-items-center justify-content-between py-md-3 w-75 mx-5 mx-sm-0"
+                 id="banner-category-container">
+                <h2 class="m-2">Find the perfect recipe</h2>
+                <div class="row w-100 m-2">
+                    <div class="col-12 col-lg-4">
+                        <div class="form-group">
+                            <select name="course" id="input-course"
+                                    class="form-control w-100 custom-select link-select">
+                                <option value="" disabled selected>By Course...</option>
+                                <option value="">Main Dishes</option>
+                                <option value="">Desserts</option>
+                                <option value="">Breakfast</option>
+                                <option value="">Side Dishes</option>
+                                <option value="">Salads</option>
+                                <option value="">Appetizers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="form-group">
+                            <select name="diet" id="input-diet"
+                                    class="form-control w-100 custom-select link-select">
+                                <option value="" disabled selected>By Diet...</option>
+                                <option value="">Vegetarian</option>
+                                <option value="">Vegan</option>
+                                <option value="">Gluten-Free</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="form-group">
+                            <select name="category" id="input-category"
+                                    class="form-control w-100 custom-select link-select">
+                                <option value="" disabled selected>Most Popular...</option>
+                                <option value="">Pumpkin</option>
+                                <option value="">Vegetarian</option>
+                                <option value="">Cookies</option>
+                                <option value="">Soup</option>
+                                <option value="">Salads</option>
+                                <option value="">Pasta</option>
+                                <option value="">Chicken</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of category banner-->
+    <!-- Section latest-->
+    {#    <div class="container mt-5">#}
+    {#        <div class="row d-flex justify-content-between">#}
+    {#            <h2>The Latest</h2>#}
+    {#            <a href="#" class="link-green align-self-center">View All Recent Posts</a>#}
+    {#        </div>#}
+    {#        <div class="row mt-3">#}
+    {#            <div class="col-12 col-md-6">#}
+    {#                <div class="card border-0">#}
+    {#                    <img src="{% static 'image/index/post-1.jpg' %}" alt="" class="img-fluid">#}
+    {#                    <div class="card-body">#}
+    {#                        <h4>This and That</h4>#}
+    {#                        <p>His We planted our garden and now we watch it grow. I also planted an espalier apple tree and#}
+    {#                            more flowers. The lilacs are in full bloom right now. Tiger on the loose. Yikes. I have a#}
+    {#                            bad case of tennis elbow and had to go to the doctor this week. No mountain biking for…</p>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            <div class="col-12 col-md-6 d-flex flex-column justify-content-between justify-content-sm-start">#}
+    {#                <div class="row">#}
+    {#                    <div class="col-6">#}
+    {#                        <div class="card border-0">#}
+    {#                            <img src="{% static 'image/index/post-2.jpg' %}" alt="" class="card-img-top img-fluid">#}
+    {#                            <div class="card-body">#}
+    {#                                <h5>Skillet Chocolate Chip Cookie</h5>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="col-6">#}
+    {#                        <div class="card border-0">#}
+    {#                            <img src="{% static 'image/index/post-3.jpg' %}" alt="" class="card-img-top img-fluid">#}
+    {#                            <div class="card-body">#}
+    {#                                <h5>Creamy Lemon Ravioli with Spinach & Peas</h5>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="row">#}
+    {#                    <div class="col-6">#}
+    {#                        <div class="card border-0">#}
+    {#                            <img src="{% static 'image/index/post-4.jpg' %}" alt="" class="card-img-top img-fluid">#}
+    {#                            <div class="card-body">#}
+    {#                                <h5>25 Mother’s Day Recipes</h5>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="col-6">#}
+    {#                        <div class="card border-0">#}
+    {#                            <img src="{% static 'image/index/post-5.jpg' %}" alt="" class="card-img-top img-fluid">#}
+    {#                            <div class="card-body">#}
+    {#                                <h5>Breakfast Burritos</h5>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+    <!-- End of section latest-->
+    <!-- Section vegetarian-->
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-between">
+            <h2>Vegetarian Recipes</h2>
+            <a href="#" class="link-green align-self-center">View All Vegetarian Recipes</a>
+        </div>
+        k
+        <div class="row mt-3 d-flex flex-column flex-md-row">
+            <div class="col-12 col-md-4">
+                <a class="card border-0 link-green" href="{% url 'dish_detail' veg.0.id %}">
+                    <img src="{% firstof veg.0.image veg.0.image_url '/media/default.jpg' %}"
+                         class="card-img-top img-fluid">
+                    <div class="card-body">
+                        <h4>{{ veg.0.dish_name }}</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a class="card border-0 link-green" href="{% url 'dish_detail' veg.1.id %}">
+                    <img src="{% firstof veg.1.image veg.1.image_url '/media/default.jpg' %}"
+                         class="card-img-top img-fluid">
+                    <div class="card-body">
+                        <h4>{{ veg.1.dish_name }}</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-4 d-flex flex-column justify-content-around">
+                <a class="row link-green" href="{% url 'dish_detail' veg.2.id %}">
+                    <div class="col-4">
+                        <img src="{% firstof veg.2.image veg.2.image_url '/media/default.jpg' %}"
+                         class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>{{ veg.2.dish_name }}</h5>
+                    </div>
+                </a>
+                <a class="row link-green" href="{% url 'dish_detail' veg.3.id %}">
+                    <div class="col-4">
+                        <img src="{% firstof veg.3.image veg.3.image_url '/media/default.jpg' %}"
+                         class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>{{ veg.3.dish_name }}</h5>
+                    </div>
+                </a>
+                <a class="row link-green" href="{% url 'dish_detail' veg.4.id %}">
+                    <div class="col-4">
+                        <img src="{% firstof veg.4.image veg.4.image_url '/media/default.jpg' %}"
+                         class="img-fluid">
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <h5>{{ veg.4.dish_name }}</h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End of section vegetarian-->
+    <!-- Banner about-->
+    <div class="jumbotron jumbotron-fluid mt-5" id="jumbotron-author">
+        <div class="container">
+            <div class="row d-flex flex-md-row flex-column-reverse">
+                <div class="col-12 col-md-7">
+                    <h2 class="my-4">Hi, I'm Maria</h2>
+                    <p id="author-intro" class="mr-5">I am so excited to cook and bake with you. The recipes you’ll find
+                        here are simple, fresh, family friendly, and sometimes a little decadent. I love vegetables, but
+                        I also have a sweet tooth. I am a cookie connoisseur and believe cookies make the world a better
+                        place. The kitchen is my happy place and the center of our home. It isn’t always clean, but it
+                        is always filled with laughter, good conversation, dancing, and delicious food. I hope you enjoy
+                        our recipes!</p>
+                    <button class="btn btn-success">Learn More</button>
+                </div>
+                <div class="col-12 col-md-5">
+                    <img src="{% static 'image/index/maria.jpg' %}" alt=""
+                         class="img-thumbnail img-fluid rounded-circle">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of banner about-->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    {#    <div class="row">#}
+    {#        {% for dish in page_obj.object_list %}#}
+    {#            <div class="col-lg-3 col-md-3 mb-3">#}
+    {#                <div class="card h-100">#}
+    {#                    <a href="{% url 'dish_detail' dish.pk %}" class="link-decoration-none">#}
+    {#                        {% if dish.image %}#}
+    {#                            <img class="card-img-top"#}
+    {#                                 src="/media/{{ dish.image|default:'default.jpg' }}"#}
+    {#                                 alt="No image"#}
+    {#                            >#}
+    {#                        {% elif dish.image_url %}#}
+    {#                            <img class="card-img-top" src="{{ dish.image_url }}" alt="No image">#}
+    {#                        {% else %}#}
+    {#                            <img class="card-img-top"#}
+    {#                                 src="{% static 'image/default.jpg' %}"#}
+    {#                                 alt="No image"#}
+    {#                            >#}
+    {#                        {% endif %}#}
+    {#                    </a>#}
+    {#                    <div class="card-body">#}
+    {#                        <h4 class="card-title">#}
+    {#                            <a href="{% url 'dish_detail' dish.pk %}"#}
+    {#                               class="link-decoration-none">#}
+    {#                                {{ dish.dish_name }}#}
+    {#                            </a>#}
+    {#                        </h4>#}
+    {#                    </div>#}
+    {#                    <div class="card-footer">#}
+    {#                        <small class="text-muted">Ratings: {{ dish.score }}/5</small>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        {% endfor %}#}
+    {#    </div>#}
+    {#    <div class="mb-4">#}
+    {#        <div class="pagination d-flex justify-content-center">#}
+    {#        <span class="step-links">#}
+    {#            {% if page_obj.has_previous %}#}
+    {#                <a class="btn btn-primary" href="?page=1">&laquo; first</a>#}
+    {#                <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+    {#            {% endif %}#}
+    {##}
+    {#            <span class="current">#}
+    {#                <button class="btn btn-secondary" disabled>#}
+    {#                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}#}
+    {#                </button>#}
+    {#            </span>#}
+    {##}
+    {#            {% if page_obj.has_next %}#}
+    {#                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>#}
+    {#                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
+    {#            {% endif %}#}
+    {#        </span>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}

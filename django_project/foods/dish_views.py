@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
@@ -8,7 +9,7 @@ from django.views.generic import View
 from .constants.pagination import *
 from .forms import DishForm, RatingForm
 from .i18n.en import *
-from .models import Dish, Rating
+from .models import Dish, Rating, Category
 from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
     AdminListView, SuperuserDeleteView
 
@@ -146,12 +147,14 @@ class UserRatingView(UserOnlyView):
 class DishDetailView(View):
     def get(self, request, pk):
         dish = get_object_or_404(Dish, pk=pk)
+        s = round(dish.score)
         ratings = Rating.objects.filter(dish=dish)
         p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         context = {
             'object': dish,
-            'page_obj': page
+            'page_obj': page,
+            'score': s
         }
         user = request.user
         if user.is_authenticated and not user.is_staff:
@@ -169,7 +172,7 @@ class SearchDishView(View):
             Q(description__icontains=query) |
             Q(ingredients__icontains=query),
             is_public=True
-        )
+        ).order_by('-review_number', '-score')[:24]
         if not dishes:
             dishes = Dish.objects.filter(is_public=True)
             messages.error(request, NO_DISH_FOUND)
@@ -182,7 +185,11 @@ class SearchDishView(View):
 
 class AllPublicDishView(View):
     def get(self, request):
-        # dishes = Dish.objects.filter(is_public=True)[:4]
+        veg = Dish.objects.filter(
+            Q(is_public=True) &
+            Q(category_id=4) &
+            Q(image_url__isnull=False),
+        ).order_by('-review_number', '-score')[:5]
         # if dishes:
         #     p = Paginator(dishes, DISHES_PER_PAGE)
         #     page = p.get_page(request.GET.get('page', 1))
@@ -192,4 +199,19 @@ class AllPublicDishView(View):
         # else:
         #     messages.error(request, NO_DISH_FOUND)
         #     return render(request, 'dishes.html')
-        return render(request, 'dishes.html')
+        # return render(request, 'dishes.html', {
+        #     'dish': dishes
+        # })
+        data = [i for i in veg.values()]
+        return render(request, 'index.html', {
+            'veg': data
+        })
+
+
+class Test(View):
+    def get(self, request):
+        # data = Category.objects.all()[:10]
+        category = Category.objects.filter(title__icontains='egetable')
+        # data = Dish.objects.filter(category=category)[:10]
+        data = [i for i in category.values()]
+        return JsonResponse({'data': data})

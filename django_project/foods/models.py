@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User as BaseUser
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from foods.validators import dish_image_path
@@ -24,7 +25,7 @@ class Category(models.Model):
 class Dish(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     dish_name = models.CharField(max_length=200)
-    description = models.CharField(max_length=5000)
+    description = ArrayField(base_field=models.CharField(max_length=10000), default=list)
     calories = models.IntegerField()
     is_public = models.BooleanField()
     image = models.ImageField(
@@ -33,8 +34,9 @@ class Dish(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=0)
     total_time = models.IntegerField()
     image_url = models.CharField(max_length=1000, null=True)
-    ingredients = models.CharField(max_length=5000)
+    ingredients = ArrayField(base_field=models.CharField(max_length=10000), default=list)
     score = models.FloatField(default=0)
+    review_number = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

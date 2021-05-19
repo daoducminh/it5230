@@ -42,7 +42,7 @@ footer {
 }
 
 .link-green {
-    color: #757575;
+    color: #000000;
 }
 
 .link-green:hover {
@@ -70,4 +70,8 @@ footer {
     -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     transform: translateY(-25%);
+}
+
+.fa-star {
+    color: gold;
 }
