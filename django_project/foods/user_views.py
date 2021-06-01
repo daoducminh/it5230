@@ -9,7 +9,7 @@ from django.views.generic.base import View
 from .constants.pagination import PROFILES_PER_PAGE
 from .forms import UserForm, BaseUserForm
 from .i18n.en import *
-from .models import Dish
+from .models import Recipe
 from .views import LoginRequiredView, AdminOnlyView
 
 
@@ -89,10 +89,10 @@ class UpdateActivationView(AdminOnlyView):
 class ProfileView(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        dishes = Dish.objects.filter(user=user, is_public=True)
+        recipes = Recipe.objects.filter(user=user)
         return render(request, 'profile.html', {
             'user': user,
-            'dishes': dishes
+            'recipes': recipes
         })
 
 

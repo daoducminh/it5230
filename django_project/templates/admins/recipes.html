@@ -1,19 +1,34 @@
 {% extends "base/default.html" %}
 
-{% block title %}Foods{% endblock %}
+{% block title %}Recipes{% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="row">
-            {% for user in page_obj.object_list %}
+            {% for recipe in page_obj.object_list %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
+                        <div class="h-75 d-flex align-items-center">
+                            <a href="{% url 'recipe_detail' recipe.pk %}">
+                                {% if recipe.image %}
+                                    <img class="card-img-top" src="/media/{{ recipe.image|default:'default.jpg' }}"
+                                         alt="No image">
+                                {% elif recipe.image_url %}
+                                    <img class="card-img-top" src="{{ recipe.image_url }}" alt="No image">
+                                {% else %}
+                                    <img class="card-img-top" src="/media/default.jpg" alt="No image">
+                                {% endif %}
+                            </a>
+                        </div>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="{% url 'profile_detail' user.pk %}">{{ user.username }}</a>
+                                <a href="{% url 'admin_recipe_detail' recipe.pk %}">{{ recipe.recipe_name }}</a>
                             </h4>
-                            <h5>{{ user.last_name }} {{ user.first_name }}</h5>
-                            <p class="card-text">{{ user.email }}</p>
+                            <h5>{{ recipe.calories }} kcal</h5>
+                            <p class="card-text">{{ recipe.description }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Ratings: {{ recipe.score }}/5</small>
                         </div>
                     </div>
                 </div>

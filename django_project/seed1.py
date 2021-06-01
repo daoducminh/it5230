@@ -180,7 +180,7 @@ def generate_food_recipe(x):
         ing = ing[:1000]
     recipe = {
         'user': x[AUTHOR_ID],
-        'dish_name': x[FULL_NAME],
+        'recipe_name': x[FULL_NAME],
         'description': desc,
         'calories': random.randint(10, 3000),
         'is_public': True,

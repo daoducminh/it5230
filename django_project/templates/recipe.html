@@ -2,16 +2,21 @@
 
 {% load static %}
 
-{% block title %}Dish{% endblock %}
+{% block title %}Recipe{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/star-rating.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="container">
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item active">Recipes</li>
-            <li class="breadcrumb-item active"><a href="#">{{ object.category.title }}</a></li>
+            <li class="breadcrumb-item active"><a
+                    href="{% url 'category' object.category.short_name %}">{{ object.category.title }}</a></li>
         </ol>
         <div class="text-center">
-            <h1 class="text-uppercase align-self-center">{{ object.dish_name }}</h1>
+            <h1 class="text-uppercase align-self-center">{{ object.recipe_name }}</h1>
         </div>
         <div class="row">
             <div class="col-12 col-sm-6">
@@ -27,9 +32,9 @@
                         <div class="my-1">
                             {% for s in '12345'|make_list %}
                                 {% if forloop.counter <= score %}
-                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star fa-star-gold"></i>
                                 {% else %}
-                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star fa-star-gold"></i>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -102,7 +107,7 @@
         {#            </div>#}
         {#            <div class="col-lg-9">#}
         {#                <div class="d-flex justify-content-center">#}
-        {#                    <h2 class="text-uppercase">{{ object.dish_name }}</h2>#}
+        {#                    <h2 class="text-uppercase">{{ object.recipe_name }}</h2>#}
         {#                </div>#}
         {#                <table class="table table-hover">#}
         {#                    <tr>#}
@@ -134,8 +139,9 @@
         <div class="row m-3 d-flex justify-content-center">
             {% if user.is_authenticated %}
                 {% if user != object.user and not user.is_staff %}
-                    <a type="button" class="btn btn-secondary m-2" data-toggle="modal" data-target="#form">Đánh
-                        giá</a>
+                    <a type="button" class="btn btn-primary m-2 text-light" data-toggle="modal" data-target="#form">
+                        Review
+                    </a>
                     <div class="modal fade" id="form" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
@@ -145,24 +151,38 @@
                                     <div class="text-center">
                                         <form action="rate/" method="post">
                                             {% csrf_token %}
-                                            <h4>Thêm đánh giá cho món ăn</h4>
-                                            <div class="mb-2">
-                                                <input type="number" min="1" max="5" step="1"
-                                                       value="{{ user_rating.score|default:5 }}" id="rating"
-                                                       name="score">
-                                                <label for="rating">
-                                                    <i class="fas fa-star"></i>
-                                                </label>
+                                            <h4>Review</h4>
+                                            <div class="rating">
+                                                <span>
+                                                    <input type="radio" name="score" id="star-5" value="5">
+                                                    <label for="star-5" class="fas fa-star fa-lg" title="5 stars"></label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" name="score" id="star-4" value="4">
+                                                    <label for="star-4" class="fas fa-star fa-lg" title="4 stars"></label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" name="score" id="star-3" value="3">
+                                                    <label for="star-3" class="fas fa-star fa-lg" title="3 stars"></label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" name="score" id="star-2" value="2">
+                                                    <label for="star-2" class="fas fa-star fa-lg" title="2 stars"></label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" name="score" id="star-1" value="1">
+                                                    <label for="star-1" class="fas fa-star fa-lg" title="1 star"></label>
+                                                </span>
                                             </div>
                                             <div class="comment-area">
                                                 <label>
-                                                    <textarea class="form-control" placeholder="Thêm bình luận" rows="4"
+                                                    <textarea class="form-control" placeholder="Comment" rows="4"
                                                               name="comment"
                                                               maxlength="100">{{ user_rating.comment }}</textarea>
                                                 </label>
                                             </div>
                                             <div class="text-center mt-4">
-                                                <button class="btn btn-success" type="submit">Gửi</button>
+                                                <button class="btn btn-success" type="submit">Submit</button>
                                             </div>
                                         </form>
                                     </div>
@@ -171,7 +191,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a type="button" class="btn btn-primary m-2" href="{% url 'user_update_dish' object.id %}">Chỉnh
+                    <a type="button" class="btn btn-primary m-2" href="{% url 'user_update_recipe' object.id %}">Chỉnh
                         sửa</a>
                     <a type="button" class="btn btn-danger m-2" href="#" data-toggle="modal"
                        data-target="#confirmModal">Delete</a>
@@ -186,24 +206,24 @@
                 </div>
                 <div class="panel-body">
                     <ul class="list-group">
-                        {% for dish in page_obj.object_list %}
+                        {% for recipe in page_obj.object_list %}
                             <li class="list-group-item">
                                 <div>
-                                    <a href="{% url 'profile_detail' dish.user.pk %}">{{ dish.user.first_name }} {{ dish.user.last_name }}</a>
+                                    <a href="{% url 'profile_detail' recipe.user.pk %}">{{ recipe.user.first_name }} {{ recipe.user.last_name }}</a>
                                     <div>
                                         {% for s in '12345'|make_list %}
-                                            {% if forloop.counter <= dish.score %}
-                                                <i class="fas fa-star"></i>
+                                            {% if forloop.counter <= recipe.score %}
+                                                <i class="fas fa-star fa-star-gold"></i>
                                             {% else %}
-                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star fa-star-gold"></i>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
                                     <div class="comment-text">
-                                        <span>{{ dish.comment }}</span>
+                                        <span>{{ recipe.comment }}</span>
                                     </div>
                                     <div>
-                                        <span>{{ dish.updated_at }}</span>
+                                        <span>{{ recipe.updated_at }}</span>
                                     </div>
                                 </div>
                             </li>
@@ -233,23 +253,33 @@
                 </div>
             </div>
         </div>
-        {#        <div class="row d-flex justify-content-center m-5">#}
-        {#            <div class="panel panel-default w-100">#}
-        {#                <div class="panel-heading">#}
-        {#                    <h3 class="panel-title">Recommendations</h3>#}
-        {#                </div>#}
-        {#                <div class="panel-body container-fluid">#}
-        {#                    <div class="row flex-nowrap" id="knn" style="overflow-x: auto; white-space: nowrap;">#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
+        <div class="row d-flex justify-content-center m-5">
+            <div class="panel panel-default w-100">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Recommendations</h3>
+                </div>
+                <div class="panel-body container-fluid">
+                    <div class="row flex-nowrap" id="svd" style="overflow-x: auto; white-space: nowrap;">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block script %}
     <script>
         const uid = {{ object.id }};
+        $('.rating input').click(function () {
+            $(".rating span").removeClass('checked');
+            $(this).parent().addClass('checked');
+        });
+        {% if user_rating.score %}
+            const starId = '#star-' + {{ user_rating.score }};
+            $(document).ready(() => {
+                $(starId).parent().addClass('checked');
+            })
+        {% endif %}
     </script>
-    {#    <script src="{% static 'js/recsys.js' %}"></script>#}
+    <script src="{% static 'js/recsys.js' %}"></script>
 {% endblock %}

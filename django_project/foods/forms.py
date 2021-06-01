@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, CharField, EmailField, EmailInput
 
-from .models import Dish, User, Rating
+from .models import Recipe, User, Rating, Menu
 
 
 class BaseUserForm(UserCreationForm):
@@ -33,13 +33,13 @@ class BaseUserForm(UserCreationForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['birthday', 'height', 'weight', 'gender', 'diet_factor']
+        fields = ['birthday', 'gender']
 
 
-class DishForm(ModelForm):
+class RecipeForm(ModelForm):
     class Meta:
-        model = Dish
-        fields = ['dish_name', 'description', 'calories', 'is_public', 'ingredients', 'image']
+        model = Recipe
+        fields = ['recipe_name', 'description', 'calories', 'ingredients', 'image']
 
 
 class RatingForm(ModelForm):

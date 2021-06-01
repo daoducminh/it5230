@@ -146,7 +146,7 @@ def seed_food_dish(real_dishes, pool):
             ingredients = get_ingredients(pool, random.randint(5, 10), is_vn)
             d = {
                 'user': u,
-                'dish_name': get_vn_dish(pool) if is_vn else get_en_dish(pool),
+                'recipe_name': get_vn_dish(pool) if is_vn else get_en_dish(pool),
                 'description': fake.text(50),
                 'calories': random.randint(10, 3000),
                 'is_public': fake.pybool(),

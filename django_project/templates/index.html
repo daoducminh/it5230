@@ -5,6 +5,7 @@
 {% block title %}Homepage{% endblock %}
 
 {% block style %}
+    <link rel="stylesheet" href="{% static 'css/star-rating.css' %}">
     <style>
         .card-img-top {
             object-fit: cover;
@@ -34,7 +35,7 @@
         <!-- First category row-->
         <div class="row">
             <div class="col-6 col-lg-3">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'one-dish-meal' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/main-dishes.jpg' %}"
                              alt="" class="figure-img img-fluid">
@@ -43,7 +44,7 @@
                 </a>
             </div>
             <div class="col-6 col-lg-3">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'clear-soups' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/soups.jpg' %}"
                              alt="" class="figure-img img-fluid">
@@ -52,7 +53,7 @@
                 </a>
             </div>
             <div class="col-6 col-lg-3">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'cookie-and-brownie' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/cookies.jpg' %}"
                              alt="" class="figure-img img-fluid">
@@ -61,7 +62,7 @@
                 </a>
             </div>
             <div class="col-6 col-lg-3">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'dessert' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/desserts.jpg' %}"
                              alt="" class="figure-img img-fluid">
@@ -74,7 +75,7 @@
         <!-- Second category row-->
         <div class="row">
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'breakfast' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/breakfast.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -83,7 +84,7 @@
                 </a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'vegetable' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/vegetables.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -92,7 +93,7 @@
                 </a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'gluten-free-appetizers' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/appetizers.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -101,7 +102,7 @@
                 </a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'salad-dressings' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/salads.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -110,7 +111,7 @@
                 </a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'spaghetti' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/pasta.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -119,7 +120,7 @@
                 </a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="#" class="link-decoration-none link-green">
+                <a href="{% url 'category' 'breads' %}" class="link-decoration-none link-green">
                     <figure class="figure d-flex flex-column align-items-center">
                         <img src="{% static 'image/index/side-dishes.jpg' %}"
                              alt="" class="figure-img img-fluid img-thumbnail rounded-circle">
@@ -142,10 +143,10 @@
                             <select name="course" id="input-course"
                                     class="form-control w-100 custom-select link-select">
                                 <option value="" disabled selected>By Course...</option>
-                                <option value="">Main Dishes</option>
+                                <option value="">Main Recipes</option>
                                 <option value="">Desserts</option>
                                 <option value="">Breakfast</option>
-                                <option value="">Side Dishes</option>
+                                <option value="">Side Recipes</option>
                                 <option value="">Salads</option>
                                 <option value="">Appetizers</option>
                             </select>
@@ -245,54 +246,53 @@
     <div class="container mt-5">
         <div class="row d-flex justify-content-between">
             <h2>Vegetarian Recipes</h2>
-            <a href="#" class="link-green align-self-center">View All Vegetarian Recipes</a>
+            <a href="{% url 'category' 'vegetable' %}" class="link-green align-self-center">View All Vegetarian Recipes</a>
         </div>
-        k
         <div class="row mt-3 d-flex flex-column flex-md-row">
             <div class="col-12 col-md-4">
-                <a class="card border-0 link-green" href="{% url 'dish_detail' veg.0.id %}">
+                <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.0.id %}">
                     <img src="{% firstof veg.0.image veg.0.image_url '/media/default.jpg' %}"
                          class="card-img-top img-fluid">
                     <div class="card-body">
-                        <h4>{{ veg.0.dish_name }}</h4>
+                        <h4>{{ veg.0.recipe_name }}</h4>
                     </div>
                 </a>
             </div>
             <div class="col-12 col-md-4">
-                <a class="card border-0 link-green" href="{% url 'dish_detail' veg.1.id %}">
+                <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.1.id %}">
                     <img src="{% firstof veg.1.image veg.1.image_url '/media/default.jpg' %}"
                          class="card-img-top img-fluid">
                     <div class="card-body">
-                        <h4>{{ veg.1.dish_name }}</h4>
+                        <h4>{{ veg.1.recipe_name }}</h4>
                     </div>
                 </a>
             </div>
             <div class="col-12 col-md-4 d-flex flex-column justify-content-around">
-                <a class="row link-green" href="{% url 'dish_detail' veg.2.id %}">
+                <a class="row link-green" href="{% url 'recipe_detail' veg.2.id %}">
                     <div class="col-4">
                         <img src="{% firstof veg.2.image veg.2.image_url '/media/default.jpg' %}"
                          class="img-fluid">
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
-                        <h5>{{ veg.2.dish_name }}</h5>
+                        <h5>{{ veg.2.recipe_name }}</h5>
                     </div>
                 </a>
-                <a class="row link-green" href="{% url 'dish_detail' veg.3.id %}">
+                <a class="row link-green" href="{% url 'recipe_detail' veg.3.id %}">
                     <div class="col-4">
                         <img src="{% firstof veg.3.image veg.3.image_url '/media/default.jpg' %}"
                          class="img-fluid">
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
-                        <h5>{{ veg.3.dish_name }}</h5>
+                        <h5>{{ veg.3.recipe_name }}</h5>
                     </div>
                 </a>
-                <a class="row link-green" href="{% url 'dish_detail' veg.4.id %}">
+                <a class="row link-green" href="{% url 'recipe_detail' veg.4.id %}">
                     <div class="col-4">
                         <img src="{% firstof veg.4.image veg.4.image_url '/media/default.jpg' %}"
                          class="img-fluid">
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
-                        <h5>{{ veg.4.dish_name }}</h5>
+                        <h5>{{ veg.4.recipe_name }}</h5>
                     </div>
                 </a>
             </div>
@@ -328,17 +328,17 @@
     <!-- -->
     <!-- -->
     {#    <div class="row">#}
-    {#        {% for dish in page_obj.object_list %}#}
+    {#        {% for recipe in page_obj.object_list %}#}
     {#            <div class="col-lg-3 col-md-3 mb-3">#}
     {#                <div class="card h-100">#}
-    {#                    <a href="{% url 'dish_detail' dish.pk %}" class="link-decoration-none">#}
-    {#                        {% if dish.image %}#}
+    {#                    <a href="{% url 'recipe_detail' recipe.pk %}" class="link-decoration-none">#}
+    {#                        {% if recipe.image %}#}
     {#                            <img class="card-img-top"#}
-    {#                                 src="/media/{{ dish.image|default:'default.jpg' }}"#}
+    {#                                 src="/media/{{ recipe.image|default:'default.jpg' }}"#}
     {#                                 alt="No image"#}
     {#                            >#}
-    {#                        {% elif dish.image_url %}#}
-    {#                            <img class="card-img-top" src="{{ dish.image_url }}" alt="No image">#}
+    {#                        {% elif recipe.image_url %}#}
+    {#                            <img class="card-img-top" src="{{ recipe.image_url }}" alt="No image">#}
     {#                        {% else %}#}
     {#                            <img class="card-img-top"#}
     {#                                 src="{% static 'image/default.jpg' %}"#}
@@ -348,14 +348,14 @@
     {#                    </a>#}
     {#                    <div class="card-body">#}
     {#                        <h4 class="card-title">#}
-    {#                            <a href="{% url 'dish_detail' dish.pk %}"#}
+    {#                            <a href="{% url 'recipe_detail' recipe.pk %}"#}
     {#                               class="link-decoration-none">#}
-    {#                                {{ dish.dish_name }}#}
+    {#                                {{ recipe.recipe_name }}#}
     {#                            </a>#}
     {#                        </h4>#}
     {#                    </div>#}
     {#                    <div class="card-footer">#}
-    {#                        <small class="text-muted">Ratings: {{ dish.score }}/5</small>#}
+    {#                        <small class="text-muted">Ratings: {{ recipe.score }}/5</small>#}
     {#                    </div>#}
     {#                </div>#}
     {#            </div>#}
