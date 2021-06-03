@@ -33,6 +33,7 @@ class Recipe(models.Model):
     ingredients = ArrayField(base_field=models.CharField(max_length=10000), default=list)
     score = models.FloatField(default=0)
     review_number = models.IntegerField(default=0)
+    suggested = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,8 +68,11 @@ class Rating(models.Model):
 
 class Menu(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    menu_name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
     recipes = models.ManyToManyField(Recipe)
+    score = models.FloatField(default=0)
+    review_number = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

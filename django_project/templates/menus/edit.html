@@ -1,0 +1,40 @@
+{% extends "base/default.html" %}
+
+{% load static %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div><input type="text" name="menu_name" value="{{ menu.menu_name }}" id="menu-name"></div>
+        <div><input type="text" name="description" value="{{ menu.description }}" id="description"></div>
+        <h4>Recipes</h4>
+        <div id="recipe-list">
+            {% for recipe in menu.recipes.all %}
+                <div class="alert alert-dismissible">
+                    {{ recipe.recipe_name }}
+                    <button class="btn btn-danger" data-dismiss="alert" aria-label="close"
+                            onclick="removeRecipe({{ recipe.pk }})">
+                        Remove
+                    </button>
+                    <input type="hidden" value="{{ recipe.pk }}">
+                </div>
+            {% endfor %}
+        </div>
+        <h4>Search</h4>
+        <div>
+            <input type="text" name="search" id="input-recipe">
+            <button id="btn-search">Search</button>
+        </div>
+        <div id="search-result"></div>
+        <button id="btn-submit">Submit</button>
+    </div>
+{% endblock %}
+
+{% block pre_script %}
+    <script src="{% static 'js/menu/pre-edit.js' %}"></script>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/menu/edit.js' %}"></script>
+{% endblock %}

@@ -121,9 +121,9 @@ class UserRatingView(UserOnlyView):
         recipe = get_object_or_404(Recipe, pk=pk)
         user = request.user
         if recipe.user != user:
-            ratings = Rating.objects.filter(recipe=recipe, user=user)
-            if ratings:
-                rating_instance = ratings.get()
+            rating = Rating.objects.filter(recipe=recipe, user=user)
+            if rating:
+                rating_instance = rating.get()
                 rating_form = RatingForm(request.POST, instance=rating_instance)
                 if rating_form.is_valid():
                     rating_form.save()

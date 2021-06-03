@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import user_views, recipe_views, menu_views
+from . import user_views, recipe_views, menu_views, search_views
 
 urlpatterns = [
     path('', recipe_views.AllPublicRecipeView.as_view(), name='index'),
@@ -50,8 +50,12 @@ urlpatterns = [
     ])),
     path('category/<str:short_name>', recipe_views.CategoryView.as_view(), name='category'),
     path('menu/', include([
+        path('<int:pk>', menu_views.DetailMenuView.as_view(), name='menu_detail'),
         path('create/', menu_views.CreateMenuView.as_view(), name='menu_create'),
+        path('update/<int:pk>/', menu_views.UpdateMenuView.as_view(), name='menu_update'),
+        path('delete/<int:pk>/', menu_views.DeleteMenuView.as_view(), name='menu_delete')
     ])),
+    path('search/', search_views.SearchRecipeView.as_view(), name='json_search_recipe'),
     # path('menu/', include([
     #     path('', menu_views.index.as_view(), name="menu_index"),
     #     path('create', menu_views.create.as_view(), name="menu_create"),
@@ -67,6 +71,3 @@ urlpatterns = [
     # ])),
     # path('rec/recipe/<int:pk>/', recsys_views.ItemSVDView.as_view(), name='rec_recipe')
 ]
-
-handler404 = 'foods.views.error_404'
-handler500 = 'foods.views.error_500'
