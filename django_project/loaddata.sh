@@ -1,2 +1,5 @@
 #!/usr/bin/env bash
-python manage.py loaddata u.json u1.json c.json r.json rv.json
+for x in u u1 c r rv
+do
+  python manage.py loaddata "$x.json"
+done
