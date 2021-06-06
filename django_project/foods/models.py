@@ -44,7 +44,7 @@ class Recipe(models.Model):
         indexes = [
             models.Index(fields=['recipe_name'], name='recipe_name_idx'),
             models.Index(fields=['category'], name='category_idx'),
-            models.Index(fields=['-created_at', '-updated_at'])
+            models.Index(fields=['-created_at', '-updated_at', '-review_number', '-score'])
         ]
 
 

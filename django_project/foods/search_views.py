@@ -11,6 +11,6 @@ class SearchRecipeView(View):
         recipe_name = self.request.GET.get('name')
         recipes = Recipe.objects.filter(
             Q(recipe_name__icontains=recipe_name)
-        ).order_by('-review_number', '-score')[:5]
+        ).order_by('-review_number', '-score')[:20]
         data = [i for i in recipes.values()]
         return JsonResponse(data, safe=False)

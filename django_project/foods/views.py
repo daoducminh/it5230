@@ -90,7 +90,13 @@ class SelfDeleteView(DeleteView, SelfLoginView):
         return self.request.user.pk == self.get_object().user.pk
 
 
-class SuperuserDeleteView(DeleteView, SelfLoginView):
+class BaseDeleteView(DeleteView, SelfLoginView):
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or (user.pk == self.get_object().user.pk)
+
+
+class BaseUpdateView(UpdateView, SelfLoginView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or (user.pk == self.get_object().user.pk)

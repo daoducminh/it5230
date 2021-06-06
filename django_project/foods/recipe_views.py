@@ -9,91 +9,24 @@ from .constants.pagination import *
 from .forms import RecipeForm, RatingForm
 from .i18n.en import *
 from .models import Recipe, Rating, Category
-from .views import SelfUpdateView, SelfDeleteView, UserListView, LoginRequiredView, UserOnlyView, AdminOnlyView, \
-    AdminListView, SuperuserDeleteView
+from .views import LoginRequiredView, BaseUpdateView, BaseDeleteView
 
 
-class AdminRecipeView(AdminOnlyView):
-    def get(self, request, pk):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        ratings = Rating.objects.filter(recipe=recipe)
-        p = Paginator(ratings, RATINGS_PER_PAGE)
-        page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'admins/recipe.html', {
-            'object': recipe,
-            'page_obj': page
-        })
-
-
-class AdminAllRecipeView(AdminListView):
-    model = Recipe
-    template_name = 'admins/recipes.html'
-    queryset = Recipe.objects.all()
-    paginate_by = RECIPES_PER_PAGE
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    def get_context_data(self, **kwarg):
-        context = super().get_context_data(**kwarg)
-        return context
-
-
-class UserRecipeView(UserOnlyView):
-    def get(self, request, pk):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        ratings = Rating.objects.filter(recipe=recipe)
-        p = Paginator(ratings, RATINGS_PER_PAGE)
-        page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'users/recipe.html', {
-            'object': recipe,
-            'page_obj': page
-        })
-
-
-class UserAllRecipeView(UserListView):
-    model = Recipe
-    template_name = 'users/recipes.html'
-    queryset = Recipe.objects.all()
-    paginate_by = RECIPES_PER_PAGE
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    def get_context_data(self, **kwarg):
-        context = super().get_context_data(**kwarg)
-        return context
-
-
-class UpdateRecipeView(SelfUpdateView):
+class UpdateRecipeView(BaseUpdateView):
     form_class = RecipeForm
     queryset = Recipe.objects.all()
     success_message = RECIPE_UPDATED
 
     def get_success_url(self):
-        if self.request.user.is_staff:
-            return reverse('admin_recipe_detail', kwargs={'pk': self.object.pk})
-        else:
-            return reverse('user_recipe_detail', kwargs={'pk': self.object.pk})
+        return reverse('recipe_detail', kwargs={'pk': self.object.pk})
 
 
-class DeleteRecipeView(SelfDeleteView):
+class DeleteRecipeView(BaseDeleteView):
     model = Recipe
     success_message = RECIPE_DELETED
 
     def get_success_url(self):
-        if self.request.user.is_staff:
-            return reverse('admin_all_recipes')
-        else:
-            return reverse('user_all_recipes')
-
-
-class SuperuserDeleteRecipeView(SuperuserDeleteView):
-    model = Recipe
-    success_message = RECIPE_DELETED
-
-    def get_success_url(self):
-        return reverse('index')
+        return reverse('search_recipe')
 
 
 class CreateRecipeView(LoginRequiredView):
@@ -116,7 +49,7 @@ class CreateRecipeView(LoginRequiredView):
             return render(request, 'foods/recipe_add.html')
 
 
-class UserRatingView(UserOnlyView):
+class UserRatingView(LoginRequiredView):
     def post(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
         user = request.user
@@ -151,7 +84,7 @@ class RecipeDetailView(View):
         p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         context = {
-            'object': recipe,
+            'recipe': recipe,
             'page_obj': page,
             'score': s
         }
@@ -167,18 +100,17 @@ class SearchRecipeView(View):
     def get(self, request):
         query = self.request.GET.get('search')
         recipes = Recipe.objects.filter(
-            Q(recipe_name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(ingredients__icontains=query)
-        ).order_by('-review_number', '-score')[:24]
-        if not recipes:
-            recipes = Recipe.objects.all()[:24]
+            recipe_name__icontains=query
+        ).order_by('-review_number', '-score')[:120]
+        if recipes:
+            p = Paginator(recipes, RECIPES_PER_PAGE)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'recipes.html', {
+                'page_obj': page
+            })
+        else:
             messages.error(request, NO_RECIPE_FOUND)
-        p = Paginator(recipes, RECIPES_PER_PAGE)
-        page = p.get_page(request.GET.get('page', 1))
-        return render(request, 'recipes.html', {
-            'page_obj': page
-        })
+            return render(request, 'recipes.html')
 
 
 class AllPublicRecipeView(View):
@@ -199,9 +131,8 @@ class AllPublicRecipeView(View):
         # return render(request, 'recipes.html', {
         #     'recipe': recipes
         # })
-        data = [i for i in veg.values()]
         return render(request, 'index.html', {
-            'veg': data
+            'veg': veg
         })
 
 

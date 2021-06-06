@@ -12,17 +12,20 @@
     <div class="container">
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item active">Recipes</li>
-            <li class="breadcrumb-item active"><a
-                    href="{% url 'category' object.category.short_name %}">{{ object.category.title }}</a></li>
+            <li class="breadcrumb-item active">
+                <a href="{% url 'category' recipe.category.short_name %}">
+                    {{ recipe.category.title }}
+                </a>
+            </li>
         </ol>
         <div class="text-center">
-            <h1 class="text-uppercase align-self-center">{{ object.recipe_name }}</h1>
+            <h1 class="text-uppercase align-self-center">{{ recipe.recipe_name }}</h1>
         </div>
         <div class="row">
             <div class="col-12 col-sm-6">
                 <div class="row">
                     <div class="col-2">
-                        {% if object.user.user.gender %}
+                        {% if recipe.user.user.gender %}
                             <img src="{% static 'image/male.png' %}" alt="" class="img-fluid rounded-circle">
                         {% else %}
                             <img src="{% static 'image/female.png' %}" alt="" class="img-fluid rounded-circle">
@@ -30,7 +33,7 @@
                     </div>
                     <div class="col-10">
                         <div class="my-1">
-                            {% for s in '12345'|make_list %}
+                            {% for s in 12345|make_list %}
                                 {% if forloop.counter <= score %}
                                     <i class="fas fa-star fa-star-gold"></i>
                                 {% else %}
@@ -38,9 +41,12 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-                        <div>
+                        <div class="my-1">
                             Recipe by
-                            <a href="{% url 'profile_detail' object.user.pk %}">{{ object.user.first_name }} {{ object.user.last_name }}</a>
+                            <a href="{% url 'profile_detail' recipe.user.pk %}">{{ recipe.user.first_name }} {{ recipe.user.last_name }}</a>
+                        </div>
+                        <div class="my-1">
+                            Updated at: {{ recipe.updated_at }}
                         </div>
                     </div>
                 </div>
@@ -52,15 +58,15 @@
         <div class="row mt-5">
             <div class="col-12 col-sm-7">
                 <div>
-                    <img src="{% firstof object.image object.image_url '/media/default.jpg' %}"
+                    <img src="{% firstof recipe.image recipe.image_url '/media/default.jpg' %}"
                          class="img-fluid">
                 </div>
                 <div class="row mt-3 px-3">
                     <div class="col-12 col-sm-6 p-3">
-                        Total Cooking Time: <span class="text-primary">{{ object.total_time }} Minutes</span>
+                        Total Cooking Time: <span class="text-primary">{{ recipe.total_time }} Minutes</span>
                     </div>
                     <div class="col-12 col-sm-6 p-3">
-                        Calories: <span class="text-primary">{{ object.calories }} kcal</span>
+                        Calories: <span class="text-primary">{{ recipe.calories }} kcal</span>
                     </div>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                         </a>
                         <div id="collapse-ingredients" class="card-body collapse show">
                             <ul class="list-group list-group-flush">
-                                {% for ingredient in object.ingredients %}
+                                {% for ingredient in recipe.ingredients %}
                                     <li class="list-group-item">{{ ingredient }}</li>
                                 {% endfor %}
                             </ul>
@@ -86,7 +92,7 @@
                         </a>
                         <div id="collapse-directions" class="card-body collapse">
                             <ul class="list-group list-group-flush">
-                                {% for desc in object.description %}
+                                {% for desc in recipe.description %}
                                     <li class="list-group-item">{{ desc }}</li>
                                 {% endfor %}
                             </ul>
@@ -95,159 +101,114 @@
                 </div>
             </div>
         </div>
-        {#        <div class="row mt-4">#}
-        {#            <div class="col-lg-3">#}
-        {#                {% if object.image %}#}
-        {#                    <img src="{{ object.image.path }}" class="img-fluid">#}
-        {#                {% elif object.image_url %}#}
-        {#                    <img src="{{ object.image_url }}" class="img-fluid">#}
-        {#                {% else %}#}
-        {#                    <img src="{% static 'image/default.jpg' %}" class="img-fluid">#}
-        {#                {% endif %}#}
-        {#            </div>#}
-        {#            <div class="col-lg-9">#}
-        {#                <div class="d-flex justify-content-center">#}
-        {#                    <h2 class="text-uppercase">{{ object.recipe_name }}</h2>#}
-        {#                </div>#}
-        {#                <table class="table table-hover">#}
-        {#                    <tr>#}
-        {#                        <th>Owner:</th>#}
-        {#                        <td>#}
-        {#                            <a href="{% url 'profile_detail' object.user.pk %}">{{ object.user.first_name }} {{ object.user.last_name }}</a>#}
-        {#                        </td>#}
-        {#                    </tr>#}
-        {#                    <tr>#}
-        {#                        <th>Ingredients:</th>#}
-        {#                        <td>{{ object.ingredients }}</td>#}
-        {#                    </tr>#}
-        {#                    <tr>#}
-        {#                        <th>Description:</th>#}
-        {#                        <td>{{ object.description }}</td>#}
-        {#                    </tr>#}
-        {#                    <tr>#}
-        {#                        <th>Calories:</th>#}
-        {#                        <td>{{ object.calories }} kcal</td>#}
-        {#                    </tr>#}
-        {#                    <tr>#}
-        {#                        <td>{{ object.is_public|yesno:"Public, Private" }}</td>#}
-        {#                    </tr>#}
-        {#                    <tr>#}
-        {#                        <th>Ratings:</th>#}
-        {#                        <td><span class="mr-2">{{ object.score }}</span><i class="fas fa-star"></i></td>#}
-        {#                    </tr>#}
-        {#                </table>#}
-        <div class="row m-3 d-flex justify-content-center">
-            {% if user.is_authenticated %}
-                {% if user != object.user and not user.is_staff %}
-                    <a type="button" class="btn btn-primary m-2 text-light" data-toggle="modal" data-target="#form">
-                        Review
-                    </a>
-                    <div class="modal fade" id="form" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="card-body text-center">
-                                    <div class="text-center">
-                                        <form action="rate/" method="post">
-                                            {% csrf_token %}
-                                            <h4>Review</h4>
-                                            <div class="rating">
-                                                <span>
-                                                    <input type="radio" name="score" id="star-5" value="5">
-                                                    <label for="star-5" class="fas fa-star fa-lg" title="5 stars"></label>
-                                                </span>
-                                                <span>
-                                                    <input type="radio" name="score" id="star-4" value="4">
-                                                    <label for="star-4" class="fas fa-star fa-lg" title="4 stars"></label>
-                                                </span>
-                                                <span>
-                                                    <input type="radio" name="score" id="star-3" value="3">
-                                                    <label for="star-3" class="fas fa-star fa-lg" title="3 stars"></label>
-                                                </span>
-                                                <span>
-                                                    <input type="radio" name="score" id="star-2" value="2">
-                                                    <label for="star-2" class="fas fa-star fa-lg" title="2 stars"></label>
-                                                </span>
-                                                <span>
-                                                    <input type="radio" name="score" id="star-1" value="1">
-                                                    <label for="star-1" class="fas fa-star fa-lg" title="1 star"></label>
-                                                </span>
-                                            </div>
-                                            <div class="comment-area">
-                                                <label>
-                                                    <textarea class="form-control" placeholder="Comment" rows="4"
-                                                              name="comment"
-                                                              maxlength="100">{{ user_rating.comment }}</textarea>
-                                                </label>
-                                            </div>
-                                            <div class="text-center mt-4">
-                                                <button class="btn btn-success" type="submit">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="modal fade" id="review-form" tabindex="-1" role="form"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="form">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h4 class="modal-title">Review</h4>
                     </div>
-                {% else %}
-                    <a type="button" class="btn btn-primary m-2" href="{% url 'user_update_recipe' object.id %}">Chỉnh
-                        sửa</a>
-                    <a type="button" class="btn btn-danger m-2" href="#" data-toggle="modal"
-                       data-target="#confirmModal">Delete</a>
+                    <div class="modal-body">
+                        <form action="rate/" method="post">
+                            {% csrf_token %}
+                            <div class="rating">
+                                {% for s in 12345|make_list %}
+                                    <span>
+                                        <input type="radio" name="score"
+                                               id="star-{{ forloop.revcounter }}"
+                                               value="{{ forloop.revcounter }}">
+                                        <label for="star-{{ forloop.revcounter }}" class="fas fa-star fa-lg">
+                                        </label>
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <div class="comment-area">
+                                <label for="review-comment"></label>
+                                <textarea
+                                        class="form-control" placeholder="Comment"
+                                        rows="4" name="comment" maxlength="100" id="review-comment"
+                                >{{ user_rating.comment }}</textarea>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-success" type="submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center my-3">
+            <div class="col-12 col-sm-4 d-flex justify-content-around">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.pk != recipe.user.pk %}
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#review-form">Review</button>
+                    {% endif %}
+                    {% if request.user.pk == recipe.user.pk %}
+                        <a type="button" class="btn btn-primary" href="{% url 'user_update_recipe' recipe.id %}">
+                            Update
+                        </a>
+                    {% endif %}
+                    {% if request.user.is_staff or request.user.pk == recipe.user.pk %}
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete">
+                            Delete
+                        </button>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
+            </div>
         </div>
 
-        <div class="row d-flex justify-content-center m-5">
-            <div class="panel panel-default w-100">
-                <div class="panel-heading">
-                    <h3 class="panel-title">User's reviews:</h3>
-                </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        {% for recipe in page_obj.object_list %}
-                            <li class="list-group-item">
-                                <div>
+        <div class="panel panel-default mx-1">
+            <div class="panel-heading mb-4">
+                <h3 class="panel-title">User's reviews:</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for recipe in page_obj.object_list %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    {% for s in 12345|make_list %}
+                                        {% if forloop.counter <= recipe.score %}
+                                            <i class="fas fa-star fa-star-gold"></i>
+                                        {% else %}
+                                            <i class="far fa-star fa-star-gold"></i>
+                                        {% endif %}
+                                    {% endfor %}
                                     <a href="{% url 'profile_detail' recipe.user.pk %}">{{ recipe.user.first_name }} {{ recipe.user.last_name }}</a>
-                                    <div>
-                                        {% for s in '12345'|make_list %}
-                                            {% if forloop.counter <= recipe.score %}
-                                                <i class="fas fa-star fa-star-gold"></i>
-                                            {% else %}
-                                                <i class="far fa-star fa-star-gold"></i>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="comment-text">
-                                        <span>{{ recipe.comment }}</span>
-                                    </div>
-                                    <div>
-                                        <span>{{ recipe.updated_at }}</span>
-                                    </div>
                                 </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="my-4">
-                        <div class="pagination d-flex justify-content-center">
-                            <span class="step-links">
-                                {% if page_obj.has_previous %}
-                                    <a class="btn btn-primary" href="?page=1">&laquo; first</a>
-                                    <a class="btn btn-primary"
-                                       href="?page={{ page_obj.previous_page_number }}">previous</a>
-                                {% endif %}
+                                <div class="col-12 col-sm-6 text-sm-right">
+                                    <span>{{ recipe.updated_at }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                {{ recipe.comment }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="my-4">
+                    <div class="pagination d-flex justify-content-center">
+                        <div class="step-links">
+                            {% if page_obj.has_previous %}
+                                <a class="btn btn-primary" href="?page=1">
+                                    &laquo; first
+                                </a>
+                                <a class="btn btn-primary"
+                                   href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
 
-                                <span class="current">
-                                    <button class="btn btn-secondary" disabled>Page {{ page_obj.number }} of
-                                        {{ page_obj.paginator.num_pages }}</button>
-                                </span>
-
-                                {% if page_obj.has_next %}
-                                    <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
-                                    <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                                {% endif %}
+                            <span class="current">
+                                <button class="btn btn-secondary" disabled>Page {{ page_obj.number }} of
+                                    {{ page_obj.paginator.num_pages }}</button>
                             </span>
+
+                            {% if page_obj.has_next %}
+                                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
+                                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                    last &raquo;
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -269,7 +230,7 @@
 
 {% block script %}
     <script>
-        const uid = {{ object.id }};
+        const uid = {{ recipe.id }};
         $('.rating input').click(function () {
             $(".rating span").removeClass('checked');
             $(this).parent().addClass('checked');

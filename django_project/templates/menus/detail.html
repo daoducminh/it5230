@@ -4,13 +4,153 @@
 
 {% block title %}Menu{% endblock %}
 
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/menu/detail.css' %}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <h2>{{ menu.menu_name }}</h2>
-        <div>{{ menu.description }}</div>
-        <h4>Recipes</h4>
-        {% for recipe in menu.recipes.all %}
-            <div>{{ recipe.recipe_name }}</div>
-        {% endfor %}
+        <ol class="breadcrumb bg-white">
+            <li class="breadcrumb-item active">Menu</li>
+            <li class="breadcrumb-item active">{{ menu.menu_name }}</li>
+        </ol>
+        <div class="text-center">
+            <h1>{{ menu.menu_name }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="row">
+                    <div class="col-2">
+                        {% if menu.user.user.gender %}
+                            <img src="{% static 'image/male.png' %}" alt="" class="img-fluid rounded-circle">
+                        {% else %}
+                            <img src="{% static 'image/female.png' %}" alt="" class="img-fluid rounded-circle">
+                        {% endif %}
+                    </div>
+                    <div class="col-10">
+                        <div class="my-1">
+                            {% for s in 12345|make_list %}
+                                {% if forloop.counter <= menu.round_score %}
+                                    <i class="fas fa-star fa-star-gold"></i>
+                                {% else %}
+                                    <i class="far fa-star fa-star-gold"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="my-1">
+                            Created by
+                            <a href="{% url 'profile_detail' menu.user.pk %}">{{ menu.user.first_name }} {{ menu.user.last_name }}</a>
+                        </div>
+                        <div class="my-1">
+                            Updated at: {{ menu.updated_at }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <blockquote class="font-italic">
+                    {{ menu.description }}
+                </blockquote>
+            </div>
+        </div>
+        {#        <div class="mt-1">#}
+        {#            Calories: <span class="text-primary">{{ total_calories }} kcal</span>#}
+        {#        </div>#}
+        <div class="row mt-3">
+            {% for recipe in recipes %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
+                    <div class="card h-100">
+                        <img src="{% firstof recipe.image recipe.image_url '/media/default.jpg' %}"
+                             class="card-img-top img-fluid p-2" alt="">
+                        <div class="card-body bg-light d-flex flex-column justify-content-between">
+                            <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.recipe_name }}</a>
+                            <div class="mt-2">
+                                {% for s in 12345|make_list %}
+                                    {% if forloop.counter <= recipe.score %}
+                                        <i class="fas fa-star fa-star-gold"></i>
+                                    {% else %}
+                                        <i class="far fa-star fa-star-gold"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-danger">({{ recipe.review_number }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="row my-3 d-flex justify-content-center">
+                <div class="col-12 col-sm-4 d-flex justify-content-around">
+                    {% if request.user.pk != menu.user.pk %}
+                        <button class="btn btn-primary">Review</button>
+                    {% endif %}
+                    {% if request.user.pk == menu.user.pk %}
+                        <button class="btn btn-success">Update</button>
+                    {% endif %}
+                    {% if request.user.is_staff or request.user.pk == menu.user.pk %}
+                        <button class="btn btn-danger">Delete</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="panel panel-default mx-1 my-3">
+            <div class="panel-heading mb-4">
+                <h3 class="panel-title">User's reviews:</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for recipe in page_obj.object_list %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    {% for s in 12345|make_list %}
+                                        {% if forloop.counter <= recipe.score %}
+                                            <i class="fas fa-star fa-star-gold"></i>
+                                        {% else %}
+                                            <i class="far fa-star fa-star-gold"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <a href="{% url 'profile_detail' recipe.user.pk %}">{{ recipe.user.first_name }} {{ recipe.user.last_name }}</a>
+                                </div>
+                                <div class="col-12 col-sm-6 text-sm-right">
+                                    <span>{{ recipe.updated_at }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                {{ recipe.comment }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="my-4">
+                    <div class="pagination d-flex justify-content-center">
+                        <div class="step-links">
+                            {% if page_obj.has_previous %}
+                                <a class="btn btn-primary" href="?page=1">
+                                    &laquo; first
+                                </a>
+                                <a class="btn btn-primary"
+                                   href="?page={{ page_obj.previous_page_number }}">
+                                    previous
+                                </a>
+                            {% endif %}
+
+                            <button class="btn btn-secondary" disabled>Page {{ page_obj.number }} of
+                                {{ page_obj.paginator.num_pages }}</button>
+
+                            {% if page_obj.has_next %}
+                                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                    next
+                                </a>
+                                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                    last &raquo;
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

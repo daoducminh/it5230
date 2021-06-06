@@ -1,9 +1,9 @@
 const recipes = new Set();
 
-function switchRecipeButton(id, status) {
+function switchRecipeButton(id, state) {
     const buttonId = `#r-${id}`;
     const button = $(buttonId);
-    if (status) {
+    if (state) {
         button.text('Added');
         button.removeClass('btn-success');
         button.addClass('btn-secondary');
@@ -21,6 +21,17 @@ function removeRecipe(id) {
     switchRecipeButton(id, false);
 }
 
+function switchSubmitButton(state) {
+    const button = $('#btn-submit');
+    button.empty();
+    button.prop('disabled', !state);
+    if (state) {
+        button.text('Save');
+    } else {
+        button.html('<span class="spinner-border spinner-border-sm mr-2"></span>Loading...');
+    }
+}
+
 function submitMenu() {
     const menuName = $('#menu-name').val();
     const description = $('#description').val();
@@ -29,14 +40,21 @@ function submitMenu() {
         description: description,
         recipes: Array.from(recipes)
     }
-    $.ajax(
-        window.location.pathname,
-        {
-            data: JSON.stringify(data),
-            type: 'POST',
-            contentType: 'application/json'
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        beforeSend: () => {
+            switchSubmitButton(false);
+        },
+        success: (data) => {
+            switchSubmitButton(true);
+            console.log(data.message);
+        },
+        error: (data) => {
+            switchSubmitButton(true);
+            console.log(data.message);
         }
-    ).done((result) => {
-        console.log(result.message);
     });
 }

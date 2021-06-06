@@ -1,28 +1,78 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from .constants.pagination import RATINGS_PER_PAGE, MENUS_PER_PAGE
 from .models import Menu, Recipe, MenuRating
-from .views import LoginRequiredView, SelfLoginView
+from django.db.models import Q
+from .views import LoginRequiredView
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 import json
 from .utilities.menu import convert_to_recipe_id
 from django.http import JsonResponse
 from .i18n.en import MENU_CREATED, MENU_UPDATED, MENU_DELETED, NO_MENU_FOUND, NOT_ALLOWED, INVALID_DATA, RATE_UPDATED, \
-    RATE_CREATED
+    RATE_CREATED, TITLE_CREATE_MENU, TITLE_UPDATE_MENU
 from .forms import MenuRatingForm
+
+
+class SearchMenuView(View):
+    def get(self, request):
+        query_name = request.GET.get('search')
+        query_user = request.GET.get('user')
+
+        if query_name or query_user:
+            query = None
+            if query_name:
+                query = Q(menu_name__icontains=query_name)
+            if query_user:
+                if query:
+                    query = query | Q(user_id=query_user)
+                else:
+                    query = Q(user_id=query_user)
+            menus = Menu.objects.filter(query)[:24]
+        else:
+            menus = Menu.objects.all()[:24]
+        if menus:
+            p = Paginator(menus, MENUS_PER_PAGE)
+            page = p.get_page(request.GET.get('page', 1))
+            return render(request, 'menus/list.html', {
+                'page_obj': page
+            })
+        else:
+            messages.error(request, NO_MENU_FOUND)
+            return render(request, 'menus/list.html')
 
 
 class DetailMenuView(View):
     def get(self, request, pk):
         menu = get_object_or_404(Menu, pk=pk)
-        return render(request, 'menus/detail.html', {'menu': menu})
+        ratings = MenuRating.objects.filter(menu=menu)
+        p = Paginator(ratings, RATINGS_PER_PAGE)
+        page = p.get_page(request.GET.get('page', 1))
+        recipes = menu.recipes.all()
+        total_calories = 0
+        total_time = 0
+        menu.round_score = round(menu.score)
+        for r in recipes:
+            r.round_score = round(r.score)
+            total_time += r.total_time
+            total_calories += r.calories
+
+        return render(request, 'menus/detail.html', {
+            'menu': menu,
+            'recipes': recipes,
+            'total_calories': total_calories,
+            'hours': total_time // 60,
+            'minutes': total_time % 60,
+            'page_obj': page
+        })
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateMenuView(LoginRequiredView):
     def get(self, request):
-        return render(request, 'menus/edit.html')
+        return render(request, 'menus/edit.html', {'title': TITLE_CREATE_MENU})
 
     def post(self, request):
         data = json.loads(request.body)
@@ -47,7 +97,14 @@ class CreateMenuView(LoginRequiredView):
 class UpdateMenuView(LoginRequiredView):
     def get(self, request, pk):
         menu = get_object_or_404(Menu, pk=pk)
-        return render(request, 'menus/edit.html', {'menu': menu})
+        recipes = menu.recipes.all()
+        for r in recipes:
+            r.round_score = round(r.score)
+        return render(request, 'menus/edit.html', {
+            'menu': menu,
+            'recipes': recipes,
+            'title': TITLE_UPDATE_MENU
+        })
 
     def post(self, request, pk):
         menu = get_object_or_404(Menu, pk=pk)

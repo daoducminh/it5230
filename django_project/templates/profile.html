@@ -1,49 +1,60 @@
 {% extends "base/default.html" %}
+{% load static %}
 
 {% block title %}User's Profile{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="m-5">
-            <h2 class="text-center mb-5">User's Profile</h2>
-            <table class="table table-hover">
-                <tr>
-                    <th>Username:</th>
-                    <td>{{ user.username }}</td>
-                </tr>
-                <tr>
-                    <th>Email:</th>
-                    <td>{{ user.email }}</td>
-                </tr>
-                <tr>
-                    <th>Full name:</th>
-                    <td>{{ user.last_name }} {{ user.first_name }}</td>
-                </tr>
-                <tr>
-                    <th>Birthday:</th>
-                    <td>{{ user.user.birthday|date:"d/m/Y" }}</td>
-                </tr>
-                <tr>
-                    <th>Gender:</th>
-                    <td>{{ user.user.gender|yesno:"Male, Female" }}</td>
-                </tr>
-                <tr>
-                    <th>Status:</th>
-                    <td>
-                        <div class="mb-3">{{ user.is_active|yesno:"Active, Inactive" }}</div>
-                        {% if request.user.is_authenticated and request.user.is_staff %}
-                            <form action="activate/" method="post">
-                                {% csrf_token %}
-                                {% if user.is_active %}
-                                    <input class="btn btn-danger" type="submit" value="Khoá tài khoản">
-                                {% else %}
-                                    <input class="btn btn-success" type="submit" value="Mở khoá tài khoản">
-                                {% endif %}
-                            </form>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+    <div class="container" data-spy="scroll" data-target=".navbar" data-offset="50">
+        <div class="row justify-content-center my-2">
+            <div class="col-8 col-sm-3">
+                {% if user.user.gender %}
+                    <img src="{% static 'image/male.png' %}" alt="" class="img-fluid rounded-circle">
+                {% else %}
+                    <img src="{% static 'image/female.png' %}" alt="" class="img-fluid rounded-circle">
+                {% endif %}
+            </div>
+        </div>
+        <div class="row justify-content-center my-2">
+            <div class="col-12 col-sm-6">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Username:</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Full name:</th>
+                        <td>{{ user.last_name }} {{ user.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Birthday:</th>
+                        <td>{{ user.user.birthday|date:"d/m/Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender:</th>
+                        <td>{{ user.user.gender|yesno:"Male, Female" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <div class="mb-3">{{ user.is_active|yesno:"Active, Inactive" }}</div>
+                            {% if request.user.is_authenticated and request.user.is_staff %}
+                                <form action="activate/" method="post">
+                                    {% csrf_token %}
+                                    {% if user.is_active %}
+                                        <input class="btn btn-danger" type="submit" value="Khoá tài khoản">
+                                    {% else %}
+                                        <input class="btn btn-success" type="submit" value="Mở khoá tài khoản">
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

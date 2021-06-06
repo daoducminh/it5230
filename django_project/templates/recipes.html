@@ -11,15 +11,15 @@
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
                     <div class="card h-100">
                         <img src="{% firstof recipe.image recipe.image_url '/media/default.jpg' %}"
-                             class="card-img-top img-fluid p-2">
+                             class="card-img-top img-fluid p-2" alt="">
                         <div class="card-body bg-light d-flex flex-column justify-content-between">
                             <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.recipe_name }}</a>
                             <div class="mt-2">
-                                {% for s in '12345'|make_list %}
+                                {% for s in 12345|make_list %}
                                     {% if forloop.counter <= recipe.score %}
-                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star fa-star-gold"></i>
                                     {% else %}
-                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star fa-star-gold"></i>
                                     {% endif %}
                                 {% endfor %}
                                 <span class="text-danger">({{ recipe.review_number }})</span>
@@ -29,26 +29,30 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="my-4">
-            <div class="pagination d-flex justify-content-center">
+        {% if page_obj %}
+            <div class="my-4">
+                <div class="pagination d-flex justify-content-center">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    <a class="btn btn-primary" href="?page=1">&laquo; first</a>
-                    <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    <a class="btn btn-primary"
+                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page=1">&laquo; first</a>
+                    <a class="btn btn-primary"
+                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
 
-                <span class="current">
-                    <button class="btn btn-secondary" disabled>
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                    </button>
-                </span>
+                <button class="btn btn-secondary" disabled>
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </button>
 
                 {% if page_obj.has_next %}
-                    <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    <a class="btn btn-primary"
+                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
+                    <a class="btn btn-primary"
+                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
