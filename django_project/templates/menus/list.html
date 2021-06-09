@@ -9,11 +9,11 @@
         <div class="row">
             {% for menu in page_obj.object_list %}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
-                    <div class="card h-100">
+                    <a class="card h-100 link-decoration-none" href="{% url 'menu_detail' menu.pk %}">
                         <img src="{% firstof menu.recipes.first.image menu.recipes.first.image_url '/media/default.jpg' %}"
                              class="card-img-top img-fluid p-2" alt="">
                         <div class="card-body bg-light d-flex flex-column justify-content-between">
-                            <a href="{% url 'menu_detail' menu.pk %}">{{ menu.menu_name }}</a>
+                            <div>{{ menu.menu_name }}</div>
                             <div class="mt-2">
                                 {% for s in 12345|make_list %}
                                     {% if forloop.counter <= menu.score %}
@@ -25,7 +25,7 @@
                                 <span class="text-danger">({{ menu.review_number }})</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>
