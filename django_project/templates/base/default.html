@@ -68,11 +68,31 @@
                 <ul class="navbar-nav my-2 my-lg-0">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link link-decoration-none" data-toggle="dropdown">
+                            <a class="nav-link link-decoration-none" data-toggle="dropdown">
                                 <img src="{% static 'image/avatar.png' %}" id="img-avatar">
                                 <span class="ml-1">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                             </a>
                             <div class="dropdown-menu">
+                                <a href="{% url 'recipe_create' %}" class="dropdown-item">
+                                    <i class="fas fa-hamburger"></i>
+                                    <span class="ml-1">Create New Recipe</span>
+                                </a>
+                                <a href="{% url 'menu_create' %}" class="dropdown-item">
+                                    <i class="fas fa-hamburger"></i>
+                                    <span class="ml-1">Create New Menu</span>
+                                </a>
+                                <a href="{% url 'search_recipe' %}?user={{ request.user.pk }}" class="dropdown-item">
+                                    <i class="fas fa-hamburger"></i>
+                                    <span class="ml-1">Your Recipes</span>
+                                </a>
+                                <a href="{% url 'search_menu' %}?user={{ request.user.pk }}" class="dropdown-item">
+                                    <i class="fas fa-hamburger"></i>
+                                    <span class="ml-1">Your Menus</span>
+                                </a>
+                                <a href="{% url 'profile_detail' request.user.pk %}" class="dropdown-item">
+                                    <i class="fas fa-user"></i>
+                                    <span class="ml-1">Profile</span>
+                                </a>
                                 <a class="dropdown-item" href="" data-toggle="modal"
                                    data-target="#logout-modal">
                                     <i class="fas fa-sign-out-alt"></i>

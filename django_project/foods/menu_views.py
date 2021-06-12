@@ -1,19 +1,21 @@
+import json
+
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from .constants.pagination import RATINGS_PER_PAGE, MENUS_PER_PAGE
-from .models import Menu, Recipe, MenuRating
 from django.db.models import Q
-from .views import LoginRequiredView
-from django.views.generic import View
-from django.utils.decorators import method_decorator
-import json
-from .utilities.menu import convert_to_recipe_id
 from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import View
+
+from .constants.pagination import RATINGS_PER_PAGE, MENUS_PER_PAGE
+from .forms import MenuRatingForm
 from .i18n.en import MENU_CREATED, MENU_UPDATED, MENU_DELETED, NO_MENU_FOUND, NOT_ALLOWED, INVALID_DATA, RATE_UPDATED, \
     RATE_CREATED, TITLE_CREATE_MENU, TITLE_UPDATE_MENU
-from .forms import MenuRatingForm
+from .models import Menu, Recipe, MenuRating
+from .utilities.menu import convert_to_recipe_id
+from .views import LoginRequiredView
 
 
 class SearchMenuView(View):
@@ -30,9 +32,9 @@ class SearchMenuView(View):
                     query = query | Q(user_id=query_user)
                 else:
                     query = Q(user_id=query_user)
-            menus = Menu.objects.filter(query)[:24]
+            menus = Menu.objects.filter(query).order_by('-review_number', '-score')[:240]
         else:
-            menus = Menu.objects.all()[:24]
+            menus = Menu.objects.all().order_by('-review_number', '-score')[:240]
         if menus:
             p = Paginator(menus, MENUS_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
@@ -47,7 +49,7 @@ class SearchMenuView(View):
 class DetailMenuView(View):
     def get(self, request, pk):
         menu = get_object_or_404(Menu, pk=pk)
-        ratings = MenuRating.objects.filter(menu=menu)
+        ratings = MenuRating.objects.filter(menu=menu).order_by('-updated_at')
         p = Paginator(ratings, RATINGS_PER_PAGE)
         page = p.get_page(request.GET.get('page', 1))
         recipes = menu.recipes.all()
@@ -58,15 +60,21 @@ class DetailMenuView(View):
             r.round_score = round(r.score)
             total_time += r.total_time
             total_calories += r.calories
-
-        return render(request, 'menus/detail.html', {
+        context = {
             'menu': menu,
             'recipes': recipes,
             'total_calories': total_calories,
             'hours': total_time // 60,
             'minutes': total_time % 60,
             'page_obj': page
-        })
+        }
+        user = request.user
+        if user.is_authenticated and user.pk != menu.user.pk:
+            user_rating = MenuRating.objects.filter(menu=menu, user=user)
+            if user_rating:
+                context['user_rating'] = user_rating.get()
+
+        return render(request, 'menus/detail.html', context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

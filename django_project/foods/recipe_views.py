@@ -2,31 +2,27 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.views.generic import View
 
 from .constants.pagination import *
 from .forms import RecipeForm, RatingForm
 from .i18n.en import *
 from .models import Recipe, Rating, Category
-from .views import LoginRequiredView, BaseUpdateView, BaseDeleteView
+from .views import LoginRequiredView
 
 
-class UpdateRecipeView(BaseUpdateView):
-    form_class = RecipeForm
-    queryset = Recipe.objects.all()
-    success_message = RECIPE_UPDATED
-
-    def get_success_url(self):
-        return reverse('recipe_detail', kwargs={'pk': self.object.pk})
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateRecipeView(LoginRequiredView):
+    def post(self, request, pk):
+        pass
 
 
-class DeleteRecipeView(BaseDeleteView):
-    model = Recipe
-    success_message = RECIPE_DELETED
-
-    def get_success_url(self):
-        return reverse('search_recipe')
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteRecipeView(LoginRequiredView):
+    def post(self, request, pk):
+        pass
 
 
 class CreateRecipeView(LoginRequiredView):
@@ -89,48 +85,46 @@ class RecipeDetailView(View):
             'score': s
         }
         user = request.user
-        if user.is_authenticated and not user.is_staff:
+        if user.is_authenticated and user.pk != recipe.user.pk:
             user_rating = Rating.objects.filter(recipe=recipe, user=user)
             if user_rating:
                 context['user_rating'] = user_rating.get()
-        return render(request, 'recipe.html', context)
+        return render(request, 'recipes/detail.html', context)
 
 
 class SearchRecipeView(View):
     def get(self, request):
-        query = self.request.GET.get('search')
-        recipes = Recipe.objects.filter(
-            recipe_name__icontains=query
-        ).order_by('-review_number', '-score')[:120]
+        query_name = request.GET.get('search')
+        query_user = request.GET.get('user')
+        if query_name or query_user:
+            query = None
+            if query_name:
+                query = Q(recipe_name__icontains=query_name)
+            if query_user:
+                if query:
+                    query = query | Q(user_id=query_user)
+                else:
+                    query = Q(user_id=query_user)
+            recipes = Recipe.objects.filter(query).order_by('-review_number', '-score')[:240]
+        else:
+            recipes = Recipe.objects.all()[:240]
         if recipes:
             p = Paginator(recipes, RECIPES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'recipes.html', {
+            return render(request, 'recipes/list.html', {
                 'page_obj': page
             })
         else:
             messages.error(request, NO_RECIPE_FOUND)
-            return render(request, 'recipes.html')
+            return render(request, 'recipes/list.html')
 
 
-class AllPublicRecipeView(View):
+class HomepageView(View):
     def get(self, request):
         veg = Recipe.objects.filter(
             Q(category_id=4) &
             Q(image_url__isnull=False),
         ).order_by('-review_number', '-score')[:5]
-        # if recipes:
-        #     p = Paginator(recipes, RECIPES_PER_PAGE)
-        #     page = p.get_page(request.GET.get('page', 1))
-        #     return render(request, 'recipes.html', {
-        #         'page_obj': page
-        #     })
-        # else:
-        #     messages.error(request, NO_RECIPE_FOUND)
-        #     return render(request, 'recipes.html')
-        # return render(request, 'recipes.html', {
-        #     'recipe': recipes
-        # })
         return render(request, 'index.html', {
             'veg': veg
         })
@@ -143,9 +137,9 @@ class CategoryView(View):
         if recipes:
             p = Paginator(recipes, RECIPES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'recipes.html', {
+            return render(request, 'recipes/list.html', {
                 'page_obj': page
             })
         else:
             messages.error(request, NO_RECIPE_FOUND)
-            return render(request, 'recipes.html')
+            return render(request, 'recipes/list.html')

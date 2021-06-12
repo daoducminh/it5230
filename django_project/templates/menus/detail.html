@@ -15,7 +15,7 @@
             <li class="breadcrumb-item active">{{ menu.menu_name }}</li>
         </ol>
         <div class="text-center">
-            <h1>{{ menu.menu_name }}</h1>
+            <h1 class="text-uppercase">{{ menu.menu_name }}</h1>
         </div>
         <div class="row">
             <div class="col-12 col-md-6">
@@ -79,17 +79,93 @@
                 </div>
             {% endfor %}
         </div>
+        <div class="modal fade" id="message-modal" tabindex="-1"
+             aria-labelledby="messageModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="form">
+                <div class="modal-content p-3">
+                    <div class="modal-body">
+                        <div id="message-content"></div>
+                        <hr>
+                        <div class="mt-3">
+                            Please <a href="{{ request.META.HTTP_REFERER }}">click here</a> if you are not redirected
+                            after few seconds.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% if request.user.is_authenticated %}
             <div class="row my-3 d-flex justify-content-center">
                 <div class="col-12 col-sm-4 d-flex justify-content-around">
                     {% if request.user.pk != menu.user.pk %}
-                        <button class="btn btn-primary">Review</button>
+                        <div class="modal fade" id="review-modal" tabindex="-1" role="form"
+                             aria-labelledby="reviewModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="form">
+                                <div class="modal-content">
+                                    <div class="modal-header justify-content-center">
+                                        <h4 class="modal-title">Review</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="rate/" method="post">
+                                            {% csrf_token %}
+                                            <div class="rating">
+                                                {% for s in 12345|make_list %}
+                                                    <span>
+                                                        <input type="radio" name="score"
+                                                               id="star-{{ forloop.revcounter }}"
+                                                               value="{{ forloop.revcounter }}">
+                                                        <label for="star-{{ forloop.revcounter }}"
+                                                               class="fas fa-star fa-lg">
+                                                        </label>
+                                                    </span>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="comment-area">
+                                                <label for="review-comment"></label>
+                                                <textarea
+                                                        class="form-control" placeholder="Comment"
+                                                        rows="4" name="comment" maxlength="100" id="review-comment"
+                                                >{{ user_rating.comment }}</textarea>
+                                            </div>
+                                            <div class="text-center mt-4">
+                                                <button class="btn btn-success" type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#review-modal">Review</button>
                     {% endif %}
                     {% if request.user.pk == menu.user.pk %}
-                        <button class="btn btn-success">Update</button>
+                        <a class="btn btn-success" href="{% url 'menu_update' menu.pk %}">Update</a>
                     {% endif %}
                     {% if request.user.is_staff or request.user.pk == menu.user.pk %}
-                        <button class="btn btn-danger">Delete</button>
+                        <div class="modal fade" id="delete-modal" tabindex="-1"
+                             aria-labelledby="deleteModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="form">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Warning</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>Do you really want to delete this menu?</div>
+                                        <div class="row flex-column flex-sm-row-reverse mt-3">
+                                            <div class="col-12 col-sm-4 d-flex justify-content-sm-between justify-content-around">
+                                                <button class="btn btn-danger" id="confirm-delete">Yes</button>
+                                                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">
+                            Delete
+                        </button>
                     {% endif %}
                 </div>
             </div>
@@ -153,4 +229,20 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('.rating input').click(function () {
+            $(".rating span").removeClass('checked');
+            $(this).parent().addClass('checked');
+        });
+        {% if user_rating.score %}
+            const starId = '#star-' + {{ user_rating.score }};
+            $(document).ready(() => {
+                $(starId).parent().addClass('checked');
+            })
+        {% endif %}
+    </script>
+    <script src="{% static 'js/menu/detail.js' %}"></script>
 {% endblock %}

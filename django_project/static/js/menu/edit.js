@@ -25,7 +25,7 @@ function addRecipe(index) {
         }
 
         const element = `<div class="alert alert-dismissible fade show recipe-item">
-    <div class="row">
+    <a class="row link-decoration-none" href="/recipe/${id}/">
         <div class="col-3 recipe-img">
             <img src="${image}" alt="" class="img-fluid img-thumbnail">
         </div>
@@ -33,7 +33,7 @@ function addRecipe(index) {
             <div>${r['recipe_name']}</div>
             <div>${starRating} <span class="text-danger">(${numberReview})</span></div>
         </div>
-    </div>
+    </a>
     <div><button type="button" class="btn-remove-recipe" data-dismiss="alert" aria-label="close" onclick="removeRecipe(${r['id']})">&times;</button></div>
     <input type="hidden" value="${r['id']}">
 </div>`;
@@ -78,7 +78,7 @@ function searchRecipe() {
                     if (recipes.has(id)) {
                         button = `<button type="button" class="btn btn-secondary" disabled onclick="addRecipe(${i})" id="r-${id}">Added</button>`;
                     } else {
-                        button = `<button type="button" class="btn btn-success" onclick="addRecipe(${i})" id="r-${id}">Add</button>`;
+                        button = `<button type="button" class="btn btn-primary" onclick="addRecipe(${i})" id="r-${id}">Add</button>`;
                     }
                     if (r['image']) {
                         image = r['image'];
@@ -88,7 +88,7 @@ function searchRecipe() {
                         image = '/media/default.jpg';
                     }
                     const element = `<div class="alert alert-dismissible recipe-item">
-    <div class="row">
+    <a class="row link-decoration-none" href="/recipe/${id}/">
         <div class="col-3 recipe-img">
             <img class="img-fluid img-thumbnail" src="${image}" alt="">
         </div>
@@ -96,7 +96,7 @@ function searchRecipe() {
             <div>${r['recipe_name']}</div>
             <div>${starRating} <span class="text-danger">(${numberReview})</span></div>
         </div>
-    </div>
+    </a>
     ${button}
 </div>`;
                     resultBox.append(element);

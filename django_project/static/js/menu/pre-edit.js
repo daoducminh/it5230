@@ -5,14 +5,14 @@ function switchRecipeButton(id, state) {
     const button = $(buttonId);
     if (state) {
         button.text('Added');
-        button.removeClass('btn-success');
+        button.removeClass('btn-primary');
         button.addClass('btn-secondary');
         button.prop('disabled', true);
     } else {
         button.text('Add');
         button.removeClass('btn-secondary');
         button.prop('disabled', false);
-        button.addClass('btn-success');
+        button.addClass('btn-primary');
     }
 }
 
@@ -30,6 +30,21 @@ function switchSubmitButton(state) {
     } else {
         button.html('<span class="spinner-border spinner-border-sm mr-2"></span>Loading...');
     }
+}
+
+function showSubmitResult(message, status) {
+    const messageModal = $('#message-modal');
+    const messageContent = $('#message-content');
+    messageContent.text(message);
+    if (status) {
+        messageContent.attr('class', 'alert alert-success');
+    } else {
+        messageContent.attr('class', 'alert alert-danger');
+    }
+    messageModal.modal('show');
+    setTimeout(() => {
+        window.location.href = document.referrer;
+    }, 3000);
 }
 
 function submitMenu() {
@@ -50,11 +65,11 @@ function submitMenu() {
         },
         success: (data) => {
             switchSubmitButton(true);
-            console.log(data.message);
+            showSubmitResult(data.message, true);
         },
-        error: (data) => {
+        error: (error) => {
             switchSubmitButton(true);
-            console.log(data.message);
+            showSubmitResult('There is an error when submitting your menu.');
         }
     });
 }

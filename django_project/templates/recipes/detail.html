@@ -101,51 +101,52 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="review-form" tabindex="-1" role="form"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="form">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h4 class="modal-title">Review</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="rate/" method="post">
-                            {% csrf_token %}
-                            <div class="rating">
-                                {% for s in 12345|make_list %}
-                                    <span>
-                                        <input type="radio" name="score"
-                                               id="star-{{ forloop.revcounter }}"
-                                               value="{{ forloop.revcounter }}">
-                                        <label for="star-{{ forloop.revcounter }}" class="fas fa-star fa-lg">
-                                        </label>
-                                    </span>
-                                {% endfor %}
-                            </div>
-                            <div class="comment-area">
-                                <label for="review-comment"></label>
-                                <textarea
-                                        class="form-control" placeholder="Comment"
-                                        rows="4" name="comment" maxlength="100" id="review-comment"
-                                >{{ user_rating.comment }}</textarea>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button class="btn btn-success" type="submit">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="row justify-content-center my-3">
             <div class="col-12 col-sm-4 d-flex justify-content-around">
                 {% if request.user.is_authenticated %}
                     {% if request.user.pk != recipe.user.pk %}
+                        <div class="modal fade" id="review-form" tabindex="-1" role="form"
+                             aria-labelledby="reviewModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="form">
+                                <div class="modal-content">
+                                    <div class="modal-header justify-content-center">
+                                        <h4 class="modal-title">Review</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="rate/" method="post">
+                                            {% csrf_token %}
+                                            <div class="rating">
+                                                {% for s in 12345|make_list %}
+                                                    <span>
+                                                        <input type="radio" name="score"
+                                                               id="star-{{ forloop.revcounter }}"
+                                                               value="{{ forloop.revcounter }}">
+                                                        <label for="star-{{ forloop.revcounter }}"
+                                                               class="fas fa-star fa-lg">
+                                                        </label>
+                                                    </span>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="comment-area">
+                                                <label for="review-comment"></label>
+                                                <textarea
+                                                        class="form-control" placeholder="Comment"
+                                                        rows="4" name="comment" maxlength="100" id="review-comment"
+                                                >{{ user_rating.comment }}</textarea>
+                                            </div>
+                                            <div class="text-center mt-4">
+                                                <button class="btn btn-success" type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" data-toggle="modal" data-target="#review-form">Review</button>
                     {% endif %}
                     {% if request.user.pk == recipe.user.pk %}
-                        <a type="button" class="btn btn-primary" href="{% url 'user_update_recipe' recipe.id %}">
+                        <a type="button" class="btn btn-primary" href="{% url 'recipe_update' recipe.id %}">
                             Update
                         </a>
                     {% endif %}
