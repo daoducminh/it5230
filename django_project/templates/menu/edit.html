@@ -42,8 +42,12 @@
                             <div class="alert alert-dismissible fade show recipe-item">
                                 <a class="row link-decoration-none" href="{% url 'recipe_detail' r.pk %}">
                                     <div class="col-3 recipe-img">
-                                        <img src="{% firstof r.image r.image_url '/media/default.jpg' %}"
-                                             alt="" class="img-fluid img-thumbnail">
+                                        {% if r.image %}
+                                            <img src="{{ r.image.url }}" alt="" class="img-fluid img-thumbnail">
+                                        {% else %}
+                                            <img src="{{ r.image_url|default:'/media/default.jpg' }}"
+                                                 alt="" class="img-fluid img-thumbnail">
+                                        {% endif %}
                                     </div>
                                     <div class="col-9 d-flex flex-column justify-content-between">
                                         <div>{{ r.recipe_name }}</div>
@@ -89,7 +93,7 @@
         </div>
         <div class="row d-flex flex-column flex-md-row justify-content-md-end">
             <button class="btn btn-success m-3" id="btn-submit">Save</button>
-            <button class="btn btn-danger m-3" id="btn-cancel">Discard change</button>
+            <a class="btn btn-danger m-3" href="{{ request.META.HTTP_REFERER }}">Discard change</a>
         </div>
         <div class="modal fade" id="message-modal" tabindex="-1"
              aria-labelledby="messageModalLabel"

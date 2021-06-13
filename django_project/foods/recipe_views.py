@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -13,21 +14,58 @@ from .models import Recipe, Rating, Category
 from .views import LoginRequiredView
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UpdateRecipeView(LoginRequiredView):
+    def get(self, request, pk):
+        recipe = get_object_or_404(Recipe, pk=pk)
+        recipe = RecipeForm(instance=recipe)
+        category = Category.objects.all()
+        return render(request, 'recipe/edit.html', {
+            'title': 'Update Recipe',
+            'recipe': recipe,
+            'category': category
+        })
+
     def post(self, request, pk):
-        pass
+        recipe_instance = Recipe.objects.get(pk=pk)
+        recipe_form = RecipeForm(request.POST, request.FILES, instance=recipe_instance)
+        if recipe_form.is_valid():
+            recipe = recipe_form.save(False)
+            if recipe_form.cleaned_data['image_url']:
+                recipe.image.delete()
+            recipe.save()
+            messages.success(request, RECIPE_UPDATED)
+            return redirect('recipe_detail', pk=pk)
+        else:
+            category = Category.objects.all()
+            messages.error(request, recipe_form.errors)
+            return render(request, 'recipe/edit.html', {
+                'title': 'Update Recipe',
+                'recipe': recipe_form,
+                'category': category
+            })
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteRecipeView(LoginRequiredView):
     def post(self, request, pk):
-        pass
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+            if recipe.user.pk == request.user.pk or request.user.is_staff:
+                recipe.delete()
+                return JsonResponse({'message': RECIPE_DELETED})
+            else:
+                return JsonResponse({'message': NOT_ALLOWED}, status=500)
+        except:
+            return JsonResponse({'message': NO_RECIPE_FOUND}, status=500)
 
 
 class CreateRecipeView(LoginRequiredView):
     def get(self, request):
-        return render(request, 'foods/recipe_add.html')
+        category = Category.objects.all()
+        return render(request, 'recipe/edit.html', {
+            'title': 'Create New Recipe',
+            'category': category
+        })
 
     def post(self, request):
         recipe_form = RecipeForm(request.POST, request.FILES)
@@ -36,13 +74,10 @@ class CreateRecipeView(LoginRequiredView):
             recipe.user = request.user
             recipe.save()
             messages.success(request, RECIPE_CREATED)
-            if request.user.is_staff:
-                return redirect('admin_all_recipes')
-            else:
-                return redirect('user_all_recipes')
+            return render(request, 'recipe/edit.html')
         else:
             messages.error(request, recipe_form.errors)
-            return render(request, 'foods/recipe_add.html')
+            return render(request, 'recipe/edit.html')
 
 
 class UserRatingView(LoginRequiredView):
@@ -89,34 +124,7 @@ class RecipeDetailView(View):
             user_rating = Rating.objects.filter(recipe=recipe, user=user)
             if user_rating:
                 context['user_rating'] = user_rating.get()
-        return render(request, 'recipes/detail.html', context)
-
-
-class SearchRecipeView(View):
-    def get(self, request):
-        query_name = request.GET.get('search')
-        query_user = request.GET.get('user')
-        if query_name or query_user:
-            query = None
-            if query_name:
-                query = Q(recipe_name__icontains=query_name)
-            if query_user:
-                if query:
-                    query = query | Q(user_id=query_user)
-                else:
-                    query = Q(user_id=query_user)
-            recipes = Recipe.objects.filter(query).order_by('-review_number', '-score')[:240]
-        else:
-            recipes = Recipe.objects.all()[:240]
-        if recipes:
-            p = Paginator(recipes, RECIPES_PER_PAGE)
-            page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'recipes/list.html', {
-                'page_obj': page
-            })
-        else:
-            messages.error(request, NO_RECIPE_FOUND)
-            return render(request, 'recipes/list.html')
+        return render(request, 'recipe/detail.html', context)
 
 
 class HomepageView(View):
@@ -137,9 +145,9 @@ class CategoryView(View):
         if recipes:
             p = Paginator(recipes, RECIPES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
-            return render(request, 'recipes/list.html', {
+            return render(request, 'recipe/list.html', {
                 'page_obj': page
             })
         else:
             messages.error(request, NO_RECIPE_FOUND)
-            return render(request, 'recipes/list.html')
+            return render(request, 'recipe/list.html')

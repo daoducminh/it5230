@@ -1,7 +1,0 @@
-.card-img-top {
-    transition: all 500ms ease-in-out;
-}
-
-.card-img-top:hover {
-    transform: scale(1.5, 1.5);
-}

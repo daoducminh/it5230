@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm, CharField, EmailField, EmailInput
-
+from django.forms import ModelForm, CharField, EmailField, EmailInput, ImageField
 from .models import Recipe, User, Rating, MenuRating
 
 
@@ -33,22 +32,26 @@ class BaseUserForm(UserCreationForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['birthday', 'gender']
+        fields = ('birthday', 'gender')
 
 
 class RecipeForm(ModelForm):
+    image = ImageField(required=False)
+    image_url = CharField(required=False)
+
     class Meta:
         model = Recipe
-        fields = ['recipe_name', 'description', 'calories', 'ingredients', 'image']
+        # fields = ['recipe_name', 'description', 'category', 'calories', 'ingredients', 'total_time','']
+        exclude = ('user', 'created_at', 'updated_at', 'score', 'review_number')
 
 
 class RatingForm(ModelForm):
     class Meta:
         model = Rating
-        fields = ['score', 'comment']
+        fields = ('score', 'comment')
 
 
 class MenuRatingForm(ModelForm):
     class Meta:
         model = MenuRating
-        fields = ['score', 'comment']
+        fields = ('score', 'comment')

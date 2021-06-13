@@ -42,7 +42,7 @@ $(document).ready(() => {
             },
             error: (error) => {
                 switchDeleteButton(true);
-                showDeleteResult('There is an error when deleting this menu.');
+                showDeleteResult(error.message, false);
             }
         });
     })

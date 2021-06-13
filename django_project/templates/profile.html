@@ -91,8 +91,12 @@
                         {% for recipe in recipes %}
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
                                 <a class="card h-100 link-decoration-none" href="{% url 'recipe_detail' recipe.pk %}">
-                                    <img src="{% firstof recipe.image recipe.image_url '/media/default.jpg' %}"
-                                         class="card-img-top img-fluid p-2" alt="">
+                                    {% if recipe.image %}
+                                        <img src="{{ recipe.image.url }}" class="card-img-top img-fluid p-2" alt="">
+                                    {% else %}
+                                        <img src="{{ recipe.image_url|default:'/media/default.jpg' }}"
+                                             class="card-img-top img-fluid p-2" alt="">
+                                    {% endif %}
                                     <div class="card-body bg-light d-flex flex-column justify-content-between">
                                         <div>{{ recipe.recipe_name }}</div>
                                         <div class="mt-2">
@@ -122,8 +126,13 @@
                         {% for menu in menus %}
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
                                 <a class="card h-100 link-decoration-none" href="{% url 'menu_detail' menu.pk %}">
-                                    <img src="{% firstof menu.recipes.first.image menu.recipes.first.image_url '/media/default.jpg' %}"
-                                         class="card-img-top img-fluid p-2" alt="">
+                                    {% if menu.recipes.first.image %}
+                                        <img src="{{ menu.recipes.first.image.url }}"
+                                             class="card-img-top img-fluid p-2" alt="">
+                                    {% else %}
+                                        <img src="{{ menu.recipes.first.image_url|default:'/media/default.jpg' }}"
+                                             class="card-img-top img-fluid p-2" alt="">
+                                    {% endif %}
                                     <div class="card-body bg-light d-flex flex-column justify-content-between">
                                         <div>{{ menu.menu_name }}</div>
                                         <div class="mt-2">

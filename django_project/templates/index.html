@@ -246,13 +246,18 @@
     <div class="container mt-5">
         <div class="row d-flex justify-content-between">
             <h2>Vegetarian Recipes</h2>
-            <a href="{% url 'category' 'vegetable' %}" class="link-green align-self-center">View All Vegetarian Recipes</a>
+            <a href="{% url 'category' 'vegetable' %}" class="link-green align-self-center">View All Vegetarian
+                Recipes</a>
         </div>
         <div class="row mt-3 d-flex flex-column flex-md-row">
             <div class="col-12 col-md-4">
                 <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.0.id %}">
-                    <img src="{% firstof veg.0.image veg.0.image_url '/media/default.jpg' %}"
-                         class="card-img-top img-fluid">
+                    {% if veg.0.image %}
+                        <img src="{{ veg.0.image.url }}" class="card-img-top img-fluid">
+                    {% else %}
+                        <img src="{{ veg.0.image_url|default:'/media/default.jpg' }}"
+                             class="card-img-top img-fluid">
+                    {% endif %}
                     <div class="card-body">
                         <h4>{{ veg.0.recipe_name }}</h4>
                     </div>
@@ -260,8 +265,12 @@
             </div>
             <div class="col-12 col-md-4">
                 <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.1.id %}">
-                    <img src="{% firstof veg.1.image veg.1.image_url '/media/default.jpg' %}"
-                         class="card-img-top img-fluid">
+                    {% if veg.1.image %}
+                        <img src="{{ veg.1.image.url }}" class="card-img-top img-fluid">
+                    {% else %}
+                        <img src="{{ veg.1.image_url|default:'/media/default.jpg' }}"
+                             class="card-img-top img-fluid">
+                    {% endif %}
                     <div class="card-body">
                         <h4>{{ veg.1.recipe_name }}</h4>
                     </div>
@@ -270,8 +279,12 @@
             <div class="col-12 col-md-4 d-flex flex-column justify-content-around">
                 <a class="row link-green" href="{% url 'recipe_detail' veg.2.id %}">
                     <div class="col-4">
-                        <img src="{% firstof veg.2.image veg.2.image_url '/media/default.jpg' %}"
-                         class="img-fluid">
+                        {% if veg.2.image %}
+                            <img src="{{ veg.2.image.url }}" class="img-fluid">
+                        {% else %}
+                            <img src="{{ veg.2.image_url|default:'/media/default.jpg' }}"
+                                 class="img-fluid">
+                        {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
                         <h5>{{ veg.2.recipe_name }}</h5>
@@ -279,8 +292,12 @@
                 </a>
                 <a class="row link-green" href="{% url 'recipe_detail' veg.3.id %}">
                     <div class="col-4">
-                        <img src="{% firstof veg.3.image veg.3.image_url '/media/default.jpg' %}"
-                         class="img-fluid">
+                        {% if veg.3.image %}
+                            <img src="{{ veg.3.image.url }}" class="img-fluid">
+                        {% else %}
+                            <img src="{{ veg.3.image_url|default:'/media/default.jpg' }}"
+                                 class="img-fluid">
+                        {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
                         <h5>{{ veg.3.recipe_name }}</h5>
@@ -288,8 +305,12 @@
                 </a>
                 <a class="row link-green" href="{% url 'recipe_detail' veg.4.id %}">
                     <div class="col-4">
-                        <img src="{% firstof veg.4.image veg.4.image_url '/media/default.jpg' %}"
-                         class="img-fluid">
+                        {% if veg.4.image %}
+                            <img src="{{ veg.4.image.url }}" class="img-fluid">
+                        {% else %}
+                            <img src="{{ veg.4.image_url|default:'/media/default.jpg' }}"
+                                 class="img-fluid">
+                        {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
                         <h5>{{ veg.4.recipe_name }}</h5>

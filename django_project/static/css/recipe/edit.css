@@ -1,0 +1,7 @@
+.image-input {
+    min-height: 9vh;
+}
+
+#image-upload {
+    border-style: dotted;
+}

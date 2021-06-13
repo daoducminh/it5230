@@ -9,7 +9,7 @@ urlpatterns = [
         path('update/', user_views.UpdateProfileView.as_view(), name='update_profile')
     ])),
     path('recipe/', include([
-        path('', recipe_views.SearchRecipeView.as_view(), name='search_recipe'),
+        path('', search_views.SearchRecipeView.as_view(), name='search_recipe'),
         path('create/', recipe_views.CreateRecipeView.as_view(), name='recipe_create'),
         path('<int:pk>/', include([
             path('', recipe_views.RecipeDetailView.as_view(), name='recipe_detail'),
@@ -19,7 +19,7 @@ urlpatterns = [
         ])),
     ])),
     path('profile/', include([
-        path('', user_views.SearchProfile.as_view(), name='search_profile'),
+        path('', search_views.SearchProfile.as_view(), name='search_profile'),
         path('<int:pk>/', include([
             path('', user_views.ProfileView.as_view(), name='profile_detail'),
             path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
@@ -27,7 +27,7 @@ urlpatterns = [
     ])),
     path('category/<str:short_name>', recipe_views.CategoryView.as_view(), name='category'),
     path('menu/', include([
-        path('', menu_views.SearchMenuView.as_view(), name='search_menu'),
+        path('', search_views.SearchMenuView.as_view(), name='search_menu'),
         path('<int:pk>/', include([
             path('', menu_views.DetailMenuView.as_view(), name='menu_detail'),
             path('rate/', menu_views.RateMenuView.as_view(), name='rate_menu'),
@@ -36,6 +36,6 @@ urlpatterns = [
         ])),
         path('create/', menu_views.CreateMenuView.as_view(), name='menu_create'),
     ])),
-    path('search/', search_views.SearchRecipeView.as_view(), name='json_search_recipe'),
+    path('search/', search_views.MenuSearchRecipeView.as_view(), name='menu_search_recipe'),
     # path('rec/recipe/<int:pk>/', recsys_views.ItemSVDView.as_view(), name='rec_recipe')
 ]
