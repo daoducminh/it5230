@@ -117,17 +117,17 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item link-green">Dessert</a>
-                        <a href="#" class="dropdown-item link-green">Lunch</a>
-                        <a href="#" class="dropdown-item link-green">One-Dish Meal</a>
-                        <a href="#" class="dropdown-item link-green">Vegetable</a>
-                        <a href="#" class="dropdown-item link-green">Breakfast</a>
-                        <a href="#" class="dropdown-item link-green">Beverages</a>
-                        <a href="#" class="dropdown-item link-green">Meat</a>
-                        <a href="#" class="dropdown-item link-green">Chicken</a>
-                        <a href="#" class="dropdown-item link-green">Sauces</a>
-                        <a href="#" class="dropdown-item link-green">Pork</a>
-                        <a href="#" class="dropdown-item link-green">All Recipes</a>
+                        <a href="{% url 'category' 'dessert' %}" class="dropdown-item link-green">Dessert</a>
+                        <a href="{% url 'category' 'lunch' %}" class="dropdown-item link-green">Lunch</a>
+                        <a href="{% url 'category' 'one-dish-meal' %}" class="dropdown-item link-green">One-Dish Meal</a>
+                        <a href="{% url 'category' 'vegetable' %}" class="dropdown-item link-green">Vegetable</a>
+                        <a href="{% url 'category' 'breakfast' %}" class="dropdown-item link-green">Breakfast</a>
+                        <a href="{% url 'category' 'beverages' %}" class="dropdown-item link-green">Beverages</a>
+                        <a href="{% url 'category' 'meat' %}" class="dropdown-item link-green">Meat</a>
+                        <a href="{% url 'category' 'chicken' %}" class="dropdown-item link-green">Chicken</a>
+                        <a href="{% url 'category' 'sauces' %}" class="dropdown-item link-green">Sauces</a>
+                        <a href="{% url 'category' 'pork' %}" class="dropdown-item link-green">Pork</a>
+                        <a href="{% url 'search_recipe' %}" class="dropdown-item link-green">All Recipes</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -139,10 +139,10 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item link-green">Chicken</a>
-                        <a href="#" class="dropdown-item link-green">Spaghetti</a>
-                        <a href="#" class="dropdown-item link-green">Steak</a>
-                        <a href="#" class="dropdown-item link-green">Stew</a>
+                        <a href="{% url 'category' 'chicken' %}" class="dropdown-item link-green">Chicken</a>
+                        <a href="{% url 'category' 'spaghetti' %}" class="dropdown-item link-green">Spaghetti</a>
+                        <a href="{% url 'category' 'steak' %}" class="dropdown-item link-green">Steak</a>
+                        <a href="{% url 'category' 'stew' %}" class="dropdown-item link-green">Stew</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -154,14 +154,14 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item link-green">Cookies and Brownies</a>
-                        <a href="#" class="dropdown-item link-green">Bars</a>
-                        <a href="#" class="dropdown-item link-green">Cake</a>
-                        <a href="#" class="dropdown-item link-green">Frozen desserts</a>
+                        <a href="{% url 'category' 'cookie-and-brownie' %}" class="dropdown-item link-green">Cookies and Brownies</a>
+                        <a href="{% url 'category' 'bars' %}" class="dropdown-item link-green">Bars</a>
+                        <a href="{% url 'category' 'cake' %}" class="dropdown-item link-green">Cake</a>
+                        <a href="{% url 'category' 'frozen' %}" class="dropdown-item link-green">Frozen desserts</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark text-uppercase menu-text" href="#">
+                    <a class="nav-link text-dark text-uppercase menu-text" href="{% url 'category' 'salad-dressings' %}">
                         Salads
                     </a>
                 </li>
@@ -214,8 +214,42 @@
 {% block content %}
 {% endblock %}
 <!-- Footer-->
-<footer class="container-fluid sticky-footer py-5 mt-auto">
-    <div class="container"><p class="m-0 text-center">Copyright &copy; Food Delicious 2021</p></div>
+<footer class="container-fluid sticky-footer py-5 mt-auto footer-clean">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-4 col-md-3 item">
+                <h3>Services</h3>
+                <ul>
+                    <li><a href="#">Web design</a></li>
+                    <li><a href="#">Development</a></li>
+                    <li><a href="#">Hosting</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-4 col-md-3 item">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="#">Company</a></li>
+                    <li><a href="#">Team</a></li>
+                    <li><a href="#">Legacy</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-4 col-md-3 item">
+                <h3>Careers</h3>
+                <ul>
+                    <li><a href="#">Job openings</a></li>
+                    <li><a href="#">Employee success</a></li>
+                    <li><a href="#">Benefits</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 item social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-snapchat"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <p class="copyright">Copyright &copy; Food Delicious 2021</p>
+            </div>
+        </div>
+    </div>
 </footer>
 <!-- End of footer-->
 <!-- Custom scripts for all pages-->
