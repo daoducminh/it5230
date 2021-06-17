@@ -44,10 +44,17 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea class="form-control" name="description"
-                                  id="description" maxlength="100"
-                                  placeholder="Description" required
-                        >{{ recipe.description.value }}</textarea>
+                        <input class="form-control" type="text"
+                               name="description" value="{{ recipe.description.value }}"
+                               id="description" maxlength="100"
+                               placeholder="Description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="directions">Directions</label>
+                        <textarea class="form-control" name="directions"
+                                  id="directions" maxlength="100"
+                                  placeholder="Directions" required
+                        >{{ recipe.directions.value }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="ingredients">Ingredients</label>
@@ -116,7 +123,8 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="image-url" name="image_url"
                                            placeholder="https://example.com/"
-                                           value="{% if recipe.image_url.value %}{{ recipe.image_url.value }}{% endif %}">
+                                           value="
+                                                   {% if recipe.image_url.value %}{{ recipe.image_url.value }}{% endif %}">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button" id="btn-preview">Preview</button>
                                     </div>

@@ -2,12 +2,13 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.views.generic import View
 from django.contrib.auth.models import User
-from .models import Recipe, Menu
+from .models import Recipe, Menu, Category
 from django.core.paginator import Paginator
 from .constants.pagination import *
 from django.contrib import messages
 from django.shortcuts import render
 from .i18n.en import NO_RECIPE_FOUND, NO_MENU_FOUND, NO_PROFILE_FOUND
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 
 class MenuSearchRecipeView(View):
@@ -96,3 +97,23 @@ class SearchProfile(View):
         return render(request, 'profiles.html', {
             'page_obj': page
         })
+
+
+class FullTextSearch(View):
+    def get(self, request):
+        query_name = request.GET.get('search')
+        vector = SearchVector('recipe_name')
+        query = SearchQuery(query_name)
+        recipes = Recipe.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')[:20]
+        data = [i for i in recipes.values()]
+        return JsonResponse(data, safe=False)
+
+
+class SearchCategory(View):
+    def get(self, request):
+        query_name = request.GET.get('search')
+        vector = SearchVector('title')
+        query = SearchQuery(query_name)
+        recipes = Category.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')[:20]
+        data = [i for i in recipes.values()]
+        return JsonResponse(data, safe=False)

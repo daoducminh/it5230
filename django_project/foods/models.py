@@ -2,13 +2,17 @@ from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
-from foods.validators import recipe_image_path
+from foods.validators import image_path
 
 
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     birthday = models.DateField()
     gender = models.BooleanField()
+    image = models.ImageField(
+        upload_to=image_path
+    )
+    image_url = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return self.user.username
@@ -22,10 +26,11 @@ class Category(models.Model):
 class Recipe(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     recipe_name = models.CharField(max_length=200)
-    description = ArrayField(base_field=models.CharField(max_length=10000), default=list)
+    description = models.TextField(null=True)
+    directions = ArrayField(base_field=models.CharField(max_length=10000), default=list)
     calories = models.IntegerField()
     image = models.ImageField(
-        upload_to=recipe_image_path
+        upload_to=image_path
     )
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=0)
     total_time = models.IntegerField()

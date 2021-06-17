@@ -96,8 +96,8 @@
                         </a>
                         <div id="collapse-directions" class="card-body collapse">
                             <ul class="list-group list-group-flush">
-                                {% for desc in recipe.description %}
-                                    <li class="list-group-item">{{ desc }}</li>
+                                {% for d in recipe.directions %}
+                                    <li class="list-group-item">{{ d }}</li>
                                 {% endfor %}
                             </ul>
                         </div>
