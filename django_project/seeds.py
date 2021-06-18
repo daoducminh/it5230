@@ -12,6 +12,7 @@ FOODS_RECIPE = 'foods.recipe'
 FOODS_RATING = 'foods.rating'
 FOODS_CATEGORY = 'foods.category'
 FOODS_MENU = 'foods.menu'
+MENU_RATING = 'foods.menu_rating'
 HASHED_PASSWORD = 'pbkdf2_sha256$216000$E7eK2AnWdjH7$vA0IUnEP2MzszO+Ubxp00DSiXq2AbT6wBDMex3XU00I='
 DATE_JOINED = '2020-12-23T14:49:21+07:00'
 BIRTHDAY = '2000-01-01'
@@ -187,16 +188,66 @@ def generate_food_menu(x, user, recipes):
 def seed_menu(users, recipes, n_menus=20):
     menu_range = range(1, n_menus + 1)
     user_rand = tuple(random.choice(users) for i in menu_range)
-    recipe_rand = tuple(random.sample(recipes, 5) for i in menu_range)
-    return tuple(map(generate_food_menu, menu_range, user_rand, recipe_rand)), tuple(menu_range)
+    menu_rand = tuple(random.sample(recipes, 5) for i in menu_range)
+    return tuple(map(generate_food_menu, menu_range, user_rand, menu_rand)), tuple(menu_range)
+
+
+def generate_recipe_review(x, user, recipe):
+    rv = {
+        'user': user,
+        'recipe': recipe,
+        'score': random.randint(1, 5),
+        'comment': fake.text(100),
+        'created_at': timestamp,
+        'updated_at': timestamp
+    }
+    return {
+        MODEL: FOODS_RATING,
+        PK: x,
+        FIELDS: rv
+    }
+
+
+def seed_recipe_review(users, recipes, n_reviews=100):
+    review_range = range(1, n_reviews + 1)
+    user_rand = tuple(random.choice(users) for i in review_range)
+    recipe_rand = tuple(random.choice(recipes) for i in review_range)
+    return tuple(map(generate_recipe_review, review_range, user_rand, recipe_rand))
+
+
+def generate_menu_review(x, user, menu):
+    mv = {
+        'user': user,
+        'menu': menu,
+        'score': random.randint(1, 5),
+        'comment': fake.text(100),
+        'created_at': timestamp,
+        'updated_at': timestamp
+    }
+    return {
+        MODEL: MENU_RATING,
+        PK: x,
+        FIELDS: mv
+    }
+
+
+def seed_menu_review(users, menus, n_reviews=100):
+    review_range = range(1, n_reviews + 1)
+    user_rand = tuple(random.choice(users) for i in review_range)
+    menu_rand = tuple(random.choice(menus) for i in review_range)
+    return tuple(map(generate_menu_review, review_range, user_rand, menu_rand))
 
 
 if __name__ == '__main__':
-    u_data, u_id = seed_user(10, 10)
+    u_data, u_id = seed_user(10, 50)
     write_json(u_data, 'u.json')
-    c_data, c_id = seed_category(10)
+    c_data, c_id = seed_category(20)
     write_json(c_data, 'c.json')
-    r_data, r_id = seed_recipe(u_id, c_id, 50)
+    r_data, r_id = seed_recipe(u_id, c_id, 500)
     write_json(r_data, 'r.json')
-    m_data, m_id = seed_menu(u_id, r_id, 30)
+    m_data, m_id = seed_menu(u_id, r_id, 100)
     write_json(m_data, 'm.json')
+    rv_data = seed_recipe_review(u_id, r_id, 500)
+    write_json(rv_data, 'rv.json')
+    mv_data = seed_menu_review(u_id, m_id, 500)
+    write_json(mv_data, 'mv.json')
