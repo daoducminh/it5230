@@ -1,14 +1,15 @@
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
-from django.views.generic import View
-from django.contrib.auth.models import User
-from .models import Recipe, Menu, Category
-from django.core.paginator import Paginator
-from .constants.pagination import *
-from django.contrib import messages
 from django.shortcuts import render
+from django.views.generic import View
+
+from .constants.pagination import *
 from .i18n.en import NO_RECIPE_FOUND, NO_MENU_FOUND, NO_PROFILE_FOUND
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from .models import Recipe, Menu, Category
 
 
 class MenuSearchRecipeView(View):

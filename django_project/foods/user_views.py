@@ -1,12 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
 from django.db import transaction
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import View
 
-from .constants.pagination import PROFILES_PER_PAGE
 from .forms import UserForm, BaseUserForm
 from .i18n.en import *
 from .models import Recipe, Menu

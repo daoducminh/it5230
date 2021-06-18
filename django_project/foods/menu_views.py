@@ -2,14 +2,13 @@ import json
 
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
-from .constants.pagination import RATINGS_PER_PAGE, MENUS_PER_PAGE
+from .constants.pagination import RATINGS_PER_PAGE
 from .forms import MenuRatingForm
 from .i18n.en import *
 from .models import Menu, Recipe, MenuRating

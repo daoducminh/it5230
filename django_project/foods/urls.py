@@ -36,8 +36,5 @@ urlpatterns = [
         ])),
         path('create/', menu_views.CreateMenuView.as_view(), name='menu_create'),
     ])),
-    path('search/', search_views.MenuSearchRecipeView.as_view(), name='menu_search_recipe'),
-    path('rep/', search_views.FullTextSearch.as_view(), name='full_text_search'),
-    path('cat/', search_views.SearchCategory.as_view(), name='search_category'),
-    # path('rec/recipe/<int:pk>/', recsys_views.ItemSVDView.as_view(), name='rec_recipe')
+    path('search/', search_views.MenuSearchRecipeView.as_view(), name='menu_search_recipe')
 ]
