@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 from foods.validators import image_path
 
 
@@ -41,15 +42,16 @@ class Recipe(models.Model):
     suggested = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    tsv = SearchVectorField(null=True)
 
     def __str__(self):
         return self.recipe_name
 
     class Meta:
         indexes = [
-            models.Index(fields=['recipe_name'], name='recipe_name_idx'),
             models.Index(fields=['category'], name='category_idx'),
-            models.Index(fields=['-created_at', '-updated_at', '-review_number', '-score'])
+            models.Index(fields=['-updated_at']),
+            GinIndex(fields=['tsv'])
         ]
 
 
@@ -67,7 +69,7 @@ class Rating(models.Model):
     class Meta:
         unique_together = ('user', 'recipe')
         indexes = [
-            models.Index(fields=['-created_at', '-updated_at'])
+            models.Index(fields=['-updated_at'])
         ]
 
 
@@ -80,6 +82,13 @@ class Menu(models.Model):
     review_number = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    tsv = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-updated_at']),
+            GinIndex(fields=['tsv'])
+        ]
 
 
 class MenuRating(models.Model):
@@ -89,3 +98,9 @@ class MenuRating(models.Model):
     comment = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'menu')
+        indexes = [
+            models.Index(fields=['-updated_at'])
+        ]
