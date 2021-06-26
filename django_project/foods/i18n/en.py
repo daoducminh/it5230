@@ -19,3 +19,6 @@ NOT_ALLOWED = 'You are not allowed to do this'
 INVALID_DATA = 'Invalid data'
 TITLE_CREATE_MENU = 'Create new menu'
 TITLE_UPDATE_MENU = 'Update menu'
+
+RECIPE_SUGGESTED = 'Recipe is suggested'
+RECIPE_NOT_SUGGESTED = 'Recipe has been removed from suggestion'

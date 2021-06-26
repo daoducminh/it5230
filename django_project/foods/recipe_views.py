@@ -11,7 +11,7 @@ from .constants.pagination import *
 from .forms import RecipeForm, RatingForm
 from .i18n.en import *
 from .models import Recipe, Rating, Category
-from .views import LoginRequiredView
+from .views import LoginRequiredView, AdminOnlyView
 
 
 class UpdateRecipeView(LoginRequiredView):
@@ -138,10 +138,10 @@ class HomepageView(View):
         })
 
 
-class CategoryView(View):
+class RecipesByCategoryView(View):
     def get(self, request, short_name):
         category = get_object_or_404(Category, short_name=short_name)
-        recipes = Recipe.objects.filter(category=category).order_by('-review_number', '-score')[:60]
+        recipes = Recipe.objects.filter(category=category).order_by('-review_number', '-score')[:240]
         if recipes:
             p = Paginator(recipes, RECIPES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
@@ -151,3 +151,15 @@ class CategoryView(View):
         else:
             messages.error(request, NO_RECIPE_FOUND)
             return render(request, 'recipe/list.html')
+
+
+class SuggestRecipe(AdminOnlyView):
+    def get(self, request, pk):
+        recipe = get_object_or_404(Recipe, pk=pk)
+        if recipe.suggested:
+            messages.success(request, RECIPE_NOT_SUGGESTED)
+        else:
+            messages.success(request, RECIPE_SUGGESTED)
+        recipe.suggested = not recipe.suggested
+        recipe.save()
+        return redirect('recipe_detail', pk=pk)

@@ -15,7 +15,8 @@ urlpatterns = [
             path('', recipe_views.RecipeDetailView.as_view(), name='recipe_detail'),
             path('rate/', recipe_views.UserRatingView.as_view(), name='rate_recipe'),
             path('update/', recipe_views.UpdateRecipeView.as_view(), name='recipe_update'),
-            path('delete/', recipe_views.DeleteRecipeView.as_view(), name='self_delete_recipe')
+            path('delete/', recipe_views.DeleteRecipeView.as_view(), name='self_delete_recipe'),
+            path('suggest/', recipe_views.SuggestRecipe.as_view(), name='suggest_recipe')
         ])),
     ])),
     path('profile/', include([
@@ -25,7 +26,7 @@ urlpatterns = [
             path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
         ])),
     ])),
-    path('category/<str:short_name>', recipe_views.CategoryView.as_view(), name='category'),
+    path('category/<str:short_name>', recipe_views.RecipesByCategoryView.as_view(), name='category'),
     path('menu/', include([
         path('', search_views.SearchMenuView.as_view(), name='search_menu'),
         path('<int:pk>/', include([

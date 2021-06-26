@@ -19,6 +19,9 @@ class User(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        indexes = (models.Index(fields=['user']),)
+
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -49,11 +52,11 @@ class Recipe(models.Model):
         return self.recipe_name
 
     class Meta:
-        indexes = [
+        indexes = (
             models.Index(fields=['category'], name='category_idx'),
             models.Index(fields=['-updated_at']),
             GinIndex(fields=['tsv'])
-        ]
+        )
 
 
 class Rating(models.Model):
@@ -69,9 +72,10 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('user', 'recipe')
-        indexes = [
-            models.Index(fields=['-updated_at'])
-        ]
+        indexes = (
+            models.Index(fields=['user', 'recipe']),
+            models.Index(fields=['-updated_at']),
+        )
 
 
 class Menu(models.Model):
@@ -86,10 +90,11 @@ class Menu(models.Model):
     tsv = SearchVectorField(null=True)
 
     class Meta:
-        indexes = [
+        indexes = (
+            models.Index(fields=['user']),
             models.Index(fields=['-updated_at']),
             GinIndex(fields=['tsv'])
-        ]
+        )
 
 
 class MenuRating(models.Model):
@@ -102,6 +107,7 @@ class MenuRating(models.Model):
 
     class Meta:
         unique_together = ('user', 'menu')
-        indexes = [
+        indexes = (
+            models.Index(fields=['user', 'menu']),
             models.Index(fields=['-updated_at'])
-        ]
+        )
