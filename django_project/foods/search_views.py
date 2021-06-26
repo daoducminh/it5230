@@ -1,25 +1,25 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import View
 
 from .constants.pagination import *
 from .i18n.en import NO_RECIPE_FOUND, NO_MENU_FOUND, NO_PROFILE_FOUND
-from .models import Recipe, Menu, Category
+from .models import Recipe, Menu
 
 
 class MenuSearchRecipeView(View):
     def get(self, request):
-        recipe_name = self.request.GET.get('name')
-        recipes = Recipe.objects.filter(
-            Q(recipe_name__icontains=recipe_name)
-        ).order_by('-review_number', '-score')[:20]
-        data = [i for i in recipes.values()]
-        return JsonResponse(data, safe=False)
+        query_name = self.request.GET.get('name')
+        if query_name:
+            query = SearchQuery(query_name)
+            recipes = Recipe.objects.annotate(rank=SearchRank(F('tsv'), query)).order_by('-rank')[:30]
+            data = [i for i in recipes.values()]
+            return JsonResponse(data, safe=False)
 
 
 class SearchMenuView(View):
@@ -27,18 +27,20 @@ class SearchMenuView(View):
         query_name = request.GET.get('search')
         query_user = request.GET.get('user')
 
-        if query_name or query_user:
-            query = None
-            if query_name:
-                query = Q(menu_name__icontains=query_name)
+        query_set = Menu.objects
+        if query_name:
+            query = SearchQuery(query_name)
+            query_set = query_set.annotate(rank=SearchRank(F('tsv'), query))
             if query_user:
-                if query:
-                    query = query | Q(user_id=query_user)
-                else:
-                    query = Q(user_id=query_user)
-            menus = Menu.objects.filter(query).order_by('-review_number', '-score')[:240]
+                query_set = query_set.filter(user_id=query_user)
+            menus = query_set.order_by('-rank', '-review_number', '-score')[:240]
         else:
-            menus = Menu.objects.all().order_by('-review_number', '-score')[:240]
+            if query_user:
+                query_set = query_set.filter(user_id=query_user)
+            else:
+                query_set = query_set.all()
+            menus = query_set.order_by('-review_number', '-score')[:240]
+
         if menus:
             p = Paginator(menus, MENUS_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
@@ -54,18 +56,21 @@ class SearchRecipeView(View):
     def get(self, request):
         query_name = request.GET.get('search')
         query_user = request.GET.get('user')
-        if query_name or query_user:
-            query = None
-            if query_name:
-                query = Q(recipe_name__icontains=query_name)
+
+        query_set = Recipe.objects
+        if query_name:
+            query = SearchQuery(query_name)
+            query_set = query_set.annotate(rank=SearchRank(F('tsv'), query))
             if query_user:
-                if query:
-                    query = query | Q(user_id=query_user)
-                else:
-                    query = Q(user_id=query_user)
-            recipes = Recipe.objects.filter(query).order_by('-review_number', '-score')[:240]
+                query_set = query_set.filter(user_id=query_user)
+            recipes = query_set.order_by('-rank', '-review_number', '-score')[:240]
         else:
-            recipes = Recipe.objects.all()[:240]
+            if query_user:
+                query_set = query_set.filter(user_id=query_user)
+            else:
+                query_set = query_set.all()
+            recipes = query_set.order_by('-review_number', '-score')[:240]
+
         if recipes:
             p = Paginator(recipes, RECIPES_PER_PAGE)
             page = p.get_page(request.GET.get('page', 1))
@@ -98,23 +103,3 @@ class SearchProfile(View):
         return render(request, 'profiles.html', {
             'page_obj': page
         })
-
-
-class FullTextSearch(View):
-    def get(self, request):
-        query_name = request.GET.get('search')
-        vector = SearchVector('recipe_name')
-        query = SearchQuery(query_name)
-        recipes = Recipe.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')[:20]
-        data = [i for i in recipes.values()]
-        return JsonResponse(data, safe=False)
-
-
-class SearchCategory(View):
-    def get(self, request):
-        query_name = request.GET.get('search')
-        vector = SearchVector('title')
-        query = SearchQuery(query_name)
-        recipes = Category.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')[:20]
-        data = [i for i in recipes.values()]
-        return JsonResponse(data, safe=False)

@@ -11,24 +11,40 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             sql='''
-                  CREATE TRIGGER vector_column_recipe_trigger
-                  BEFORE INSERT OR UPDATE ON foods_recipe
-                  FOR EACH ROW EXECUTE FUNCTION
-                  tsvector_update_trigger(
-                    tsv, 'pg_catalog.english', recipe_name, description
-                  );
+                CREATE FUNCTION recipes_trigger() RETURNS trigger AS $$
+                begin
+                      new.tsv :=
+                         setweight(to_tsvector('pg_catalog.english', coalesce(new.recipe_name,'')), 'A') ||
+                         setweight(to_tsvector('pg_catalog.english', coalesce(new.description,'')), 'C');
+                      return new;
+                end
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER vector_column_recipe_trigger BEFORE INSERT OR UPDATE
+                ON foods_recipe FOR EACH ROW EXECUTE PROCEDURE recipes_trigger();
                 ''',
-            reverse_sql='DROP TRIGGER IF EXISTS vector_column_recipe_trigger ON foods_recipe;'
+            reverse_sql='''
+                DROP TRIGGER IF EXISTS vector_column_recipe_trigger ON foods_recipe;
+                DROP FUNCTION IF EXISTS recipes_trigger;
+            '''
         ),
         migrations.RunSQL(
             sql='''
-                  CREATE TRIGGER vector_column_menu_trigger
-                  BEFORE INSERT OR UPDATE ON foods_menu
-                  FOR EACH ROW EXECUTE FUNCTION
-                  tsvector_update_trigger(
-                    tsv, 'pg_catalog.english', menu_name, description
-                  );
+              CREATE FUNCTION menus_trigger() RETURNS trigger AS $$
+                begin
+                      new.tsv :=
+                         setweight(to_tsvector('pg_catalog.english', coalesce(new.menu_name,'')), 'A') ||
+                         setweight(to_tsvector('pg_catalog.english', coalesce(new.description,'')), 'C');
+                      return new;
+                end
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER vector_column_menu_trigger BEFORE INSERT OR UPDATE
+                ON foods_menu FOR EACH ROW EXECUTE PROCEDURE menus_trigger();
                 ''',
-            reverse_sql='DROP TRIGGER IF EXISTS vector_column_menu_trigger ON foods_menu;'
+            reverse_sql='''
+                DROP TRIGGER IF EXISTS vector_column_menu_trigger ON foods_menu;
+                DROP FUNCTION IF EXISTS menus_trigger;
+            '''
         )
     ]
