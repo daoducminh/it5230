@@ -193,11 +193,13 @@
         <div class="row mt-3 d-flex flex-column flex-md-row">
             <div class="col-12 col-md-4">
                 <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.0.id %}">
+                    <img src="{% static 'image/lazy-image.svg' %}" loading="lazy"
+                         class="card-img-top img-fluid">
                     {% if veg.0.image %}
-                        <img src="{{ veg.0.image.url }}" class="card-img-top img-fluid">
+                        <input type="hidden" value="{{ veg.0.image.url }}" class="lazy-image-input">
                     {% else %}
-                        <img src="{{ veg.0.image_url|default:'/media/default.jpg' }}"
-                             class="card-img-top img-fluid">
+                        <input type="hidden" class="lazy-image-input"
+                               value="{{ veg.0.image_url|default:'/media/default.jpg' }}">
                     {% endif %}
                     <div class="card-body">
                         <h4>{{ veg.0.recipe_name }}</h4>
@@ -206,11 +208,13 @@
             </div>
             <div class="col-12 col-md-4">
                 <a class="card border-0 link-green" href="{% url 'recipe_detail' veg.1.id %}">
+                    <img src="{% static 'image/lazy-image.svg' %}" loading="lazy"
+                         class="card-img-top img-fluid">
                     {% if veg.1.image %}
-                        <img src="{{ veg.1.image.url }}" class="card-img-top img-fluid">
+                        <input type="hidden" value="{{ veg.1.image.url }}" class="lazy-image-input">
                     {% else %}
-                        <img src="{{ veg.1.image_url|default:'/media/default.jpg' }}"
-                             class="card-img-top img-fluid">
+                        <input type="hidden" class="lazy-image-input"
+                               value="{{ veg.1.image_url|default:'/media/default.jpg' }}">
                     {% endif %}
                     <div class="card-body">
                         <h4>{{ veg.1.recipe_name }}</h4>
@@ -220,11 +224,13 @@
             <div class="col-12 col-md-4 d-flex flex-column justify-content-around">
                 <a class="row link-green" href="{% url 'recipe_detail' veg.2.id %}">
                     <div class="col-4">
+                        <img src="{% static 'image/lazy-image.svg' %}" loading="lazy"
+                             class="img-fluid">
                         {% if veg.2.image %}
-                            <img src="{{ veg.2.image.url }}" class="img-fluid">
+                            <input type="hidden" value="{{ veg.2.image.url }}" class="lazy-image-input">
                         {% else %}
-                            <img src="{{ veg.2.image_url|default:'/media/default.jpg' }}"
-                                 class="img-fluid">
+                            <input type="hidden" class="lazy-image-input"
+                                   value="{{ veg.2.image_url|default:'/media/default.jpg' }}">
                         {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
@@ -233,11 +239,13 @@
                 </a>
                 <a class="row link-green" href="{% url 'recipe_detail' veg.3.id %}">
                     <div class="col-4">
+                        <img src="{% static 'image/lazy-image.svg' %}" loading="lazy"
+                             class="img-fluid">
                         {% if veg.3.image %}
-                            <img src="{{ veg.3.image.url }}" class="img-fluid">
+                            <input type="hidden" value="{{ veg.3.image.url }}" class="lazy-image-input">
                         {% else %}
-                            <img src="{{ veg.3.image_url|default:'/media/default.jpg' }}"
-                                 class="img-fluid">
+                            <input type="hidden" class="lazy-image-input"
+                                   value="{{ veg.3.image_url|default:'/media/default.jpg' }}">
                         {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
@@ -246,11 +254,13 @@
                 </a>
                 <a class="row link-green" href="{% url 'recipe_detail' veg.4.id %}">
                     <div class="col-4">
+                        <img src="{% static 'image/lazy-image.svg' %}" loading="lazy"
+                             class="img-fluid">
                         {% if veg.4.image %}
-                            <img src="{{ veg.4.image.url }}" class="img-fluid">
+                            <input type="hidden" value="{{ veg.4.image.url }}" class="lazy-image-input">
                         {% else %}
-                            <img src="{{ veg.4.image_url|default:'/media/default.jpg' }}"
-                                 class="img-fluid">
+                            <input type="hidden" class="lazy-image-input"
+                                   value="{{ veg.4.image_url|default:'/media/default.jpg' }}">
                         {% endif %}
                     </div>
                     <div class="col-8 d-flex flex-column justify-content-center">
@@ -283,4 +293,8 @@
         </div>
     </div>
     <!-- End of banner about-->
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/lazy-image.js' %}"></script>
 {% endblock %}

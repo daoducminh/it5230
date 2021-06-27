@@ -66,10 +66,12 @@ class SearchRecipeView(View):
         order = None
 
         query_set = Recipe.objects
-        # Handle parameter for full-text search
-        if q_search:
-            ts_query = SearchQuery(q_search)
-            query_set = query_set.annotate(rank=SearchRank(F('tsv'), ts_query))
+        # Handle recipes' order
+        if q_sort:
+            if q_sort == 'latest':
+                order = ('-updated_at',)
+            else:
+                order = ('-review_number',)
         # Handle parameter for user id
         if q_user:
             filter_query = Q(user_id=q_user)
@@ -84,20 +86,30 @@ class SearchRecipeView(View):
             except TypeError:
                 q_max = MAX_CALORIES
             if filter_query:
-                filter_query = filter_query | Q(calories__range=(q_min, q_max))
+                filter_query = filter_query & Q(calories__range=(q_min, q_max))
             else:
                 filter_query = Q(calories__range=(q_min, q_max))
-        # Combine all needed filters
-        if filter_query:
-            query_set = query_set.filter(filter_query)
+        if order:
+            if filter_query:
+                filter_query = Q(recipe_name__icontains=q_search) & filter_query
+            query_set = query_set.filter(filter_query).order_by(*order)
         else:
-            query_set = query_set.all()
-        # Handle recipes' order
-        if q_sort:
-            if q_sort == 'latest':
-                order = ('-updated_at',)
+            # Handle parameter for full-text search
+            if q_search:
+                ts_query = SearchQuery(q_search)
+                query_set = query_set.annotate(rank=SearchRank(F('tsv'), ts_query))
+
+            # Combine all needed filters
+            if filter_query:
+                query_set = query_set.filter(filter_query)
             else:
-                order = ('-review_number', '-score')
+                if not q_search:
+                    query_set = query_set.all()
+
+            if q_search:
+                query_set = query_set.order_by('-rank')
+            else:
+                query_set = query_set.order_by('-review_number')
         # Handle pagination
         try:
             current_page = int(current_page)
@@ -105,11 +117,11 @@ class SearchRecipeView(View):
             current_page = 1
         index = (current_page - 1) * RECIPES_PER_PAGE
         # Make query
-        recipes = query_set.order_by(*order)[index:index + RECIPES_PER_PAGE]
+        recipes = query_set[index:index + RECIPES_PER_PAGE]
 
         if recipes:
             next_index = current_page * RECIPES_PER_PAGE
-            next_recipes = query_set.order_by(*order)[next_index:next_index + RECIPES_PER_PAGE]
+            next_recipes = query_set[next_index:next_index + RECIPES_PER_PAGE]
             page_obj = {'current_page': current_page}
             if next_recipes:
                 page_obj['next_page'] = current_page + 1

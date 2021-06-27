@@ -12,7 +12,7 @@ class Command(BaseCommand):
             common_vector = SearchVector('description', weight='C')
             recipe_tsv = SearchVector('recipe_name', weight='A') + common_vector
             Recipe.objects.update(tsv=recipe_tsv)
-            menu_tsv = SearchVector('recipe_name', weight='A') + common_vector
+            menu_tsv = SearchVector('menu_name', weight='A') + common_vector
             Menu.objects.update(tsv=menu_tsv)
-        except Exception:
-            raise CommandError('An error occurs when updating ts vector')
+        except Exception as e:
+            raise CommandError(str(e))

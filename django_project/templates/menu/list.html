@@ -10,13 +10,13 @@
             {% for menu in page_obj.object_list %}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
                     <a class="card h-100 link-decoration-none" href="{% url 'menu_detail' menu.pk %}">
+                        <img src="{% static 'image/lazy-image.svg' %}" class="card-img-top img-fluid p-2" alt="">
                         {% if menu.recipes.first.image %}
-                            <img src="{{ menu.recipes.first.image.url }}" class="card-img-top img-fluid p-2" alt="">
+                            <input type="hidden" value="{{ menu.recipes.first.image.url }}">
                         {% else %}
-                            <img src="{{ menu.recipes.first.image_url|default:'/media/default.jpg' }}"
-                                 class="card-img-top img-fluid p-2" alt="">
+                            <input type="hidden"
+                                   value="{{ menu.recipes.first.image_url|default:'/media/default.jpg' }}">
                         {% endif %}
-
                         <div class="card-body bg-light d-flex flex-column justify-content-between">
                             <div>{{ menu.menu_name }}</div>
                             <div class="mt-2">
@@ -52,4 +52,8 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/lazy-image.js' %}"></script>
 {% endblock %}

@@ -18,7 +18,7 @@
                         <div class="input-group-prepend">
                             <label for="min-calories" class="input-group-text">Min</label>
                         </div>
-                        <input type="number" name="min" value="0"
+                        <input type="number" name="min" value="{{ request.GET.min|default:10 }}"
                                id="min-calories" class="form-control">
                         <div class="input-group-append">
                             <span class="input-group-text">kcal</span>
@@ -28,7 +28,7 @@
                         <div class="input-group-prepend">
                             <label for="max-calories" class="input-group-text">Max</label>
                         </div>
-                        <input type="number" name="max" value="2000"
+                        <input type="number" name="max" value="{{ request.GET.max|default:3000 }}"
                                id="max-calories" class="form-control">
                         <div class="input-group-append">
                             <span class="input-group-text">kcal</span>
@@ -100,4 +100,5 @@
 
 {% block script %}
     <script src="{% static 'js/recipe/list.js' %}"></script>
+    <script src="{% static 'js/lazy-image.js' %}"></script>
 {% endblock %}
