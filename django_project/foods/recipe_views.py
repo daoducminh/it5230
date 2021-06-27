@@ -133,8 +133,10 @@ class HomepageView(View):
             Q(category_id=4) &
             Q(image_url__isnull=False),
         ).order_by('-review_number', '-score')[:5]
+        s_recipes = Recipe.objects.filter(suggested=True)
         return render(request, 'index.html', {
-            'veg': veg
+            'veg': veg,
+            's_recipes': s_recipes
         })
 
 
