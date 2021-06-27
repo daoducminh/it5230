@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, CharField, EmailField, EmailInput, ImageField
 
-from .models import Recipe, User, Rating, MenuRating
+from .models import Recipe, User, Rating, MenuRating, Category
 
 
 class BaseUserForm(UserCreationForm):
@@ -58,3 +58,9 @@ class MenuRatingForm(ModelForm):
     class Meta:
         model = MenuRating
         fields = ('score', 'comment')
+
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = ('title', 'short_name')

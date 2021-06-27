@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import user_views, recipe_views, menu_views, search_views
+from . import user_views, recipe_views, menu_views, search_views, category_views
 
 urlpatterns = [
     path('', recipe_views.HomepageView.as_view(), name='index'),
@@ -26,7 +26,14 @@ urlpatterns = [
             path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
         ])),
     ])),
-    path('category/<str:short_name>', recipe_views.RecipesByCategoryView.as_view(), name='category'),
+    path('category/', include([
+        path('', category_views.ListCategoryView.as_view(), name='search_category'),
+        path('<str:short_name>/', category_views.RecipesByCategoryView.as_view(), name='category'),
+        path('create/', category_views.CreateCategoryView.as_view(), name='category_create'),
+        path('<int:pk>/', include([
+            path('update/', category_views.UpdateCategoryView.as_view(), name='category_update')
+        ]))
+    ])),
     path('menu/', include([
         path('', search_views.SearchMenuView.as_view(), name='search_menu'),
         path('<int:pk>/', include([

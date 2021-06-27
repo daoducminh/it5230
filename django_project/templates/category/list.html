@@ -1,0 +1,99 @@
+{% extends "base/default.html" %}
+
+{% block title %}Foods{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row my-3 justify-content-center">
+            <h1>All Categories</h1>
+        </div>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+        <div class="row justify-content-end my-3 mx-2">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#create-modal">
+                Add New Category
+            </button>
+        </div>
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-lg-4 col-md-6 col-12 mb-4">
+                    <div class="card category-button">
+                        <div class="card-body">
+                            <div class="row justify-content-between">
+                                <div class="col-9">
+                                    <h5 class="text-primary">{{ category.title }}</h5>
+                                </div>
+                                <div class="col-3">
+                                    <span class="badge badge-secondary">{{ category.count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" value="{{ category.id }}" id="id">
+                        <input type="hidden" value="{{ category.title }}" id="title">
+                        <input type="hidden" value="{{ category.short_name }}" id="short-name">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="modal fade" id="create-modal" tabindex="-1"
+             aria-labelledby="createModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="form">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h4 class="modal-title">Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="add/" id="category-modal" method="post">
+                            {% csrf_token %}
+                            <div class="input-group my-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="cat-title">Category</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Title"
+                                       aria-label="Title" aria-describedby="cat-title" name="title">
+                            </div>
+                            <div class="input-group my-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="cat-short-name">Short name</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Short name"
+                                       aria-label="Short name" aria-describedby="cat-short-name" name="short_name">
+                            </div>
+                            <div class="row flex-column flex-sm-row-reverse mt-3">
+                                <div class="col-12 col-sm-4 d-flex justify-content-sm-between justify-content-around">
+                                    <button class="btn btn-success" id="submit" type="submit">Yes</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="pagination d-flex justify-content-center">
+                {% if page_obj.prev_page %}
+                    <a class="btn btn-primary" href="?page={{ page_obj.prev_page }}">previous</a>
+                {% endif %}
+                <button class="btn btn-secondary mx-4" disabled>
+                    Page {{ page_obj.current_page }}
+                </button>
+                {% if page_obj.next_page %}
+                    <a class="btn btn-primary" href="?page={{ page_obj.next_page }}">next</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(() => {
+            $('.category-button').click(function () {
+                console.log($(this).find('input#title').val());
+            })
+        })
+    </script>
+{% endblock %}

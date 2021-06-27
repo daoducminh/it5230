@@ -86,8 +86,8 @@ class UpdateActivationView(AdminOnlyView):
 class ProfileView(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        recipes = Recipe.objects.filter(user=user).order_by('-review_number', '-score')
-        menus = Menu.objects.filter(user=user).order_by('-review_number', '-score')
+        recipes = Recipe.objects.filter(user=user).order_by('-review_number')
+        menus = Menu.objects.filter(user=user).order_by('-review_number')
         return render(request, 'profile.html', {
             'user': user,
             'recipes': recipes,

@@ -22,3 +22,6 @@ TITLE_UPDATE_MENU = 'Update menu'
 
 RECIPE_SUGGESTED = 'Recipe is suggested'
 RECIPE_NOT_SUGGESTED = 'Recipe has been removed from suggestion'
+
+CATEGORY_CREATED = 'Category has been created'
+CATEGORY_UPDATED = 'Category has been updated'

@@ -4,6 +4,9 @@
 
 {% block content %}
     <div class="container">
+        <div class="row my-3 justify-content-center">
+            <h1>Users</h1>
+        </div>
         <div class="row">
             {% for user in page_obj.object_list %}
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -21,15 +24,13 @@
         </div>
         <div class="mb-4">
             <div class="pagination d-flex justify-content-center">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary mx-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
 
-            {% if page_obj.has_next %}
-                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">next</a>
-            {% endif %}
-        </span>
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary mx-2" href="?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -54,6 +54,7 @@ class Recipe(models.Model):
     class Meta:
         indexes = (
             models.Index(fields=['category'], name='category_idx'),
+            models.Index(fields=['-review_number']),
             models.Index(fields=['-updated_at']),
             GinIndex(fields=['tsv'])
         )
@@ -92,6 +93,7 @@ class Menu(models.Model):
     class Meta:
         indexes = (
             models.Index(fields=['user']),
+            models.Index(fields=['-review_number']),
             models.Index(fields=['-updated_at']),
             GinIndex(fields=['tsv'])
         )

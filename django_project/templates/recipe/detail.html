@@ -140,8 +140,7 @@
                 {% if request.user.is_authenticated %}
                     {% if request.user.pk != recipe.user.pk %}
                         <div class="modal fade" id="review-form" tabindex="-1" role="form"
-                             aria-labelledby="reviewModalLabel"
-                             aria-hidden="true">
+                             aria-labelledby="reviewModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="form">
                                 <div class="modal-content">
                                     <div class="modal-header justify-content-center">

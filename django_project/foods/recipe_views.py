@@ -138,36 +138,6 @@ class HomepageView(View):
         })
 
 
-class RecipesByCategoryView(View):
-    def get(self, request, short_name):
-        category = get_object_or_404(Category, short_name=short_name)
-        current_page = request.GET.get('page')
-        try:
-            current_page = int(current_page)
-        except TypeError:
-            current_page = 1
-        index = (current_page - 1) * RECIPES_PER_PAGE
-        query_set = Recipe.objects.filter(category=category).order_by('-review_number', '-score')
-        recipes = query_set[index:index + RECIPES_PER_PAGE]
-        if recipes:
-            next_index = current_page * RECIPES_PER_PAGE
-            next_recipes = query_set[next_index:next_index + RECIPES_PER_PAGE]
-            page_obj = {'current_page': current_page}
-
-            if next_recipes:
-                page_obj['next_page'] = current_page + 1
-            if current_page > 1:
-                page_obj['prev_page'] = current_page - 1
-
-            return render(request, 'recipe/list.html', {
-                'recipes': recipes,
-                'page_obj': page_obj
-            })
-        else:
-            messages.error(request, NO_RECIPE_FOUND)
-            return render(request, 'recipe/list.html')
-
-
 class SuggestRecipe(AdminOnlyView):
     def get(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
