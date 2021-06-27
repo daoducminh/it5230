@@ -57,7 +57,7 @@
                         </select>
                         <input type="text" class="form-control border-0"
                                placeholder="Search the site" name="search"
-                               id="input-search">
+                               id="input-search" value="{{ request.GET.search }}">
                         <div class="input-group-append bg-white">
                             <button class="input-group-text bg-white border-0" id="btn-search">
                                 <i class="fas fa-search bg-white"></i>
@@ -119,7 +119,8 @@
                     <div class="dropdown-menu">
                         <a href="{% url 'category' 'dessert' %}" class="dropdown-item link-green">Dessert</a>
                         <a href="{% url 'category' 'lunch' %}" class="dropdown-item link-green">Lunch</a>
-                        <a href="{% url 'category' 'one-dish-meal' %}" class="dropdown-item link-green">One-Dish Meal</a>
+                        <a href="{% url 'category' 'one-dish-meal' %}" class="dropdown-item link-green">One-Dish
+                            Meal</a>
                         <a href="{% url 'category' 'vegetable' %}" class="dropdown-item link-green">Vegetable</a>
                         <a href="{% url 'category' 'breakfast' %}" class="dropdown-item link-green">Breakfast</a>
                         <a href="{% url 'category' 'beverages' %}" class="dropdown-item link-green">Beverages</a>
@@ -154,14 +155,16 @@
                         </span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="{% url 'category' 'cookie-and-brownie' %}" class="dropdown-item link-green">Cookies and Brownies</a>
+                        <a href="{% url 'category' 'cookie-and-brownie' %}" class="dropdown-item link-green">Cookies and
+                            Brownies</a>
                         <a href="{% url 'category' 'bars' %}" class="dropdown-item link-green">Bars</a>
                         <a href="{% url 'category' 'cake' %}" class="dropdown-item link-green">Cake</a>
                         <a href="{% url 'category' 'frozen' %}" class="dropdown-item link-green">Frozen desserts</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark text-uppercase menu-text" href="{% url 'category' 'salad-dressings' %}">
+                    <a class="nav-link text-dark text-uppercase menu-text"
+                       href="{% url 'category' 'salad-dressings' %}">
                         Salads
                     </a>
                 </li>

@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from .constants.pagination import *
+from .constants.recipe import *
 from .i18n.en import NO_RECIPE_FOUND, NO_MENU_FOUND, NO_PROFILE_FOUND
 from .models import Recipe, Menu
 
@@ -54,28 +55,71 @@ class SearchMenuView(View):
 
 class SearchRecipeView(View):
     def get(self, request):
-        query_name = request.GET.get('search')
-        query_user = request.GET.get('user')
+        params = request.GET.dict()
+        q_search = params.get('search')
+        q_user = params.get('user')
+        q_min = params.get('min')
+        q_max = params.get('max')
+        q_sort = params.get('sort')
+        current_page = params.get('page')
+        filter_query = None
+        order = None
 
         query_set = Recipe.objects
-        if query_name:
-            query = SearchQuery(query_name)
-            query_set = query_set.annotate(rank=SearchRank(F('tsv'), query))
-            if query_user:
-                query_set = query_set.filter(user_id=query_user)
-            recipes = query_set.order_by('-rank', '-review_number', '-score')[:240]
-        else:
-            if query_user:
-                query_set = query_set.filter(user_id=query_user)
+        # Handle parameter for full-text search
+        if q_search:
+            ts_query = SearchQuery(q_search)
+            query_set = query_set.annotate(rank=SearchRank(F('tsv'), ts_query))
+        # Handle parameter for user id
+        if q_user:
+            filter_query = Q(user_id=q_user)
+        # Handle parameter for calories range
+        if q_min or q_max:
+            try:
+                q_min = int(q_min)
+            except TypeError:
+                q_min = MIN_CALORIES
+            try:
+                q_max = int(q_max)
+            except TypeError:
+                q_max = MAX_CALORIES
+            if filter_query:
+                filter_query = filter_query | Q(calories__range=(q_min, q_max))
             else:
-                query_set = query_set.all()
-            recipes = query_set.order_by('-review_number', '-score')[:240]
+                filter_query = Q(calories__range=(q_min, q_max))
+        # Combine all needed filters
+        if filter_query:
+            query_set = query_set.filter(filter_query)
+        else:
+            query_set = query_set.all()
+        # Handle recipes' order
+        if q_sort:
+            if q_sort == 'latest':
+                order = ('-updated_at',)
+            else:
+                order = ('-review_number', '-score')
+        # Handle pagination
+        try:
+            current_page = int(current_page)
+        except TypeError:
+            current_page = 1
+        index = (current_page - 1) * RECIPES_PER_PAGE
+        # Make query
+        recipes = query_set.order_by(*order)[index:index + RECIPES_PER_PAGE]
 
         if recipes:
-            p = Paginator(recipes, RECIPES_PER_PAGE)
-            page = p.get_page(request.GET.get('page', 1))
+            next_index = current_page * RECIPES_PER_PAGE
+            next_recipes = query_set.order_by(*order)[next_index:next_index + RECIPES_PER_PAGE]
+            page_obj = {'current_page': current_page}
+            if next_recipes:
+                page_obj['next_page'] = current_page + 1
+            if current_page > 1:
+                page_obj['prev_page'] = current_page - 1
+
             return render(request, 'recipe/list.html', {
-                'page_obj': page
+                'recipes': recipes,
+                'page_obj': page_obj,
+                'search': True
             })
         else:
             messages.error(request, NO_RECIPE_FOUND)

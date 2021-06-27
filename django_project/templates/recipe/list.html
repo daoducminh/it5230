@@ -4,17 +4,60 @@
 
 {% block title %}Recipe{% endblock %}
 
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/recipe/list.css' %}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
+        {% if search %}
+            <div id="filter-div" class="p-2">
+                <form action="" class="row">
+                    <input type="hidden" name="search" value="{{ request.GET.search }}">
+                    <div class="col-12 col-sm-3 my-2 input-group">
+                        <div class="input-group-prepend">
+                            <label for="min-calories" class="input-group-text">Min</label>
+                        </div>
+                        <input type="number" name="min" value="0"
+                               id="min-calories" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">kcal</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3 my-2 input-group">
+                        <div class="input-group-prepend">
+                            <label for="max-calories" class="input-group-text">Max</label>
+                        </div>
+                        <input type="number" name="max" value="2000"
+                               id="max-calories" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">kcal</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3 my-2">
+                        <select name="sort" id="order-picker" class="form-control">
+                            <option value="popular">Most Popular</option>
+                            <option value="latest">Latest Recipes</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-3 my-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+        {% endif %}
         <div class="row">
-            {% for recipe in page_obj.object_list %}
+            {% for recipe in recipes %}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-3">
                     <a class="card h-100 link-decoration-none" href="{% url 'recipe_detail' recipe.pk %}">
+                        <img src="{% static 'image/lazy-image.svg' %}" alt=""
+                             class="card-img-top img-fluid p-2" loading="lazy">
                         {% if recipe.image %}
-                            <img src="{{ recipe.image.url }}" class="card-img-top img-fluid p-2" alt="">
+                            <input type="hidden" class="lazy-image-input" value="{{ recipe.image.url }}">
                         {% else %}
-                            <img src="{{ recipe.image_url|default:'/media/default.jpg' }}"
-                                 class="card-img-top img-fluid p-2" alt="">
+                            <input type="hidden" class="lazy-image-input"
+                                   value="{{ recipe.image_url|default:'/media/default.jpg' }}">
                         {% endif %}
                         <div class="card-body bg-light d-flex flex-column justify-content-between">
                             <div>{{ recipe.recipe_name }}</div>
@@ -36,27 +79,25 @@
         {% if page_obj %}
             <div class="my-4">
                 <div class="pagination d-flex justify-content-center">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a class="btn btn-primary"
-                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page=1">&laquo; first</a>
-                    <a class="btn btn-primary"
-                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
+                    {% if page_obj.prev_page %}
+                        <a class="btn btn-primary" id="prev-page"
+                           href="{{ page_obj.prev_page }}">previous</a>
+                    {% endif %}
 
-                <button class="btn btn-secondary" disabled>
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </button>
+                    <button class="btn btn-secondary mx-4" disabled>
+                        Page {{ page_obj.current_page }}
+                    </button>
 
-                {% if page_obj.has_next %}
-                    <a class="btn btn-primary"
-                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
-                    <a class="btn btn-primary"
-                       href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
+                    {% if page_obj.next_page %}
+                        <a class="btn btn-primary" id="next-page"
+                           href="{{ page_obj.next_page }}">next</a>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/recipe/list.js' %}"></script>
 {% endblock %}

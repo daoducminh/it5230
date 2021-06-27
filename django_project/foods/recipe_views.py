@@ -141,12 +141,27 @@ class HomepageView(View):
 class RecipesByCategoryView(View):
     def get(self, request, short_name):
         category = get_object_or_404(Category, short_name=short_name)
-        recipes = Recipe.objects.filter(category=category).order_by('-review_number', '-score')[:240]
+        current_page = request.GET.get('page')
+        try:
+            current_page = int(current_page)
+        except TypeError:
+            current_page = 1
+        index = (current_page - 1) * RECIPES_PER_PAGE
+        query_set = Recipe.objects.filter(category=category).order_by('-review_number', '-score')
+        recipes = query_set[index:index + RECIPES_PER_PAGE]
         if recipes:
-            p = Paginator(recipes, RECIPES_PER_PAGE)
-            page = p.get_page(request.GET.get('page', 1))
+            next_index = current_page * RECIPES_PER_PAGE
+            next_recipes = query_set[next_index:next_index + RECIPES_PER_PAGE]
+            page_obj = {'current_page': current_page}
+
+            if next_recipes:
+                page_obj['next_page'] = current_page + 1
+            if current_page > 1:
+                page_obj['prev_page'] = current_page - 1
+
             return render(request, 'recipe/list.html', {
-                'page_obj': page
+                'recipes': recipes,
+                'page_obj': page_obj
             })
         else:
             messages.error(request, NO_RECIPE_FOUND)
