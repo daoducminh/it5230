@@ -1,4 +1,5 @@
 {% extends "base/default.html" %}
+{% load static %}
 
 {% block title %}Foods{% endblock %}
 
@@ -45,7 +46,7 @@
                         <h4 class="modal-title">Category</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="add/" id="category-modal" method="post">
+                        <form action="create/" id="create-form" method="post">
                             {% csrf_token %}
                             <div class="input-group my-2">
                                 <div class="input-group-prepend">
@@ -54,11 +55,40 @@
                                 <input type="text" class="form-control" placeholder="Title"
                                        aria-label="Title" aria-describedby="cat-title" name="title">
                             </div>
+                            <div class="row flex-column flex-sm-row-reverse mt-3">
+                                <div class="col-12 col-sm-4 d-flex justify-content-sm-between justify-content-around">
+                                    <button class="btn btn-success" id="submit" type="submit">Yes</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="update-modal" tabindex="-1"
+             aria-labelledby="updateModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="form">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h4 class="modal-title">Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" id="update-form" method="post">
+                            {% csrf_token %}
+                            <div class="input-group my-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="cat-title">Category</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Title" id="input-title"
+                                       aria-label="Title" aria-describedby="cat-title" name="title">
+                            </div>
                             <div class="input-group my-2">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="cat-short-name">Short name</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Short name"
+                                <input type="text" class="form-control" placeholder="Short name" id="input-short-name"
                                        aria-label="Short name" aria-describedby="cat-short-name" name="short_name">
                             </div>
                             <div class="row flex-column flex-sm-row-reverse mt-3">
@@ -89,11 +119,5 @@
 {% endblock %}
 
 {% block script %}
-    <script>
-        $(document).ready(() => {
-            $('.category-button').click(function () {
-                console.log($(this).find('input#title').val());
-            })
-        })
-    </script>
+    <script src="{% static 'js/category/list.js' %}"></script>
 {% endblock %}

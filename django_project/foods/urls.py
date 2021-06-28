@@ -16,23 +16,23 @@ urlpatterns = [
             path('rate/', recipe_views.UserRatingView.as_view(), name='rate_recipe'),
             path('update/', recipe_views.UpdateRecipeView.as_view(), name='recipe_update'),
             path('delete/', recipe_views.DeleteRecipeView.as_view(), name='self_delete_recipe'),
-            path('suggest/', recipe_views.SuggestRecipe.as_view(), name='suggest_recipe')
+            path('suggest/', recipe_views.SuggestRecipe.as_view(), name='suggest_recipe'),
         ])),
     ])),
     path('profile/', include([
         path('', search_views.SearchProfile.as_view(), name='search_profile'),
         path('<int:pk>/', include([
             path('', user_views.ProfileView.as_view(), name='profile_detail'),
-            path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation')
+            path('activate/', user_views.UpdateActivationView.as_view(), name='update_activation'),
         ])),
     ])),
     path('category/', include([
         path('', category_views.ListCategoryView.as_view(), name='search_category'),
-        path('<str:short_name>/', category_views.RecipesByCategoryView.as_view(), name='category'),
         path('create/', category_views.CreateCategoryView.as_view(), name='category_create'),
         path('<int:pk>/', include([
-            path('update/', category_views.UpdateCategoryView.as_view(), name='category_update')
-        ]))
+            path('update/', category_views.UpdateCategoryView.as_view(), name='category_update'),
+        ])),
+        path('<str:short_name>/', category_views.RecipesByCategoryView.as_view(), name='category'),
     ])),
     path('menu/', include([
         path('', search_views.SearchMenuView.as_view(), name='search_menu'),

@@ -6,6 +6,7 @@ from .constants.pagination import CATEGORIES_PER_PAGE, RECIPES_PER_PAGE
 from .forms import CategoryForm
 from .i18n.en import *
 from .models import Recipe, Category
+from .utilities.category import convert_category_title
 from .views import AdminOnlyView
 
 
@@ -39,12 +40,14 @@ class RecipesByCategoryView(View):
             return render(request, 'recipe/list.html')
 
 
-class CreateCategoryView(View):
+class CreateCategoryView(AdminOnlyView):
     def post(self, request):
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, RECIPE_CREATED)
+            c = form.save(False)
+            c.short_name = convert_category_title(c.title)
+            c.save()
+            messages.success(request, CATEGORY_CREATED)
         else:
             messages.error(request, form.errors)
         return redirect('search_category')
@@ -56,7 +59,7 @@ class UpdateCategoryView(AdminOnlyView):
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
-            messages.success(request, RECIPE_CREATED)
+            messages.success(request, CATEGORY_UPDATED)
         else:
             messages.error(request, form.errors)
         return redirect('search_category')

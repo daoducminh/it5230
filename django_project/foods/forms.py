@@ -63,4 +63,4 @@ class MenuRatingForm(ModelForm):
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ('title', 'short_name')
+        fields = ('title',)
