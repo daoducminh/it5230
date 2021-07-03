@@ -74,10 +74,10 @@ class CreateRecipeView(LoginRequiredView):
             recipe.user = request.user
             recipe.save()
             messages.success(request, RECIPE_CREATED)
-            return render(request, 'recipe/edit.html')
+            return redirect('search_recipe')
         else:
             messages.error(request, recipe_form.errors)
-            return render(request, 'recipe/edit.html')
+            return redirect('search_recipe')
 
 
 class UserRatingView(LoginRequiredView):

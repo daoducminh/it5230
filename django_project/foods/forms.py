@@ -47,8 +47,7 @@ class RecipeForm(ModelForm):
 
     class Meta:
         model = Recipe
-        exclude = ('user', 'created_at', 'updated_at',
-                   'score', 'review_number')
+        exclude = ('user', 'created_at', 'updated_at', 'score', 'review_number', 'tsv')
 
 
 class RatingForm(ModelForm):
