@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm, CharField, EmailField, EmailInput, ImageField
+from django.forms import ModelForm, CharField, EmailField, EmailInput, ImageField, DateField, BooleanField
 
 from .models import Recipe, User, Rating, MenuRating, Category
 
@@ -33,6 +33,8 @@ class BaseUserForm(UserCreationForm):
 class UserForm(ModelForm):
     image = ImageField(required=False)
     image_url = CharField(required=False)
+    birthday = DateField(required=False)
+    gender = BooleanField(required=False)
 
     class Meta:
         model = User
@@ -45,7 +47,8 @@ class RecipeForm(ModelForm):
 
     class Meta:
         model = Recipe
-        exclude = ('user', 'created_at', 'updated_at', 'score', 'review_number')
+        exclude = ('user', 'created_at', 'updated_at',
+                   'score', 'review_number')
 
 
 class RatingForm(ModelForm):
