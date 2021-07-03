@@ -9,8 +9,8 @@ from foods.validators import image_path
 
 class User(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    birthday = models.DateField()
-    gender = models.BooleanField()
+    birthday = models.DateField(null=True)
+    gender = models.BooleanField(null=True)
     image = models.ImageField(
         upload_to=image_path
     )
