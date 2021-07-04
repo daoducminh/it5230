@@ -91,7 +91,7 @@ class SearchRecipeView(View):
                 filter_query = Q(calories__range=(q_min, q_max))
         if order:
             if filter_query:
-                filter_query = Q(recipe_name__icontains=q_search) & filter_query
+                filter_query = filter_query & Q(recipe_name__icontains=q_search)
             query_set = query_set.filter(filter_query).order_by(*order)
         else:
             # Handle parameter for full-text search

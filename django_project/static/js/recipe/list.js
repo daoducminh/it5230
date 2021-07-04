@@ -7,11 +7,12 @@ function buildParametersUrl(params) {
 }
 
 $(document).ready(() => {
-    if ($('#filter-div').length) {
-        const previousLink = $('#prev-page');
-        const nextLink = $('#next-page');
-        const previousPage = parseInt(previousLink.attr('href'));
-        const nextPage = parseInt(nextLink.attr('href'));
+    const path = window.location.pathname;
+    const previousLink = $('#prev-page');
+    const nextLink = $('#next-page');
+    const previousPage = parseInt(previousLink.attr('href'));
+    const nextPage = parseInt(nextLink.attr('href'));
+    if (path.includes('/recipe/')) {
         const search = location.search.substring(1);
         const params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
         delete params.page;
@@ -21,6 +22,14 @@ $(document).ready(() => {
         }
         if (nextPage) {
             nextLink.attr('href', url + `page=${nextPage}`);
+        }
+    }
+    if (path.includes('/category/')) {
+        if (previousPage) {
+            previousLink.attr('href', `?page=${previousPage}`);
+        }
+        if (nextPage) {
+            nextLink.attr('href', `?page=${nextPage}`);
         }
     }
 });
